@@ -428,19 +428,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\mtymi\\.nuget\\packages\\": {}
+    "C:\\Users\\t480\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\MAN.csproj",
+      "projectUniqueName": "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\MAN.csproj",
       "projectName": "MAN",
-      "projectPath": "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\MAN.csproj",
-      "packagesPath": "C:\\Users\\mtymi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\obj\\",
+      "projectPath": "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\MAN.csproj",
+      "packagesPath": "C:\\Users\\t480\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\mtymi\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\t480\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
