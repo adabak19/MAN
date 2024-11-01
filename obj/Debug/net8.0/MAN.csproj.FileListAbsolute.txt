@@ -1,0 +1,66 @@
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\appsettings.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\MAN.exe
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\MAN.deps.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\MAN.runtimeconfig.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\MAN.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\MAN.pdb
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.csproj.AssemblyReference.cache
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.AssemblyInfoInputs.cache
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.AssemblyInfo.cs
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.csproj.CoreCompileInputs.cache
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.sourcelink.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets\msbuild.MAN.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets\msbuild.build.MAN.props
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.MAN.props
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.MAN.props
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\scopedcss\bundle\MAN.styles.css
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.csproj.Up2Date
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\refint\MAN.dll
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.pdb
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\MAN.genruntimeconfig.cache
+C:\Users\mtymi\OneDrive\Pulpit\Studia\DND\LibraryManagement\MAN\obj\Debug\net8.0\ref\MAN.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\appsettings.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\MAN.exe
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\MAN.deps.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\MAN.runtimeconfig.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\MAN.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\MAN.pdb
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.csproj.AssemblyReference.cache
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.AssemblyInfoInputs.cache
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.AssemblyInfo.cs
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.csproj.CoreCompileInputs.cache
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.sourcelink.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets\msbuild.MAN.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets\msbuild.build.MAN.props
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.MAN.props
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.MAN.props
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\scopedcss\bundle\MAN.styles.css
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.csproj.Up2Date
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\refint\MAN.dll
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.pdb
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\MAN.genruntimeconfig.cache
+C:\Users\adria\OneDrive\Pulpit\Semester 7\DND\MAN\MAN\obj\Debug\net8.0\ref\MAN.dll
