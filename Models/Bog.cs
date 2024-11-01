@@ -1,12 +1,13 @@
 namespace MAN.Models;
 
-public class Book
+public class Bog
 {
     public int Id {get; set;}
     public long ISBN {get;set;}
     public string? Title {get; set;}
-    public string? Author {get; set;}
+    public int PageCount {get; set;}
     public int YearPublished {get; set;}
-    
-
+    public int BindingId {get;set;}
+    public int PublisherId {get; set;}
+    public int AuthorId {get; set;}
 }
