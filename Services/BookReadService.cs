@@ -12,9 +12,9 @@ namespace MAN.Services
         {
             BookReads = new List<BookRead>
             {
-                new BookRead { ProfileId = 1, BookId = 1, Rating = 5, DateStarted = new DateTime(2023, 1, 1), DateFinished = new DateTime(2023, 1, 10), Status = true },
-                new BookRead { ProfileId = 2, BookId = 2, Rating = 4, DateStarted = new DateTime(2023, 2, 1), DateFinished = new DateTime(2023, 2, 10), Status = true },
-                new BookRead { ProfileId = 3, BookId = 3, Rating = 3, DateStarted = new DateTime(2023, 3, 1), DateFinished = new DateTime(2023, 3, 10), Status = true },
+                new BookRead { ProfileId = 1, BookId = 1, Rating = 5, DateStarted = new DateOnly(2023, 1, 1), DateFinished = new DateOnly(2023, 1, 10), Status = true },
+                new BookRead { ProfileId = 2, BookId = 2, Rating = 4, DateStarted = new DateOnly(2023, 2, 1), DateFinished = new DateOnly(2023, 2, 10), Status = true },
+                new BookRead { ProfileId = 3, BookId = 3, Rating = 3, DateStarted = new DateOnly(2023, 3, 1), DateFinished = new DateOnly(2023, 3, 10), Status = true },
             };
         }
 
