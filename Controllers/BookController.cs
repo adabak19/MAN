@@ -12,21 +12,21 @@ public class BookController : ControllerBase
 
     }
     [HttpGet]
-    public ActionResult<List<Bog>> GetAll() => BookService.GetAll();
+    public ActionResult<List<Book>> GetAll() => BookService.GetAll();
     [HttpGet("{id}")]
-    public ActionResult<Bog> Get(int id){
+    public ActionResult<Book> Get(int id){
         var book = BookService.Get(id);
         if (book is null)
             return NotFound();
         return book;
     }
     [HttpPost]
-    public IActionResult Create(Bog book){
+    public IActionResult Create(Book book){
         BookService.Add(book);
         return CreatedAtAction(nameof(Get), new { id = book.Id}, book);
     }
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Bog book){
+    public IActionResult Update(int id, Book book){
         var existingBook = BookService.Get(id);
         if(existingBook is null)
             return NotFound();

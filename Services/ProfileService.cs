@@ -10,8 +10,8 @@ public static class ProfileService{
         Profiles = new List<Profile>
         {
             new Profile { Id = 1, FirstName = "Jan", LastName = "Tolkien", ProfileName = "jpjp"},
-            new Profile { Id = 1, FirstName = "Jan", LastName = "Tolkieniak", ProfileName = "jpjpjp"},
-            new Profile { Id = 1, FirstName = "John", LastName = "Tolkienowski", ProfileName = "jpjp2"}
+            new Profile { Id = 2, FirstName = "Jan", LastName = "Tolkieniak", ProfileName = "jpjpjp"},
+            new Profile { Id = 3, FirstName = "John", LastName = "Tolkienowski", ProfileName = "jpjp2"}
         };
     }
 

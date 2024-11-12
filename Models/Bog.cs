@@ -1,6 +1,6 @@
 namespace MAN.Models;
 
-public class Bog
+public class Book
 {
     public int Id {get; set;}
     public long ISBN {get;set;}
