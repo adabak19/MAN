@@ -1,6 +1,6 @@
 namespace MAN.Models;
 
-public class BookRead
+public class Publisher
 {
     public int Id {get; set;}
 

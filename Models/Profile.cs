@@ -1,6 +1,6 @@
 namespace MAN.Models;
 
-public class BookRead
+public class Profile
 {
     public int Id {get; set;}
     public string? FirstName {get;set;}
