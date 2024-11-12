@@ -8,6 +8,4 @@ public class BookRead
     public DateTime? DateStarted {get; set;}
     public DateTime? DateFinished {get; set;}
     public bool Status {get; set;}
-
-
 }
