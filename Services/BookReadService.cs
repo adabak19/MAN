@@ -1,21 +1,21 @@
 using System.Collections.Generic;
+using System.Linq;
 using MAN.Models;
+using System.IO;
+using System.Text.Json;
 
 namespace MAN.Services
 {
     public static class BookReadService
     {
         static List<BookRead> BookReads { get; }
-        static int nextId = 4;
+        static int nextId;
+        static string filePath = "bookreads.json";
 
         static BookReadService()
         {
-            BookReads = new List<BookRead>
-            {
-                new BookRead { ProfileId = 1, BookId = 1, Rating = 5, DateStarted = new DateOnly(2023, 1, 1), DateFinished = new DateOnly(2023, 1, 10), Status = true },
-                new BookRead { ProfileId = 2, BookId = 2, Rating = 4, DateStarted = new DateOnly(2023, 2, 1), DateFinished = new DateOnly(2023, 2, 10), Status = true },
-                new BookRead { ProfileId = 3, BookId = 3, Rating = 3, DateStarted = new DateOnly(2023, 3, 1), DateFinished = new DateOnly(2023, 3, 10), Status = true },
-            };
+            BookReads = LoadFromFile();
+            nextId = BookReads.Any() ? BookReads.Max(br => br.ProfileId) + 1 : 1;
         }
 
         public static List<BookRead> GetAll() => BookReads;
@@ -26,6 +26,7 @@ namespace MAN.Services
         public static void Add(BookRead bookRead)
         {
             BookReads.Add(bookRead);
+            SaveToFile();
         }
 
         public static void Delete(int profileId, int bookId)
@@ -35,6 +36,7 @@ namespace MAN.Services
                 return;
 
             BookReads.Remove(bookRead);
+            SaveToFile();
         }
 
         public static void Update(BookRead bookRead)
@@ -44,6 +46,24 @@ namespace MAN.Services
                 return;
 
             BookReads[index] = bookRead;
+            SaveToFile();
+        }
+
+        private static List<BookRead> LoadFromFile()
+        {
+            if (!File.Exists(filePath))
+            {
+                return new List<BookRead>();
+            }
+
+            var json = File.ReadAllText(filePath);
+            return JsonSerializer.Deserialize<List<BookRead>>(json) ?? new List<BookRead>();
+        }
+
+        private static void SaveToFile()
+        {
+            var json = JsonSerializer.Serialize(BookReads, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(filePath, json);
         }
     }
 }
