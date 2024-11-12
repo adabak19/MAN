@@ -1,0 +1,40 @@
+@MAN_HostAddress = http://localhost:5133
+
+GET {{MAN_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{MAN_HostAddress}}/author/
+Accept: application/json
+
+###
+POST {{MAN_HostAddress}}/author
+Content-Type: application/json
+
+{
+    "isbn": 126,
+    "title": "chuj",
+    "author": "dupa",
+    "yearPublished": 2137
+}
+
+###
+PUT {{MAN_HostAddress}}/author/4
+Content-Type: application/json
+
+  {
+    "id": 4,
+    "isbn": 127,
+    "title": "chuj1",
+    "author": "dupa2",
+    "yearPublished": 2137
+  }
+
+###
+
+DELETE {{MAN_HostAddress}}/author/4
+
+###
+GET {{MAN_HostAddress}}/author/1
+Accept: application/json
