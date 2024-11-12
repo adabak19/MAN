@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\MAN.csproj": {}
+    "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\MAN.csproj": {}
   },
   "projects": {
-    "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\MAN.csproj": {
+    "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\MAN.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\MAN.csproj",
+        "projectUniqueName": "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\MAN.csproj",
         "projectName": "MAN",
-        "projectPath": "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\MAN.csproj",
-        "packagesPath": "C:\\Users\\t480\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\t480\\OneDrive - ViaUC\\Desktop\\7th semester\\dnd\\handin\\MAN\\obj\\",
+        "projectPath": "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\MAN.csproj",
+        "packagesPath": "C:\\Users\\mtymi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mtymi\\OneDrive\\Pulpit\\Studia\\DND\\LibraryManagement\\MAN\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\t480\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\mtymi\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -67,7 +67,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
