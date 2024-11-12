@@ -1,4 +1,24 @@
-bin/Debug/net8.0/MAN.dll
-bin/Debug/net8.0/MAN.dll
-bin/Debug/net8.0/MAN.exe
-models/book.cs
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore other files that should not be versioned
+*.log
+*.lock
+*.tmp
+*.temp
+
+# Ignore compiled files
+*.dll
+*.exe
+*.pdb
+
+# Ignore specific directories
+.vscode/
+.idea/
