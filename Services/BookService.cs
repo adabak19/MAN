@@ -1,37 +1,43 @@
-using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Linq;
 using MAN.Models;
+using System.Threading.Tasks;
 
-namespace MAN.Services;
+namespace MAN.Services
+{
+    public static class BookService
+    {
+        static List<Book> Books { get; }
+        static int nextId;
+        static string filePath = "books.json";
 
-public static class BookService{
-    static List<Book> Books {get;}
-    static int nextId = 4;
-    static BookService(){
-        Books = new List<Book>
+        static BookService()
         {
-            new Book { Id = 1, ISBN = 123, Title = "The Lord of the Ring: The Fellowship of the Ring", AuthorId = 1, BindingId = 1, PageCount = 530, PublisherId = 1, YearPublished = 1954 },
-            new Book { Id = 2, ISBN = 124, Title = "The Lord of the Ring: The Two Towers", AuthorId = 1, BindingId = 1, PageCount = 530, PublisherId = 1, YearPublished = 1954 },
-            new Book { Id = 3, ISBN = 125, Title = "The Lord of the Ring: The Return of the King", AuthorId = 1, BindingId = 1, PageCount = 530, PublisherId = 1, YearPublished = 1954  },
-        };
-    }
+            Books = FileStorageUtility.LoadFromFile<Book>(filePath) ?? new List<Book>();
+            nextId = Books.Any() ? Books.Max(b => b.Id) + 1 : 1;
+        }
 
-    public static List<Book> GetAll() => Books;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, Books);
+        }
 
-    public static Book? Get(int id) => Books.FirstOrDefault(b => b.Id == id);
-    public static void Add(Book book){
-        book.Id = nextId++;
-        Books.Add(book);
-    }
-    public static void Delete(int id){
-        var book = Get(id);
-        if(book is null)
-            return;
-        Books.Remove(book);
-    }
-    public static void Update(Book book){
-        var index = Books.FindIndex(b => b.Id == book.Id);
-        if(index == -1)
-            return;
-        Books[index] = book;
+        public static async Task AddBookAsync(Book book)
+        {
+            book.Id = nextId++;
+            Books.Add(book);
+            await SaveToFileAsync();
+        }
+
+        public static async Task<List<Book>> GetAllAsync()
+        {
+            return await Task.FromResult(Books);
+        }
+
+        public static async Task<Book?> GetAsync(int id)
+        {
+            var book = Books.FirstOrDefault(b => b.Id == id);
+            return await Task.FromResult(book);
+        }
     }
 }

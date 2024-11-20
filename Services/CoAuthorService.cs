@@ -1,51 +1,43 @@
 using System.Collections.Generic;
+using System.Linq;
 using MAN.Models;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
     public static class CoAuthorService
     {
         static List<CoAuthors> CoAuthorsList { get; }
-        static int nextId = 4;
+        static int nextId;
+        static string filePath = "coauthors.json";
 
         static CoAuthorService()
         {
-            CoAuthorsList = new List<CoAuthors>
-            {
-                new CoAuthors { BookId = 1, AuthorId = 1 },
-                new CoAuthors { BookId = 2, AuthorId = 1 },
-                new CoAuthors { BookId = 3, AuthorId = 1 },
-                // Add more initial data as needed
-            };
+            CoAuthorsList = FileStorageUtility.LoadFromFile<CoAuthors>(filePath) ?? new List<CoAuthors>();
+            nextId = CoAuthorsList.Any() ? CoAuthorsList.Max(ca => ca.BookId) + 1 : 1;
         }
 
-        public static List<CoAuthors> GetAll() => CoAuthorsList;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, CoAuthorsList);
+        }
 
-        public static CoAuthors? Get(int bookId, int authorId) => 
-            CoAuthorsList.FirstOrDefault(ca => ca.BookId == bookId && ca.AuthorId == authorId);
-
-        public static void Add(CoAuthors coAuthor)
+        public static async Task AddCoAuthorAsync(CoAuthors coAuthor)
         {
             coAuthor.BookId = nextId++;
             CoAuthorsList.Add(coAuthor);
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int bookId, int authorId)
+        public static async Task<List<CoAuthors>> GetAllAsync()
         {
-            var coAuthor = Get(bookId, authorId);
-            if (coAuthor is null)
-                return;
-
-            CoAuthorsList.Remove(coAuthor);
+            return await Task.FromResult(CoAuthorsList);
         }
 
-        public static void Update(CoAuthors coAuthor)
+        public static async Task<CoAuthors?> GetAsync(int id)
         {
-            var index = CoAuthorsList.FindIndex(ca => ca.BookId == coAuthor.BookId && ca.AuthorId == coAuthor.AuthorId);
-            if (index == -1)
-                return;
-
-            CoAuthorsList[index] = coAuthor;
+            var coAuthor = CoAuthorsList.FirstOrDefault(ca => ca.BookId == id);
+            return await Task.FromResult(coAuthor);
         }
     }
 }
