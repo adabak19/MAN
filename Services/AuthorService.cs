@@ -3,6 +3,7 @@ using System.Linq;
 using MAN.Models;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -14,56 +15,33 @@ namespace MAN.Services
 
         static AuthorService()
         {
-            Authors = LoadFromFile();
+            Authors = FileStorageUtility.LoadFromFile<Author>(filePath) ?? new List<Author>();
             nextId = Authors.Any() ? Authors.Max(a => a.Id) + 1 : 1;
         }
 
-        public static List<Author> GetAll() => Authors;
+        public static async Task SaveToFileAsync()
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var json = JsonSerializer.Serialize(Authors, options);
+            await File.WriteAllTextAsync(filePath, json);
+        }
 
-        public static Author? Get(int id) => Authors.FirstOrDefault(a => a.Id == id);
-
-        public static void Add(Author author)
+        public static async Task AddAuthorAsync(Author author)
         {
             author.Id = nextId++;
             Authors.Add(author);
-            SaveToFile();
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int id)
+        public static async Task<List<Author>> GetAllAuthorsAsync()
         {
-            var author = Get(id);
-            if (author is null)
-                return;
-
-            Authors.Remove(author);
-            SaveToFile();
+            return await Task.FromResult(Authors);
         }
 
-        public static void Update(Author author)
+        public static async Task<Author?> GetAuthorByIdAsync(int id)
         {
-            var index = Authors.FindIndex(a => a.Id == author.Id);
-            if (index == -1)
-                return;
-
-            Authors[index] = author;
-            SaveToFile();
-        }
-
-        private static List<Author> LoadFromFile()
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<Author>();
-            }
-
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Author>>(json) ?? new List<Author>();
-        }
-
-        private static void SaveToFile()
-        {
-            var json = JsonSerializer.Serialize(Authors, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            var author = Authors.FirstOrDefault(a => a.Id == id);
+            return await Task.FromResult(author);
         }
     }
 }

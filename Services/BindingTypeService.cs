@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -12,39 +13,31 @@ namespace MAN.Services
 
         static BindingTypeService()
         {
-            BindingTypes = FileStorageUtility.LoadFromFile<BindingType>(filePath);
+            BindingTypes = FileStorageUtility.LoadFromFile<BindingType>(filePath) ?? new List<BindingType>();
             nextId = BindingTypes.Any() ? BindingTypes.Max(bt => bt.Id) + 1 : 1;
         }
 
-        public static List<BindingType> GetAll() => BindingTypes;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, BindingTypes);
+        }
 
-        public static BindingType? Get(int id) => BindingTypes.FirstOrDefault(bt => bt.Id == id);
-
-        public static void Add(BindingType bindingType)
+        public static async Task AddBindingTypeAsync(BindingType bindingType)
         {
             bindingType.Id = nextId++;
             BindingTypes.Add(bindingType);
-            FileStorageUtility.SaveToFile(filePath, BindingTypes);
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int id)
+        public static async Task<List<BindingType>> GetAllAsync()
         {
-            var bindingType = Get(id);
-            if (bindingType is null)
-                return;
-
-            BindingTypes.Remove(bindingType);
-            FileStorageUtility.SaveToFile(filePath, BindingTypes);
+            return await Task.FromResult(BindingTypes);
         }
 
-        public static void Update(BindingType bindingType)
+        public static async Task<BindingType?> GetAsync(int id)
         {
-            var index = BindingTypes.FindIndex(bt => bt.Id == bindingType.Id);
-            if (index == -1)
-                return;
-
-            BindingTypes[index] = bindingType;
-            FileStorageUtility.SaveToFile(filePath, BindingTypes);
+            var bindingType = BindingTypes.FirstOrDefault(bt => bt.Id == id);
+            return await Task.FromResult(bindingType);
         }
     }
 }

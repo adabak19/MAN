@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 public static class FileStorageUtility
 {
@@ -15,9 +16,9 @@ public static class FileStorageUtility
         return JsonSerializer.Deserialize<List<T>>(json) ?? new List<T>();
     }
 
-    public static void SaveToFile<T>(string filePath, List<T> data)
+    public static async Task SaveToFileAsync<T>(string filePath, List<T> data)
     {
         var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(filePath, json);
+        await File.WriteAllTextAsync(filePath, json);
     }
 }

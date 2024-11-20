@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -14,56 +13,31 @@ namespace MAN.Services
 
         static CoAuthorService()
         {
-            CoAuthorsList = LoadFromFile();
+            CoAuthorsList = FileStorageUtility.LoadFromFile<CoAuthors>(filePath) ?? new List<CoAuthors>();
             nextId = CoAuthorsList.Any() ? CoAuthorsList.Max(ca => ca.BookId) + 1 : 1;
         }
 
-        public static List<CoAuthors> GetAll() => CoAuthorsList;
-
-        public static CoAuthors? Get(int bookId, int authorId) =>
-            CoAuthorsList.FirstOrDefault(ca => ca.BookId == bookId && ca.AuthorId == authorId);
-
-        public static void Add(CoAuthors coAuthor)
+        public static async Task SaveToFileAsync()
         {
+            await FileStorageUtility.SaveToFileAsync(filePath, CoAuthorsList);
+        }
+
+        public static async Task AddCoAuthorAsync(CoAuthors coAuthor)
+        {
+            coAuthor.BookId = nextId++;
             CoAuthorsList.Add(coAuthor);
-            SaveToFile();
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int bookId, int authorId)
+        public static async Task<List<CoAuthors>> GetAllAsync()
         {
-            var coAuthor = Get(bookId, authorId);
-            if (coAuthor is null)
-                return;
-
-            CoAuthorsList.Remove(coAuthor);
-            SaveToFile();
+            return await Task.FromResult(CoAuthorsList);
         }
 
-        public static void Update(CoAuthors coAuthor)
+        public static async Task<CoAuthors?> GetAsync(int id)
         {
-            var index = CoAuthorsList.FindIndex(ca => ca.BookId == coAuthor.BookId && ca.AuthorId == coAuthor.AuthorId);
-            if (index == -1)
-                return;
-
-            CoAuthorsList[index] = coAuthor;
-            SaveToFile();
-        }
-
-        private static List<CoAuthors> LoadFromFile()
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<CoAuthors>();
-            }
-
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<CoAuthors>>(json) ?? new List<CoAuthors>();
-        }
-
-        private static void SaveToFile()
-        {
-            var json = JsonSerializer.Serialize(CoAuthorsList, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            var coAuthor = CoAuthorsList.FirstOrDefault(ca => ca.BookId == id);
+            return await Task.FromResult(coAuthor);
         }
     }
 }

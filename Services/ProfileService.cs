@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -14,56 +13,31 @@ namespace MAN.Services
 
         static ProfileService()
         {
-            Profiles = LoadFromFile();
+            Profiles = FileStorageUtility.LoadFromFile<Profile>(filePath) ?? new List<Profile>();
             nextId = Profiles.Any() ? Profiles.Max(p => p.Id) + 1 : 1;
         }
 
-        public static List<Profile> GetAll() => Profiles;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, Profiles);
+        }
 
-        public static Profile? Get(int id) => Profiles.FirstOrDefault(p => p.Id == id);
-
-        public static void Add(Profile profile)
+        public static async Task AddProfileAsync(Profile profile)
         {
             profile.Id = nextId++;
             Profiles.Add(profile);
-            SaveToFile();
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int id)
+        public static async Task<List<Profile>> GetAllAsync()
         {
-            var profile = Get(id);
-            if (profile is null)
-                return;
-
-            Profiles.Remove(profile);
-            SaveToFile();
+            return await Task.FromResult(Profiles);
         }
 
-        public static void Update(Profile profile)
+        public static async Task<Profile?> GetAsync(int id)
         {
-            var index = Profiles.FindIndex(p => p.Id == profile.Id);
-            if (index == -1)
-                return;
-
-            Profiles[index] = profile;
-            SaveToFile();
-        }
-
-        private static List<Profile> LoadFromFile()
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<Profile>();
-            }
-
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Profile>>(json) ?? new List<Profile>();
-        }
-
-        private static void SaveToFile()
-        {
-            var json = JsonSerializer.Serialize(Profiles, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            var profile = Profiles.FirstOrDefault(p => p.Id == id);
+            return await Task.FromResult(profile);
         }
     }
 }

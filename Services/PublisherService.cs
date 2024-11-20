@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -14,56 +13,31 @@ namespace MAN.Services
 
         static PublisherService()
         {
-            Publishers = LoadFromFile();
+            Publishers = FileStorageUtility.LoadFromFile<Publisher>(filePath) ?? new List<Publisher>();
             nextId = Publishers.Any() ? Publishers.Max(p => p.Id) + 1 : 1;
         }
 
-        public static List<Publisher> GetAll() => Publishers;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, Publishers);
+        }
 
-        public static Publisher? Get(int id) => Publishers.FirstOrDefault(p => p.Id == id);
-
-        public static void Add(Publisher publisher)
+        public static async Task AddPublisherAsync(Publisher publisher)
         {
             publisher.Id = nextId++;
             Publishers.Add(publisher);
-            SaveToFile();
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int id)
+        public static async Task<List<Publisher>> GetAllAsync()
         {
-            var publisher = Get(id);
-            if (publisher is null)
-                return;
-
-            Publishers.Remove(publisher);
-            SaveToFile();
+            return await Task.FromResult(Publishers);
         }
 
-        public static void Update(Publisher publisher)
+        public static async Task<Publisher?> GetAsync(int id)
         {
-            var index = Publishers.FindIndex(p => p.Id == publisher.Id);
-            if (index == -1)
-                return;
-
-            Publishers[index] = publisher;
-            SaveToFile();
-        }
-
-        private static List<Publisher> LoadFromFile()
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<Publisher>();
-            }
-
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Publisher>>(json) ?? new List<Publisher>();
-        }
-
-        private static void SaveToFile()
-        {
-            var json = JsonSerializer.Serialize(Publishers, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            var publisher = Publishers.FirstOrDefault(p => p.Id == id);
+            return await Task.FromResult(publisher);
         }
     }
 }

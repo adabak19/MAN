@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -14,56 +13,31 @@ namespace MAN.Services
 
         static BookReadService()
         {
-            BookReads = LoadFromFile();
+            BookReads = FileStorageUtility.LoadFromFile<BookRead>(filePath) ?? new List<BookRead>();
             nextId = BookReads.Any() ? BookReads.Max(br => br.ProfileId) + 1 : 1;
         }
 
-        public static List<BookRead> GetAll() => BookReads;
-
-        public static BookRead? Get(int profileId, int bookId) =>
-            BookReads.FirstOrDefault(br => br.ProfileId == profileId && br.BookId == bookId);
-
-        public static void Add(BookRead bookRead)
+        public static async Task SaveToFileAsync()
         {
+            await FileStorageUtility.SaveToFileAsync(filePath, BookReads);
+        }
+
+        public static async Task AddBookReadAsync(BookRead bookRead)
+        {
+            bookRead.ProfileId = nextId++;
             BookReads.Add(bookRead);
-            SaveToFile();
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int profileId, int bookId)
+        public static async Task<List<BookRead>> GetAllAsync()
         {
-            var bookRead = Get(profileId, bookId);
-            if (bookRead is null)
-                return;
-
-            BookReads.Remove(bookRead);
-            SaveToFile();
+            return await Task.FromResult(BookReads);
         }
 
-        public static void Update(BookRead bookRead)
+        public static async Task<BookRead?> GetAsync(int id)
         {
-            var index = BookReads.FindIndex(br => br.ProfileId == bookRead.ProfileId && br.BookId == bookRead.BookId);
-            if (index == -1)
-                return;
-
-            BookReads[index] = bookRead;
-            SaveToFile();
-        }
-
-        private static List<BookRead> LoadFromFile()
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<BookRead>();
-            }
-
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<BookRead>>(json) ?? new List<BookRead>();
-        }
-
-        private static void SaveToFile()
-        {
-            var json = JsonSerializer.Serialize(BookReads, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            var bookRead = BookReads.FirstOrDefault(br => br.ProfileId == id);
+            return await Task.FromResult(bookRead);
         }
     }
 }

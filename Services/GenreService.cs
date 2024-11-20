@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.IO;
-using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
@@ -14,56 +13,31 @@ namespace MAN.Services
 
         static GenreService()
         {
-            Genres = LoadFromFile();
+            Genres = FileStorageUtility.LoadFromFile<Genre>(filePath) ?? new List<Genre>();
             nextId = Genres.Any() ? Genres.Max(g => g.Id) + 1 : 1;
         }
 
-        public static List<Genre> GetAll() => Genres;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, Genres);
+        }
 
-        public static Genre? Get(int id) => Genres.FirstOrDefault(g => g.Id == id);
-
-        public static void Add(Genre genre)
+        public static async Task AddGenreAsync(Genre genre)
         {
             genre.Id = nextId++;
             Genres.Add(genre);
-            SaveToFile();
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int id)
+        public static async Task<List<Genre>> GetAllAsync()
         {
-            var genre = Get(id);
-            if (genre is null)
-                return;
-
-            Genres.Remove(genre);
-            SaveToFile();
+            return await Task.FromResult(Genres);
         }
 
-        public static void Update(Genre genre)
+        public static async Task<Genre?> GetAsync(int id)
         {
-            var index = Genres.FindIndex(g => g.Id == genre.Id);
-            if (index == -1)
-                return;
-
-            Genres[index] = genre;
-            SaveToFile();
-        }
-
-        private static List<Genre> LoadFromFile()
-        {
-            if (!File.Exists(filePath))
-            {
-                return new List<Genre>();
-            }
-
-            var json = File.ReadAllText(filePath);
-            return JsonSerializer.Deserialize<List<Genre>>(json) ?? new List<Genre>();
-        }
-
-        private static void SaveToFile()
-        {
-            var json = JsonSerializer.Serialize(Genres, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(filePath, json);
+            var genre = Genres.FirstOrDefault(g => g.Id == id);
+            return await Task.FromResult(genre);
         }
     }
 }
