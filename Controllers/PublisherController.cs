@@ -9,47 +9,42 @@ namespace MAN.Controllers
     [Route("[controller]")]
     public class PublisherController : ControllerBase
     {
-        public PublisherController()
-        {
-        }
-
-        [HttpGet]
-        public ActionResult<List<Publisher>> GetAll() => PublisherService.GetAll();
-
-        [HttpGet("{id}")]
-        public ActionResult<Publisher> Get(int id)
-        {
-            var publisher = PublisherService.Get(id);
-            if (publisher is null)
-                return NotFound();
-            return publisher;
-        }
-
-        [HttpPost]
-        public IActionResult Create(Publisher publisher)
-        {
-            PublisherService.Add(publisher);
-            return CreatedAtAction(nameof(Get), new { id = publisher.Id }, publisher);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, Publisher publisher)
-        {
-            var existingPublisher = PublisherService.Get(id);
-            if (existingPublisher is null)
-                return NotFound();
-            PublisherService.Update(publisher);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var publisher = PublisherService.Get(id);
-            if (publisher is null)
-                return NotFound();
-            PublisherService.Delete(id);
-            return NoContent();
-        }
+        private readonly PublisherService _publisherService;
+    public PublisherController(PublisherService publisherService){
+        _publisherService = publisherService;
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAll(){
+        var publisher = await _publisherService.GetAllAsync();
+        return Ok(publisher);
+    }
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Publisher>> Get(int id){
+        var publisher = await _publisherService.GetAsyncById(id);
+        if (publisher is null)
+            return NotFound();
+        return publisher;
+    }
+    [HttpPost]
+    public async Task<IActionResult> Create(Publisher publisher){
+        await _publisherService.AddAsync(publisher);
+        return CreatedAtAction(nameof(Get), new { id = publisher.Id}, publisher);
+    }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, Publisher publisher){
+        var existingPublisher = await _publisherService.GetAsyncById(id);
+        if(existingPublisher is null)
+            return NotFound();
+        await _publisherService.UpdateAsync(publisher);
+        return NoContent();
+    }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id){
+        var Publisher = _publisherService.GetAsyncById(id);
+        if (Publisher is null)
+            return NotFound();
+        await _publisherService.DeleteAsync(id);
+        return NoContent();
+    }
     }
 }
