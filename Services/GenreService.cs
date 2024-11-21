@@ -1,37 +1,38 @@
 using System.Collections.Specialized;
 using MAN.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Services;
 
-public static class GenreService{
-    static List<Genre> Genres {get;}
-    static int nextId = 4;
-    static GenreService(){
-        Genres = new List<Genre>
-        {
-            new Genre { Id = 1, GenreName = "Horror"},
-            new Genre { Id = 2, GenreName = "Comedy"},
-            new Genre { Id = 3, GenreName = "Thriller"}
-        };
-    }
+public class GenreService{
 
-    public static List<Genre> GetAll() => Genres;
-
-    public static Genre? Get(int id) => Genres.FirstOrDefault(a => a.Id == id);
-    public static void Add(Genre genre){
-        genre.Id = nextId++;
-        Genres.Add(genre);
+    public async Task<List<Genre>> GetAllAsync(){
+        using ApplicationDbContext context = new();
+        return await context.Genres.ToListAsync();
     }
-    public static void Delete(int id){
-        var genre = Get(id);
-        if(genre is null)
-            return;
-        Genres.Remove(genre);
+    public async Task<Genre?> GetAsyncById(int id){
+        using ApplicationDbContext context = new();
+        return await context.Genres.FindAsync(id);;
     }
-    public static void Update(Genre genre){
-        var index = Genres.FindIndex(a => a.Id == genre.Id);
-        if(index == -1)
+    public async Task<Genre> Add(Genre genre){
+        using ApplicationDbContext context = new();
+        EntityEntry<Genre> entry = await context.Genres.AddAsync(genre);
+        await context.SaveChangesAsync();
+        return entry.Entity;
+    }
+    public async Task Delete(int id){
+        using ApplicationDbContext context = new();
+        var genre = await context.Genres.FindAsync(id);
+        if (genre is null){
             return;
-        Genres[index] = genre;
+        }
+        context.Genres.Remove(genre);
+        await context.SaveChangesAsync();
+    }
+    public async Task Update(Genre genre){
+        using ApplicationDbContext context = new();
+        context.Genres.Update(genre);
+        await context.SaveChangesAsync();
     }
 }
