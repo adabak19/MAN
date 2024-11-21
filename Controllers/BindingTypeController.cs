@@ -9,50 +9,51 @@ namespace MAN.Controllers
     [Route("[controller]")]
     public class BindingTypeController : ControllerBase
     {
-        public BindingTypeController()
-        {
+        private readonly BindingTypeService _bindingTypeService;
+
+        public BindingTypeController(BindingTypeService bindingTypeService){
+            _bindingTypeService = bindingTypeService;
         }
 
         [HttpGet]
-        public ActionResult<List<BindingType>> GetAll() => BindingTypeService.GetAll();
+        public async Task<IActionResult> GetAll(){
+            var bindingTypes = await _bindingTypeService.GetAllAsync();
+            return Ok(bindingTypes);
+        }
 
         [HttpGet("{id}")]
-        public ActionResult<BindingType> Get(int id)
+        public async Task<ActionResult<BindingType>> Get(int id)
         {
-            var bindingType = BindingTypeService.Get(id);
+            var bindingType = await _bindingTypeService.GetAsyncById(id);
             if (bindingType is null)
                 return NotFound();
             return bindingType;
         }
 
         [HttpPost]
-        public IActionResult Create(BindingType bindingType)
+        public async Task<IActionResult> Create(BindingType bindingType)
         {
-            BindingTypeService.Add(bindingType);
+            await _bindingTypeService.Add(bindingType);
             return CreatedAtAction(nameof(Get), new { id = bindingType.Id }, bindingType);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, BindingType bindingType)
+        public async Task<IActionResult> Update(int id, BindingType bindingType)
         {
-            if (id != bindingType.Id)
-                return BadRequest("BindingType ID mismatch");
-
-            var existingBindingType = BindingTypeService.Get(id);
+            var existingBindingType = await _bindingTypeService.GetAsyncById(id);
             if (existingBindingType is null)
                 return NotFound();
-
-            BindingTypeService.Update(bindingType);
+            await _bindingTypeService.Update(bindingType);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var bindingType = BindingTypeService.Get(id);
+            var bindingType = await _bindingTypeService.GetAsyncById(id);
             if (bindingType is null)
                 return NotFound();
-            BindingTypeService.Delete(id);
+            await _bindingTypeService.Delete(id);
             return NoContent();
         }
     }

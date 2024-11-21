@@ -8,37 +8,41 @@ namespace MAN.Controllers;
 [Route("[controller]")]
 public class AuthorController : ControllerBase
 {
-    public AuthorController(){
-
+    private readonly AuthorService _authorService;
+    public AuthorController(AuthorService authorService){
+        _authorService = authorService;
     }
     [HttpGet]
-    public ActionResult<List<Author>> GetAll() => AuthorService.GetAll();
+    public async Task<IActionResult> GetAll(){
+        var authors = await _authorService.GetAllAsync();
+        return Ok(authors);
+    }
     [HttpGet("{id}")]
-    public ActionResult<Author> Get(int id){
-        var author = AuthorService.Get(id);
+    public async Task<ActionResult<Author>> Get(int id){
+        var author = await _authorService.GetAsyncById(id);
         if (author is null)
             return NotFound();
         return author;
     }
     [HttpPost]
-    public IActionResult Create(Author author){
-        AuthorService.Add(author);
+    public async Task<IActionResult> Create(Author author){
+        await _authorService.Add(author);
         return CreatedAtAction(nameof(Get), new { id = author.Id}, author);
     }
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Author author){
-        var existingAuthor = AuthorService.Get(id);
+    public async Task<IActionResult> Update(int id, Author author){
+        var existingAuthor = await _authorService.GetAsyncById(id);
         if(existingAuthor is null)
             return NotFound();
-        AuthorService.Update(author);
+        await _authorService.Update(author);
         return NoContent();
     }
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id){
-        var author = AuthorService.Get(id);
+    public async Task<IActionResult> Delete(int id){
+        var author = _authorService.GetAsyncById(id);
         if (author is null)
             return NotFound();
-        AuthorService.Delete(id);
+        await _authorService.Delete(id);
         return NoContent();
     }
 }
