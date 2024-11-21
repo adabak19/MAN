@@ -1,43 +1,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace MAN.Services
-{
-    public static class GenreService
-    {
-        static List<Genre> Genres { get; }
-        static int nextId;
-        static string filePath = "genres.json";
+namespace MAN.Services;
 
-        static GenreService()
-        {
-            Genres = FileStorageUtility.LoadFromFile<Genre>(filePath) ?? new List<Genre>();
-            nextId = Genres.Any() ? Genres.Max(g => g.Id) + 1 : 1;
+public class GenreService{
+
+    public async Task<List<Genre>> GetAllAsync(){
+        using ApplicationDbContext context = new();
+        return await context.Genres.ToListAsync();
+    }
+    public async Task<Genre?> GetAsyncById(int id){
+        using ApplicationDbContext context = new();
+        return await context.Genres.FindAsync(id);;
+    }
+    public async Task<Genre> Add(Genre genre){
+        using ApplicationDbContext context = new();
+        EntityEntry<Genre> entry = await context.Genres.AddAsync(genre);
+        await context.SaveChangesAsync();
+        return entry.Entity;
+    }
+    public async Task Delete(int id){
+        using ApplicationDbContext context = new();
+        var genre = await context.Genres.FindAsync(id);
+        if (genre is null){
+            return;
         }
-
-        public static async Task SaveToFileAsync()
-        {
-            await FileStorageUtility.SaveToFileAsync(filePath, Genres);
-        }
-
-        public static async Task AddGenreAsync(Genre genre)
-        {
-            genre.Id = nextId++;
-            Genres.Add(genre);
-            await SaveToFileAsync();
-        }
-
-        public static async Task<List<Genre>> GetAllAsync()
-        {
-            return await Task.FromResult(Genres);
-        }
-
-        public static async Task<Genre?> GetAsync(int id)
-        {
-            var genre = Genres.FirstOrDefault(g => g.Id == id);
-            return await Task.FromResult(genre);
-        }
+        context.Genres.Remove(genre);
+        await context.SaveChangesAsync();
+    }
+    public async Task Update(Genre genre){
+        using ApplicationDbContext context = new();
+        context.Genres.Update(genre);
+        await context.SaveChangesAsync();
     }
 }
