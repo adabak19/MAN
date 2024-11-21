@@ -9,17 +9,22 @@ namespace MAN.Controllers
     [Route("[controller]")]
     public class CoAuthorController : ControllerBase
     {
-        public CoAuthorController()
+        private readonly CoAuthorService _coAuthorService;
+        public CoAuthorController(CoAuthorService coAuthorService)
         {
+            _coAuthorService = coAuthorService;
         }
 
         [HttpGet]
-        public ActionResult<List<CoAuthors>> GetAll() => CoAuthorService.GetAll();
+        public async Task<IActionResult> GetAll(){
+            var coAuthor = await _coAuthorService.GetAllAsync();
+            return Ok(coAuthor);
+        }
 
         [HttpGet("{bookId}/{authorId}")]
-        public ActionResult<CoAuthors> Get(int bookId, int authorId)
+        public async Task<ActionResult<CoAuthors>> Get(int bookId, int authorId)
         {
-            var coAuthor = CoAuthorService.Get(bookId, authorId);
+            var coAuthor = await _coAuthorService.GetAsyncById(bookId, authorId);
 
             if (coAuthor == null)
                 return NotFound();
@@ -28,36 +33,32 @@ namespace MAN.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(CoAuthors coAuthor)
+        public async Task<IActionResult> Create(CoAuthors coAuthor)
         {
-            CoAuthorService.Add(coAuthor);
+            await _coAuthorService.Add(coAuthor);
             return CreatedAtAction(nameof(Get), new { bookId = coAuthor.BookId, authorId = coAuthor.AuthorId }, coAuthor);
         }
 
         [HttpPut("{bookId}/{authorId}")]
-        public IActionResult Update(int bookId, int authorId, CoAuthors coAuthor)
+        public async Task<IActionResult> Update(int bookId, int authorId, CoAuthors coAuthor)
         {
-            if (bookId != coAuthor.BookId || authorId != coAuthor.AuthorId)
-                return BadRequest();
-
-            var existingCoAuthor = CoAuthorService.Get(bookId, authorId);
+            var existingCoAuthor = await _coAuthorService.GetAsyncById(bookId, authorId);
             if (existingCoAuthor is null)
                 return NotFound();
 
-            CoAuthorService.Update(coAuthor);
-
+            await _coAuthorService.Update(coAuthor);
             return NoContent();
         }
 
         [HttpDelete("{bookId}/{authorId}")]
-        public IActionResult Delete(int bookId, int authorId)
+        public async Task<IActionResult> Delete(int bookId, int authorId)
         {
-            var coAuthor = CoAuthorService.Get(bookId, authorId);
+            var coAuthor = await _coAuthorService.GetAsyncById(bookId, authorId);
 
             if (coAuthor is null)
                 return NotFound();
 
-            CoAuthorService.Delete(bookId, authorId);
+            await _coAuthorService.Delete(bookId, authorId);
 
             return NoContent();
         }
