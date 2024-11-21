@@ -1,43 +1,47 @@
 using System.Collections.Generic;
-using System.Linq;
 using MAN.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Services
 {
-    public static class CoAuthorService
+    public class CoAuthorService
     {
-        static List<CoAuthors> CoAuthorsList { get; }
-        static int nextId;
-        static string filePath = "coauthors.json";
 
-        static CoAuthorService()
-        {
-            CoAuthorsList = FileStorageUtility.LoadFromFile<CoAuthors>(filePath) ?? new List<CoAuthors>();
-            nextId = CoAuthorsList.Any() ? CoAuthorsList.Max(ca => ca.BookId) + 1 : 1;
+        public async Task<List<CoAuthors>> GetAllAsync(){
+            using ApplicationDbContext context = new();
+            return await context.CoAuthors.ToListAsync();
         }
 
-        public static async Task SaveToFileAsync()
-        {
-            await FileStorageUtility.SaveToFileAsync(filePath, CoAuthorsList);
+        public async Task<CoAuthors?> GetAsyncById(int bookId, int authorId){
+            using ApplicationDbContext context = new();
+            CoAuthors? coAuthor = await context.CoAuthors.FirstOrDefaultAsync(ca => ca.BookId == bookId && ca.AuthorId == authorId);
+            return coAuthor;
         }
 
-        public static async Task AddCoAuthorAsync(CoAuthors coAuthor)
+        public async Task<CoAuthors> Add(CoAuthors coAuthor)
         {
-            coAuthor.BookId = nextId++;
-            CoAuthorsList.Add(coAuthor);
-            await SaveToFileAsync();
+            using ApplicationDbContext context = new();
+            EntityEntry<CoAuthors> entry = await context.CoAuthors.AddAsync(coAuthor);
+            await context.SaveChangesAsync();
+            return entry.Entity;
         }
 
-        public static async Task<List<CoAuthors>> GetAllAsync()
+        public async Task Delete(int bookId, int authorId)
         {
-            return await Task.FromResult(CoAuthorsList);
+            using ApplicationDbContext context = new();
+            var coAuthor = await context.CoAuthors.FirstOrDefaultAsync(ca => ca.BookId == bookId && ca.AuthorId == authorId);
+            if (coAuthor is null)
+                return;
+            context.CoAuthors.Remove(coAuthor);
+            await context.SaveChangesAsync();
         }
 
-        public static async Task<CoAuthors?> GetAsync(int id)
+        public async Task Update(CoAuthors coAuthor)
         {
-            var coAuthor = CoAuthorsList.FirstOrDefault(ca => ca.BookId == id);
-            return await Task.FromResult(coAuthor);
+            using ApplicationDbContext context = new();
+            context.CoAuthors.Update(coAuthor);
+            await context.SaveChangesAsync();
         }
     }
 }
