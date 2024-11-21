@@ -1,43 +1,46 @@
 using System.Collections.Generic;
-using System.Linq;
 using MAN.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Services
 {
-    public static class BindingTypeService
+    public class BindingTypeService
     {
-        static List<BindingType> BindingTypes { get; }
-        static int nextId;
-        static string filePath = "bindingtypes.json";
-
-        static BindingTypeService()
-        {
-            BindingTypes = FileStorageUtility.LoadFromFile<BindingType>(filePath) ?? new List<BindingType>();
-            nextId = BindingTypes.Any() ? BindingTypes.Max(bt => bt.Id) + 1 : 1;
+        public async Task<List<BindingType>> GetAllAsync(){
+            using ApplicationDbContext context = new();
+            return await context.BindingTypes.ToListAsync();
         }
 
-        public static async Task SaveToFileAsync()
-        {
-            await FileStorageUtility.SaveToFileAsync(filePath, BindingTypes);
+        public async Task<BindingType?> GetAsyncById(int id){
+            using ApplicationDbContext context = new();
+            BindingType? bindingType = await context.BindingTypes.FindAsync(id);
+            return bindingType;
         }
 
-        public static async Task AddBindingTypeAsync(BindingType bindingType)
+        public async Task<BindingType> Add(BindingType bindingType)
         {
-            bindingType.Id = nextId++;
-            BindingTypes.Add(bindingType);
-            await SaveToFileAsync();
+            using ApplicationDbContext context = new();
+            EntityEntry<BindingType> entry = await context.BindingTypes.AddAsync(bindingType);
+            await context.SaveChangesAsync();
+            return entry.Entity;
         }
 
-        public static async Task<List<BindingType>> GetAllAsync()
+        public async Task Delete(int id)
         {
-            return await Task.FromResult(BindingTypes);
+            using ApplicationDbContext context = new();
+            var bindingType = await context.BindingTypes.FindAsync(id);
+            if (bindingType is null)
+                return;
+            context.BindingTypes.Remove(bindingType);
+            await context.SaveChangesAsync();
         }
 
-        public static async Task<BindingType?> GetAsync(int id)
+        public async Task Update(BindingType bindingType)
         {
-            var bindingType = BindingTypes.FirstOrDefault(bt => bt.Id == id);
-            return await Task.FromResult(bindingType);
+            using ApplicationDbContext context = new();
+            context.BindingTypes.Update(bindingType);
+            await context.SaveChangesAsync();
         }
     }
 }

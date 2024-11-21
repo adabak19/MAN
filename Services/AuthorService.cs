@@ -1,47 +1,39 @@
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Specialized;
 using MAN.Models;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace MAN.Services
-{
-    public static class AuthorService
-    {
-        static List<Author> Authors { get; }
-        static int nextId;
-        static string filePath = "authors.json";
+namespace MAN.Services;
 
-        static AuthorService()
-        {
-            Authors = FileStorageUtility.LoadFromFile<Author>(filePath) ?? new List<Author>();
-            nextId = Authors.Any() ? Authors.Max(a => a.Id) + 1 : 1;
-        }
+public class AuthorService{
 
-        public static async Task SaveToFileAsync()
-        {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            var json = JsonSerializer.Serialize(Authors, options);
-            await File.WriteAllTextAsync(filePath, json);
-        }
+    public async Task<List<Author>> GetAllAsync(){
+        using ApplicationDbContext context = new();
+        return await context.Authors.ToListAsync();
+    }
 
-        public static async Task AddAuthorAsync(Author author)
-        {
-            author.Id = nextId++;
-            Authors.Add(author);
-            await SaveToFileAsync();
-        }
-
-        public static async Task<List<Author>> GetAllAuthorsAsync()
-        {
-            return await Task.FromResult(Authors);
-        }
-
-        public static async Task<Author?> GetAuthorByIdAsync(int id)
-        {
-            var author = Authors.FirstOrDefault(a => a.Id == id);
-            return await Task.FromResult(author);
-        }
+    public async Task<Author?> GetAsyncById(int id){
+        using ApplicationDbContext context = new();
+        Author? author = await context.Authors.FindAsync(id);
+        return author;
+    }
+    public async Task<Author> Add(Author author){
+        using ApplicationDbContext context = new();
+        EntityEntry<Author> entry = await context.Authors.AddAsync(author);
+        await context.SaveChangesAsync();
+        return entry.Entity;
+    }
+    public async Task Delete(int id){
+        using ApplicationDbContext context = new();
+        var author = await context.Authors.FindAsync(id);
+        if(author is null)
+            return;
+        context.Authors.Remove(author);
+        await context.SaveChangesAsync();
+    }
+    public async Task Update(Author author){
+        using ApplicationDbContext context = new();
+        context.Authors.Update(author);
+        await context.SaveChangesAsync();
     }
 }
