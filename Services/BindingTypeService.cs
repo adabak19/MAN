@@ -1,47 +1,43 @@
 using System.Collections.Generic;
+using System.Linq;
 using MAN.Models;
+using System.Threading.Tasks;
 
 namespace MAN.Services
 {
     public static class BindingTypeService
     {
         static List<BindingType> BindingTypes { get; }
-        static int nextId = 1;
+        static int nextId;
+        static string filePath = "bindingtypes.json";
 
         static BindingTypeService()
         {
-            BindingTypes = new List<BindingType>
-            {
-                new BindingType { Id = 1, Type = "Hardcover" },
-                new BindingType { Id = 2, Type = "Paperback" },
-                new BindingType { Id = 3, Type = "E-book" }
-            };
+            BindingTypes = FileStorageUtility.LoadFromFile<BindingType>(filePath) ?? new List<BindingType>();
+            nextId = BindingTypes.Any() ? BindingTypes.Max(bt => bt.Id) + 1 : 1;
         }
 
-        public static List<BindingType> GetAll() => BindingTypes;
+        public static async Task SaveToFileAsync()
+        {
+            await FileStorageUtility.SaveToFileAsync(filePath, BindingTypes);
+        }
 
-        public static BindingType? Get(int id) => BindingTypes.FirstOrDefault(b => b.Id == id);
-
-        public static void Add(BindingType bindingType)
+        public static async Task AddBindingTypeAsync(BindingType bindingType)
         {
             bindingType.Id = nextId++;
             BindingTypes.Add(bindingType);
+            await SaveToFileAsync();
         }
 
-        public static void Delete(int id)
+        public static async Task<List<BindingType>> GetAllAsync()
         {
-            var bindingType = Get(id);
-            if (bindingType is null)
-                return;
-            BindingTypes.Remove(bindingType);
+            return await Task.FromResult(BindingTypes);
         }
 
-        public static void Update(BindingType bindingType)
+        public static async Task<BindingType?> GetAsync(int id)
         {
-            var index = BindingTypes.FindIndex(b => b.Id == bindingType.Id);
-            if (index == -1)
-                return;
-            BindingTypes[index] = bindingType;
+            var bindingType = BindingTypes.FirstOrDefault(bt => bt.Id == id);
+            return await Task.FromResult(bindingType);
         }
     }
 }

@@ -20,11 +20,11 @@ Content-Type: application/json
 }
 
 ###
-PUT {{MAN_HostAddress}}/book/4
+PUT {{MAN_HostAddress}}/book/1
 Content-Type: application/json
 
   {
-    "id": 4,
+    "id": 1,
     "isbn": 127,
     "title": "chuj1",
     "author": "dupa2",
@@ -37,4 +37,42 @@ DELETE {{MAN_HostAddress}}/book/4
 
 ###
 GET {{MAN_HostAddress}}/book/1
+Accept: application/json
+
+###
+# Get all authors
+GET {{MAN_HostAddress}}/author
+Accept: application/json
+
+###
+# Get an author by ID
+GET {{MAN_HostAddress}}/author/1
+Accept: application/json
+
+###
+# Add a new author
+POST {{MAN_HostAddress}}/author
+Content-Type: application/json
+
+{
+  
+    "firstName": "John",
+    "middleName": "A.",
+    "lastName": "Doe"
+}
+
+###
+# Add another new author
+POST {{MAN_HostAddress}}/author
+Content-Type: application/json
+
+{
+    "firstName": "Jane",
+    "middleName": "B.",
+    "lastName": "Smith"
+}
+
+###
+# Get the newly added author by ID
+GET {{MAN_HostAddress}}/author/2
 Accept: application/json

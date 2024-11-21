@@ -1,37 +1,47 @@
-using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Linq;
 using MAN.Models;
+using System.IO;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-namespace MAN.Services;
+namespace MAN.Services
+{
+    public static class AuthorService
+    {
+        static List<Author> Authors { get; }
+        static int nextId;
+        static string filePath = "authors.json";
 
-public static class AuthorService{
-    static List<Author> Authors {get;}
-    static int nextId = 4;
-    static AuthorService(){
-        Authors = new List<Author>
+        static AuthorService()
         {
-            new Author { Id = 1, FirstName = "John", MiddleName = "Ronald Reuel", LastName = "Tolkien"},
-            new Author { Id = 2, FirstName = "dddd", MiddleName = "eeeee", LastName = "fffff"},
-            new Author { Id = 3, FirstName = "ggggg", MiddleName = "hhhh", LastName = "jjjj" },
-        };
-    }
+            Authors = FileStorageUtility.LoadFromFile<Author>(filePath) ?? new List<Author>();
+            nextId = Authors.Any() ? Authors.Max(a => a.Id) + 1 : 1;
+        }
 
-    public static List<Author> GetAll() => Authors;
+        public static async Task SaveToFileAsync()
+        {
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var json = JsonSerializer.Serialize(Authors, options);
+            await File.WriteAllTextAsync(filePath, json);
+        }
 
-    public static Author? Get(int id) => Authors.FirstOrDefault(a => a.Id == id);
-    public static void Add(Author author){
-        author.Id = nextId++;
-        Authors.Add(author);
-    }
-    public static void Delete(int id){
-        var author = Get(id);
-        if(author is null)
-            return;
-        Authors.Remove(author);
-    }
-    public static void Update(Author author){
-        var index = Authors.FindIndex(a => a.Id == author.Id);
-        if(index == -1)
-            return;
-        Authors[index] = author;
+        public static async Task AddAuthorAsync(Author author)
+        {
+            author.Id = nextId++;
+            Authors.Add(author);
+            await SaveToFileAsync();
+        }
+
+        public static async Task<List<Author>> GetAllAuthorsAsync()
+        {
+            return await Task.FromResult(Authors);
+        }
+
+        public static async Task<Author?> GetAuthorByIdAsync(int id)
+        {
+            var author = Authors.FirstOrDefault(a => a.Id == id);
+            return await Task.FromResult(author);
+        }
     }
 }
