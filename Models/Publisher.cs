@@ -1,9 +1,12 @@
 namespace MAN.Models;
+using System.ComponentModel.DataAnnotations;
 
 public class Publisher
-{
-    public int Id {get; set;}
+    {
+        [Key]
+        public int Id { get; set; }
 
-    public string? PublisherName {get; set;}
-
-}
+        [Required]
+        [MaxLength(50)]
+        public string? PublisherName { get; set; }
+    }
