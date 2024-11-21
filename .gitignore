@@ -22,3 +22,7 @@ obj/
 # Ignore specific directories
 .vscode/
 .idea/
+
+# Ignore SQLite temporary files
+*.db-shm
+*.db-wal

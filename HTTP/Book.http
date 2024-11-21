@@ -37,5 +37,5 @@ Content-Type: application/json
 DELETE {{MAN_HostAddress}}/book/58419579
 
 ###
-GET {{MAN_HostAddress}}/book/999
+GET {{MAN_HostAddress}}/book/2
 Accept: application/json
