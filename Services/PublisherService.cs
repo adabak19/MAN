@@ -1,43 +1,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace MAN.Services
-{
-    public static class PublisherService
+namespace MAN.Services;
+    public class PublisherService
     {
-        static List<Publisher> Publishers { get; }
-        static int nextId;
-        static string filePath = "publishers.json";
+    public async Task<List<Publisher>> GetAllAsync(){
+        using ApplicationDbContext context = new();
+        return await context.Publishers.ToListAsync();
+    }
 
-        static PublisherService()
-        {
-            Publishers = FileStorageUtility.LoadFromFile<Publisher>(filePath) ?? new List<Publisher>();
-            nextId = Publishers.Any() ? Publishers.Max(p => p.Id) + 1 : 1;
+    public async Task<Publisher?> GetAsyncById(int id){
+        using ApplicationDbContext context = new();
+        return await context.Publishers.FindAsync(id);
+    }
+    public async Task<Publisher> AddAsync(Publisher publisher){
+        using ApplicationDbContext context = new();
+        EntityEntry<Publisher> entry = await context.Publishers.AddAsync(publisher);
+        await context.SaveChangesAsync();
+        return entry.Entity;
+    }
+    public async Task DeleteAsync(int id){
+        using ApplicationDbContext context = new();
+        var publisher = await context.Publishers.FindAsync(id);
+        if (publisher is null){
+            return;
         }
-
-        public static async Task SaveToFileAsync()
-        {
-            await FileStorageUtility.SaveToFileAsync(filePath, Publishers);
-        }
-
-        public static async Task AddPublisherAsync(Publisher publisher)
-        {
-            publisher.Id = nextId++;
-            Publishers.Add(publisher);
-            await SaveToFileAsync();
-        }
-
-        public static async Task<List<Publisher>> GetAllAsync()
-        {
-            return await Task.FromResult(Publishers);
-        }
-
-        public static async Task<Publisher?> GetAsync(int id)
-        {
-            var publisher = Publishers.FirstOrDefault(p => p.Id == id);
-            return await Task.FromResult(publisher);
-        }
+        context.Publishers.Remove(publisher);
+        await context.SaveChangesAsync();
+    }
+    public async Task UpdateAsync(Publisher publisher){
+        using ApplicationDbContext context = new();
+        context.Publishers.Update(publisher);
+        await context.SaveChangesAsync();
     }
 }

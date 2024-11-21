@@ -1,43 +1,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using MAN.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace MAN.Services
-{
-    public static class ProfileService
-    {
-        static List<Profile> Profiles { get; }
-        static int nextId;
-        static string filePath = "profiles.json";
+namespace MAN.Services;
 
-        static ProfileService()
-        {
-            Profiles = FileStorageUtility.LoadFromFile<Profile>(filePath) ?? new List<Profile>();
-            nextId = Profiles.Any() ? Profiles.Max(p => p.Id) + 1 : 1;
+public class ProfileService{
+    public async Task<List<Profile>> GetAllAsync(){
+        using ApplicationDbContext context = new();
+        return await context.Profiles.ToListAsync();
+    }
+
+    public async Task<Profile?> GetAsyncById(int id){
+        using ApplicationDbContext context = new();
+        return await context.Profiles.FindAsync(id);
+    }
+    public async Task<Profile> AddAsync(Profile profile){
+        using ApplicationDbContext context = new();
+        EntityEntry<Profile> entry = await context.Profiles.AddAsync(profile);
+        await context.SaveChangesAsync();
+        return entry.Entity;
+    }
+    public async Task DeleteAsync(int id){
+        using ApplicationDbContext context = new();
+        var profile = await context.Profiles.FindAsync(id);
+        if (profile is null){
+            return;
         }
-
-        public static async Task SaveToFileAsync()
-        {
-            await FileStorageUtility.SaveToFileAsync(filePath, Profiles);
-        }
-
-        public static async Task AddProfileAsync(Profile profile)
-        {
-            profile.Id = nextId++;
-            Profiles.Add(profile);
-            await SaveToFileAsync();
-        }
-
-        public static async Task<List<Profile>> GetAllAsync()
-        {
-            return await Task.FromResult(Profiles);
-        }
-
-        public static async Task<Profile?> GetAsync(int id)
-        {
-            var profile = Profiles.FirstOrDefault(p => p.Id == id);
-            return await Task.FromResult(profile);
-        }
+        context.Profiles.Remove(profile);
+        await context.SaveChangesAsync();
+    }
+    public async Task UpdateAsync(Profile profile){
+        using ApplicationDbContext context = new();
+        context.Profiles.Update(profile);
+        await context.SaveChangesAsync();
     }
 }
