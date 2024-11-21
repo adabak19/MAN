@@ -8,37 +8,41 @@ namespace MAN.Controllers;
 [Route("[controller]")]
 public class GenreController : ControllerBase
 {
-    public GenreController(){
-
+    private readonly GenreService _genreService;
+    public GenreController(GenreService genreService){
+        _genreService = genreService;
     }
     [HttpGet]
-    public ActionResult<List<Genre>> GetAll() => GenreService.GetAll();
+    public async Task<IActionResult> GetAll(){
+        var genre = await _genreService.GetAllAsync();
+        return Ok(genre);
+    }
     [HttpGet("{id}")]
-    public ActionResult<Genre> Get(int id){
-        var genre = GenreService.Get(id);
+    public async Task<ActionResult<Genre>> Get(int id){
+        var genre = await _genreService.GetAsyncById(id);
         if (genre is null)
             return NotFound();
         return genre;
     }
     [HttpPost]
-    public IActionResult Create(Genre genre){
-        GenreService.Add(genre);
+    public async Task<IActionResult> Create(Genre genre){
+        await _genreService.Add(genre);
         return CreatedAtAction(nameof(Get), new { id = genre.Id}, genre);
     }
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Genre genre){
-        var existingGenre = GenreService.Get(id);
+    public async Task<IActionResult> Update(int id, Genre genre){
+        var existingGenre = await _genreService.GetAsyncById(id);
         if(existingGenre is null)
             return NotFound();
-        GenreService.Update(genre);
+        await _genreService.Update(genre);
         return NoContent();
     }
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id){
-        var genre = GenreService.Get(id);
+    public async Task<IActionResult> Delete(int id){
+        var genre = _genreService.GetAsyncById(id);
         if (genre is null)
             return NotFound();
-        GenreService.Delete(id);
+        await _genreService.Delete(id);
         return NoContent();
     }
 }

@@ -9,55 +9,55 @@ namespace MAN.Controllers
     [Route("[controller]")]
     public class BookReadController : ControllerBase
     {
-        public BookReadController()
+        private readonly BookReadService _bookReadService;
+        public BookReadController(BookReadService bookReadService)
         {
+            _bookReadService = bookReadService;
         }
 
         [HttpGet]
-        public ActionResult<List<BookRead>> GetAll() => BookReadService.GetAll();
+        public async Task<IActionResult> GetAll(){
+            var bookReads = await _bookReadService.GetAllAsync();
+            return Ok(bookReads);
+        }
 
         [HttpGet("{profileId}/{bookId}")]
-        public ActionResult<BookRead> Get(int profileId, int bookId)
+        public async Task<ActionResult<BookRead>> Get(int profileId, int bookId)
         {
-            var bookRead = BookReadService.Get(profileId, bookId);
-
+            var bookRead = await _bookReadService.GetAsyncById(profileId, bookId);
             if (bookRead == null)
                 return NotFound();
-
             return bookRead;
         }
 
         [HttpPost]
-        public IActionResult Create(BookRead bookRead)
+        public async Task<IActionResult> Create(BookRead bookRead)
         {
-            BookReadService.Add(bookRead);
+            await _bookReadService.Add(bookRead);
             return CreatedAtAction(nameof(Get), new { profileId = bookRead.ProfileId, bookId = bookRead.BookId }, bookRead);
         }
 
         [HttpPut("{profileId}/{bookId}")]
-        public IActionResult Update(int profileId, int bookId, BookRead bookRead)
+        public async Task<IActionResult> Update(int profileId, int bookId, BookRead bookRead)
         {
-            if (profileId != bookRead.ProfileId || bookId != bookRead.BookId)
-                return BadRequest();
-
-            var existingBookRead = BookReadService.Get(profileId, bookId);
+            var existingBookRead = await _bookReadService.GetAsyncById(profileId, bookId);
             if (existingBookRead is null)
                 return NotFound();
 
-            BookReadService.Update(bookRead);
+            await _bookReadService.Update(bookRead);
 
             return NoContent();
         }
 
         [HttpDelete("{profileId}/{bookId}")]
-        public IActionResult Delete(int profileId, int bookId)
+        public async Task<IActionResult> Delete(int profileId, int bookId)
         {
-            var bookRead = BookReadService.Get(profileId, bookId);
+            var bookRead = await _bookReadService.GetAsyncById(profileId, bookId);
 
             if (bookRead is null)
                 return NotFound();
 
-            BookReadService.Delete(profileId, bookId);
+            await _bookReadService.Delete(profileId, bookId);
 
             return NoContent();
         }
