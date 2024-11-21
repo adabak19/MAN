@@ -1,9 +1,13 @@
+// using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 namespace MAN.Models;
 
 public class BindingType
-{
-    public int Id {get; set;}
-    public string? Type {get;set;}
+    {
+        [Key]
+        public int Id { get; set; }
 
-
-}
+        [Required]
+        [MaxLength(50)]
+        public string? Type { get; set; }
+    }

@@ -1,13 +1,32 @@
 namespace MAN.Models;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Book
-{
-    public int Id {get; set;}
-    public long ISBN {get;set;}
-    public string? Title {get; set;}
-    public int PageCount {get; set;}
-    public int YearPublished {get; set;}
-    public int BindingId {get;set;}
-    public int PublisherId {get; set;}
-    public int AuthorId {get; set;}
-}
+    {
+        [Key]
+        public int Id { get; set; }
+
+        [MaxLength(15)]
+        public string? ISBN { get; set; }
+
+        [Required]
+        [MaxLength(200)]
+        public string? Title { get; set; }
+
+        public int? PageCount { get; set; }
+
+        public int? YearPublished { get; set; }
+
+        [ForeignKey("BindingType")]
+        public int? BindingTypeId { get; set; }
+        public BindingType? BindingType { get; set; }
+
+        [ForeignKey("Publisher")]
+        public int? PublisherId { get; set; }
+        public Publisher? Publisher { get; set; }
+
+        [ForeignKey("Author")]
+        public int? AuthorId { get; set; }
+        public Author? Author { get; set; }
+    }
