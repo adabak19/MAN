@@ -1,43 +1,47 @@
 using System.Collections.Generic;
-using System.Linq;
 using MAN.Models;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Services
 {
-    public static class BookReadService
+    public class BookReadService
     {
-        static List<BookRead> BookReads { get; }
-        static int nextId;
-        static string filePath = "bookreads.json";
 
-        static BookReadService()
-        {
-            BookReads = FileStorageUtility.LoadFromFile<BookRead>(filePath) ?? new List<BookRead>();
-            nextId = BookReads.Any() ? BookReads.Max(br => br.ProfileId) + 1 : 1;
+        public async Task<List<BookRead>> GetAllAsync(){
+            using ApplicationDbContext context = new();
+            return await context.BookReads.ToListAsync();
         }
 
-        public static async Task SaveToFileAsync()
-        {
-            await FileStorageUtility.SaveToFileAsync(filePath, BookReads);
+        public async Task<BookRead?> GetAsyncById(int profileId, int bookId){
+            using ApplicationDbContext context = new();
+            BookRead? bookRead = await context.BookReads.FirstOrDefaultAsync(br => br.ProfileId == profileId && br.BookId == bookId);
+            return bookRead;
         }
 
-        public static async Task AddBookReadAsync(BookRead bookRead)
+        public async Task<BookRead> Add(BookRead bookRead)
         {
-            bookRead.ProfileId = nextId++;
-            BookReads.Add(bookRead);
-            await SaveToFileAsync();
+            using ApplicationDbContext context = new();
+            EntityEntry<BookRead> entry = await context.BookReads.AddAsync(bookRead);
+            await context.SaveChangesAsync();
+            return entry.Entity;
         }
 
-        public static async Task<List<BookRead>> GetAllAsync()
+        public async Task Delete(int profileId, int bookId)
         {
-            return await Task.FromResult(BookReads);
+            using ApplicationDbContext context = new();
+            var bookRead = await context.BookReads.FirstOrDefaultAsync(br => br.ProfileId == profileId && br.BookId == bookId);
+            if (bookRead is null)
+                return;
+            context.BookReads.Remove(bookRead);
+            await context.SaveChangesAsync();
         }
 
-        public static async Task<BookRead?> GetAsync(int id)
+        public async Task Update(BookRead bookRead)
         {
-            var bookRead = BookReads.FirstOrDefault(br => br.ProfileId == id);
-            return await Task.FromResult(bookRead);
+            using ApplicationDbContext context = new();
+            context.BookReads.Update(bookRead);
+            await context.SaveChangesAsync();
         }
     }
 }
