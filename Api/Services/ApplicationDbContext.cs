@@ -31,6 +31,40 @@ public partial class ApplicationDbContext : DbContext
            modelBuilder.Entity<Publisher>().HasKey(k => k.Id);
            modelBuilder.Entity<Book>().Property(b => b.Id).ValueGeneratedOnAdd();
            OnModelCreatingPartial(modelBuilder);
-       }
+       
+
+ 
+
+        // Configure many-to-many relationship between Book and Genre
+        modelBuilder.Entity<BookGenre>()
+            .HasOne(bg => bg.Book)
+            .WithMany(b => b.BookGenres)
+            .HasForeignKey(bg => bg.BookId);
+
+        modelBuilder.Entity<BookGenre>()
+            .HasOne(bg => bg.Genre)
+            .WithMany(g => g.BookGenres)
+            .HasForeignKey(bg => bg.GenreId);
+
+        // Configure optional properties and constraints
+        modelBuilder.Entity<Book>()
+            .Property(b => b.ISBN)
+            .HasMaxLength(15);
+
+        modelBuilder.Entity<Book>()
+            .Property(b => b.Title)
+            .IsRequired()
+            .HasMaxLength(200);
+
+        modelBuilder.Entity<Genre>()
+            .Property(g => g.GenreName)
+            .IsRequired()
+            .HasMaxLength(50);
+
+        // Call partial method for additional configurations
+        OnModelCreatingPartial(modelBuilder);
+    }
+
+
        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

@@ -29,4 +29,7 @@ public class Book
         [ForeignKey("Author")]
         public int? AuthorId { get; set; }
         public Author? Author { get; set; }
+    
+     // Navigation property for many-to-many relationship
+    public ICollection<BookGenre>? BookGenres { get; set; }
     }

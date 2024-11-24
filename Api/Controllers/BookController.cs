@@ -46,4 +46,16 @@ public class BookController : ControllerBase
         await _bookService.Delete(id);
         return NoContent();
     }
+
+ // Search books by title, author, or genre
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] string? title, [FromQuery] string? author, [FromQuery] string? genre)
+    {
+        var books = await _bookService.SearchBooksAsync(title, author, genre);
+        return Ok(books);
+    }
+
+
+
+
 }

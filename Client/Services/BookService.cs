@@ -44,5 +44,29 @@ namespace MAN.Client.Services
             var response = await _httpClient.PutAsJsonAsync($"api/book/{book.Id}", book);
             response.EnsureSuccessStatusCode();
         }
+
+// Search Books Implementation
+        public async Task<IEnumerable<Book>> SearchBooksAsync(string? title, string? author, string? genre)
+        {
+            var query = _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.BookGenres)
+                .ThenInclude(bg => bg.Genre)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(title))
+                query = query.Where(b => b.Title.Contains(title));
+
+            if (!string.IsNullOrWhiteSpace(author))
+                query = query.Where(b => b.Author.FirstName.Contains(author) || b.Author.LastName.Contains(author));
+
+            if (!string.IsNullOrWhiteSpace(genre))
+                query = query.Where(b => b.BookGenres.Any(bg => bg.Genre.GenreName.Contains(genre)));
+
+            return await query.ToListAsync();
+        }
+
+
+
     }
 }
