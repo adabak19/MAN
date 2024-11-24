@@ -1,6 +1,6 @@
 // using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-namespace LibraryManagement.Shared.Models;
+namespace MAN.Shared.Models;
 
 public class BindingType
     {

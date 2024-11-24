@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using LibraryManagement.Shared.Models;
+using MAN.Shared.Models;
 namespace MAN.Api.Services;
 
 public partial class ApplicationDbContext : DbContext
@@ -14,6 +14,7 @@ public partial class ApplicationDbContext : DbContext
     public DbSet<Genre> Genres => Set<Genre>();
     public DbSet<Profile> Profiles => Set<Profile>();
     public DbSet<Publisher> Publishers => Set<Publisher>();
+    public DbSet<BookRented> BookRented => Set<BookRented>();
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source = library.db");
@@ -25,6 +26,7 @@ public partial class ApplicationDbContext : DbContext
            modelBuilder.Entity<BindingType>().HasKey(k => k.Id);
            modelBuilder.Entity<BookGenre>().HasKey(k => new {k.GenreId, k.BookId});
            modelBuilder.Entity<BookRead>().HasKey(k => new {k.BookId, k.ProfileId});
+           modelBuilder.Entity<BookRented>().HasKey(k => new {k.BookId, k.ProfileId});
            modelBuilder.Entity<CoAuthors>().HasKey(k => new {k.BookId, k.AuthorId});
            modelBuilder.Entity<Genre>().HasKey(k => k.Id);
            modelBuilder.Entity<Profile>().HasKey(k => k.Id);
@@ -32,5 +34,5 @@ public partial class ApplicationDbContext : DbContext
            modelBuilder.Entity<Book>().Property(b => b.Id).ValueGeneratedOnAdd();
            OnModelCreatingPartial(modelBuilder);
        }
-       partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

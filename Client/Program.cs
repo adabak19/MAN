@@ -1,5 +1,5 @@
-using LibraryManagement.Shared.Models;
-using LibraryManagement.Shared.Interfaces;
+using MAN.Shared.Models;
+using MAN.Shared.Interfaces;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Client;

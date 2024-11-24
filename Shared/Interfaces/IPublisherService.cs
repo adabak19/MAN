@@ -1,5 +1,5 @@
-using LibraryManagement.Shared.Models;
-namespace LibraryManagement.Shared.Interfaces;
+using MAN.Shared.Models;
+namespace MAN.Shared.Interfaces;
 public interface IPublisherService
 {
     Task<List<Publisher>> GetAllAsync();

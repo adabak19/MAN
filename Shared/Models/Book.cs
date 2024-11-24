@@ -1,4 +1,4 @@
-namespace LibraryManagement.Shared.Models;
+namespace MAN.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

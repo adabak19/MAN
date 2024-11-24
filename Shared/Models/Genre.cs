@@ -1,12 +1,12 @@
-namespace LibraryManagement.Shared.Models;
+namespace MAN.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 
-public class Publisher
+public class Genre
     {
         [Key]
         public int Id { get; set; }
 
         [Required]
         [MaxLength(50)]
-        public string? PublisherName { get; set; }
+        public string? GenreName { get; set; }
     }

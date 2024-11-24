@@ -1,5 +1,5 @@
-using LibraryManagement.Shared.Interfaces;
-using LibraryManagement.Shared.Models;
+using MAN.Shared.Interfaces;
+using MAN.Shared.Models;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Collections.Generic;
