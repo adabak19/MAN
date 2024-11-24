@@ -1,6 +1,6 @@
-using LibraryManagement.Shared.Models;
+using MAN.Shared.Models;
 using MAN.Api.Services;
-using LibraryManagement.Shared.Interfaces;
+using MAN.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MAN.Api.Controllers;

@@ -1,6 +1,6 @@
 using System.Collections.Specialized;
-using LibraryManagement.Shared.Models;
-using LibraryManagement.Shared.Interfaces;
+using MAN.Shared.Models;
+using MAN.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 

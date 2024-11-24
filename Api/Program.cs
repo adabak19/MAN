@@ -1,6 +1,6 @@
 using MAN.Api.Services;
-using LibraryManagement.Shared.Models;
-using LibraryManagement.Shared.Interfaces;
+using MAN.Shared.Models;
+using MAN.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +25,7 @@ builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<IBindingTypeService, BindingTypeService>();
 builder.Services.AddScoped<IBookGenreService, BookGenreService>();
 builder.Services.AddScoped<IBookReadService, BookReadService>();
+builder.Services.AddScoped<IBookRentedService, BookRentedService>();
 builder.Services.AddScoped<ICoAuthorService, CoAuthorService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
 builder.Services.AddScoped<IPublisherService, PublisherService>();

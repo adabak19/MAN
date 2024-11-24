@@ -1,0 +1,41 @@
+@MAN_HostAddress = https://localhost:7216/api
+
+GET {{MAN_HostAddress}}/profile
+Accept: application/json
+
+###
+POST {{MAN_HostAddress}}/book
+Content-Type: application/json
+
+{
+    "isbn": "1243242",
+    "title": "Book",
+    "pageCount": 120,
+    "yearPublished": 1929,
+    "bindingTypeId": 3,
+    "publisherId": 2,
+    "authorId": 3
+}
+
+###
+PUT {{MAN_HostAddress}}/book/
+Content-Type: application/json
+
+  {
+    "id": 58419579,
+    "isbn": "1243241",
+    "title": "Book2",
+    "pageCount": 120,
+    "yearPublished": 1929,
+    "bindingTypeId": 3,
+    "publisherId": 2,
+    "authorId": 3
+  }
+
+###
+
+DELETE {{MAN_HostAddress}}/book/58419579
+
+###
+GET {{MAN_HostAddress}}/book/2
+Accept: application/json
