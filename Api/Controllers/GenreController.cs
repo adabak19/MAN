@@ -1,15 +1,16 @@
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
 using MAN.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Shared.Interfaces;
 
 namespace MAN.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class GenreController : ControllerBase
 {
-    private readonly GenreService _genreService;
-    public GenreController(GenreService genreService){
+    private readonly IGenreService _genreService;
+    public GenreController(IGenreService genreService){
         _genreService = genreService;
     }
     [HttpGet]

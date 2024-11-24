@@ -1,11 +1,12 @@
 using System.Collections.Generic;
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
+using LibraryManagement.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Api.Services
 {
-    public class BookReadService
+    public class BookReadService : IBookReadService
     {
 
         public async Task<List<BookRead>> GetAllAsync(){

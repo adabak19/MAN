@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
+using LibraryManagement.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Api.Services;
 
-public class ProfileService{
+public class ProfileService : IProfileService{
     public async Task<List<Profile>> GetAllAsync(){
         using ApplicationDbContext context = new();
         return await context.Profiles.ToListAsync();

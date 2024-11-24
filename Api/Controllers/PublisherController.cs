@@ -1,16 +1,17 @@
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
 using MAN.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Shared.Interfaces;
 
 
 namespace MAN.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PublisherController : ControllerBase
     {
-        private readonly PublisherService _publisherService;
-    public PublisherController(PublisherService publisherService){
+        private readonly IPublisherService _publisherService;
+    public PublisherController(IPublisherService publisherService){
         _publisherService = publisherService;
     }
     [HttpGet]

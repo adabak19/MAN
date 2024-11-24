@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MAN.Api.Migrations
+namespace Library.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -17,7 +17,7 @@ namespace MAN.Api.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
 
-            modelBuilder.Entity("MAN.Models.Author", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Author", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("Authors");
                 });
 
-            modelBuilder.Entity("MAN.Models.BindingType", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.BindingType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("BindingTypes");
                 });
 
-            modelBuilder.Entity("MAN.Models.Book", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Book", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +107,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("Books");
                 });
 
-            modelBuilder.Entity("MAN.Models.BookGenre", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.BookGenre", b =>
                 {
                     b.Property<int>("GenreId")
                         .HasColumnType("INTEGER");
@@ -122,7 +122,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("BookGenres");
                 });
 
-            modelBuilder.Entity("MAN.Models.BookRead", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.BookRead", b =>
                 {
                     b.Property<int>("BookId")
                         .HasColumnType("INTEGER");
@@ -150,7 +150,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("BookReads");
                 });
 
-            modelBuilder.Entity("MAN.Models.CoAuthors", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.CoAuthors", b =>
                 {
                     b.Property<int>("BookId")
                         .HasColumnType("INTEGER");
@@ -163,7 +163,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("CoAuthors");
                 });
 
-            modelBuilder.Entity("MAN.Models.Genre", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Genre", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -179,7 +179,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("MAN.Models.Profile", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Profile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +204,7 @@ namespace MAN.Api.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("MAN.Models.Publisher", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Publisher", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -220,24 +220,24 @@ namespace MAN.Api.Migrations
                     b.ToTable("Publishers");
                 });
 
-            modelBuilder.Entity("MAN.Models.Author", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Author", b =>
                 {
-                    b.HasOne("MAN.Models.CoAuthors", null)
+                    b.HasOne("LibraryManagement.Shared.Models.CoAuthors", null)
                         .WithMany("Author")
                         .HasForeignKey("CoAuthorsBookId", "CoAuthorsAuthorId");
                 });
 
-            modelBuilder.Entity("MAN.Models.Book", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.Book", b =>
                 {
-                    b.HasOne("MAN.Models.Author", "Author")
+                    b.HasOne("LibraryManagement.Shared.Models.Author", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("MAN.Models.BindingType", "BindingType")
+                    b.HasOne("LibraryManagement.Shared.Models.BindingType", "BindingType")
                         .WithMany()
                         .HasForeignKey("BindingTypeId");
 
-                    b.HasOne("MAN.Models.Publisher", "Publisher")
+                    b.HasOne("LibraryManagement.Shared.Models.Publisher", "Publisher")
                         .WithMany()
                         .HasForeignKey("PublisherId");
 
@@ -248,15 +248,15 @@ namespace MAN.Api.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("MAN.Models.BookGenre", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.BookGenre", b =>
                 {
-                    b.HasOne("MAN.Models.Book", "Book")
+                    b.HasOne("LibraryManagement.Shared.Models.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MAN.Models.Genre", "Genre")
+                    b.HasOne("LibraryManagement.Shared.Models.Genre", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -267,15 +267,15 @@ namespace MAN.Api.Migrations
                     b.Navigation("Genre");
                 });
 
-            modelBuilder.Entity("MAN.Models.BookRead", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.BookRead", b =>
                 {
-                    b.HasOne("MAN.Models.Book", "Book")
+                    b.HasOne("LibraryManagement.Shared.Models.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MAN.Models.Profile", "Profile")
+                    b.HasOne("LibraryManagement.Shared.Models.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -286,9 +286,9 @@ namespace MAN.Api.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("MAN.Models.CoAuthors", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.CoAuthors", b =>
                 {
-                    b.HasOne("MAN.Models.Book", "Book")
+                    b.HasOne("LibraryManagement.Shared.Models.Book", "Book")
                         .WithMany()
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -297,7 +297,7 @@ namespace MAN.Api.Migrations
                     b.Navigation("Book");
                 });
 
-            modelBuilder.Entity("MAN.Models.CoAuthors", b =>
+            modelBuilder.Entity("LibraryManagement.Shared.Models.CoAuthors", b =>
                 {
                     b.Navigation("Author");
                 });

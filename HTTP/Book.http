@@ -1,6 +1,6 @@
-@MAN_HostAddress = https://localhost:7216
+@MAN_HostAddress = https://localhost:7216/api
 
-GET {{MAN_HostAddress}}/book/
+GET {{MAN_HostAddress}}/book
 Accept: application/json
 
 ###

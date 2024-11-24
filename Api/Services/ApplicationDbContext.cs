@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
 namespace MAN.Api.Services;
 
 public partial class ApplicationDbContext : DbContext

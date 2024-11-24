@@ -1,17 +1,18 @@
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
 using MAN.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Shared.Interfaces;
 using System.Collections.Generic;
 
 namespace MAN.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BindingTypeController : ControllerBase
     {
-        private readonly BindingTypeService _bindingTypeService;
+        private readonly IBindingTypeService _bindingTypeService;
 
-        public BindingTypeController(BindingTypeService bindingTypeService){
+        public BindingTypeController(IBindingTypeService bindingTypeService){
             _bindingTypeService = bindingTypeService;
         }
 

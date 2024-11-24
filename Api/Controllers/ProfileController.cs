@@ -1,15 +1,16 @@
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
 using MAN.Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using LibraryManagement.Shared.Interfaces;
 
 namespace MAN.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ProfileController : ControllerBase
 {
-    private readonly ProfileService _profileService;
-    public ProfileController(ProfileService profileService){
+    private readonly IProfileService _profileService;
+    public ProfileController(IProfileService profileService){
         _profileService = profileService;
     }
     [HttpGet]

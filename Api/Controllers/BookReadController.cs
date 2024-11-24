@@ -1,16 +1,17 @@
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
 using MAN.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using LibraryManagement.Shared.Interfaces;
 
 namespace MAN.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class BookReadController : ControllerBase
     {
-        private readonly BookReadService _bookReadService;
-        public BookReadController(BookReadService bookReadService)
+        private readonly IBookReadService _bookReadService;
+        public BookReadController(IBookReadService bookReadService)
         {
             _bookReadService = bookReadService;
         }

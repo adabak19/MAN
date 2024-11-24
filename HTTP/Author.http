@@ -1,5 +1,4 @@
-@MAN_HostAddress = http://localhost:5133
-
+@MAN_HostAddress = https://localhost:7216/api
 GET {{MAN_HostAddress}}/weatherforecast/
 Accept: application/json
 

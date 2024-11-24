@@ -1,11 +1,12 @@
 using System.Collections.Specialized;
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
+using LibraryManagement.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Api.Services;
 
-public class AuthorService{
+public class AuthorService : IAuthorService{
 
     public async Task<List<Author>> GetAllAsync(){
         using ApplicationDbContext context = new();

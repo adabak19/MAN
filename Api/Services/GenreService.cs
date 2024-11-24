@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
-using MAN.Api.Models;
+using LibraryManagement.Shared.Models;
+using LibraryManagement.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace MAN.Api.Services;
 
-public class GenreService{
+public class GenreService : IGenreService{
 
     public async Task<List<Genre>> GetAllAsync(){
         using ApplicationDbContext context = new();
