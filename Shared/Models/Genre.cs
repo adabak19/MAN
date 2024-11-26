@@ -1,5 +1,8 @@
 namespace MAN.Shared.Models;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Genre
     {
@@ -8,7 +11,7 @@ public class Genre
 
         [Required]
         [MaxLength(50)]
-        public string? GenreName { get; set; }
+        public string GenreName { get; set; }
 
          // Navigation property for many-to-many relationship
     public ICollection<BookGenre>? BookGenres { get; set; }

@@ -1,6 +1,9 @@
 namespace MAN.Shared.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
+using System.Collections.Generic;
+
 
 public class Book
     {
@@ -12,24 +15,26 @@ public class Book
 
         [Required]
         [MaxLength(200)]
-        public string? Title { get; set; }
+        public string Title { get; set; }
 
         public int? PageCount { get; set; }
 
         public int? YearPublished { get; set; }
 
-        [ForeignKey("BindingType")]
         public int? BindingTypeId { get; set; }
-        public BindingType? BindingType { get; set; }
 
-        [ForeignKey("Publisher")]
         public int? PublisherId { get; set; }
-        public Publisher? Publisher { get; set; }
 
-        [ForeignKey("Author")]
-        public int? AuthorId { get; set; }
-        public Author? Author { get; set; }
+        [Required]
+        public int AuthorId { get; set; }
+        public int Amount { get; set; }
+       
     
-     // Navigation property for many-to-many relationship
+    public BindingType? BindingType { get; set; }
+    public Publisher? Publisher { get; set; }
+    public Author? Author { get; set; }
     public ICollection<BookGenre>? BookGenres { get; set; }
+    public ICollection<BookRead>? BookReads { get; set; }
+    public ICollection<CoAuthors>? Coauthors { get; set; }
+    
     }

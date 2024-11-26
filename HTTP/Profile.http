@@ -14,7 +14,8 @@ Content-Type: application/json
     "yearPublished": 1929,
     "bindingTypeId": 3,
     "publisherId": 2,
-    "authorId": 3
+    "authorId": 3,
+    "amount": 2
 }
 
 ###

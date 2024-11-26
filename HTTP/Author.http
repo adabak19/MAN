@@ -12,11 +12,11 @@ POST {{MAN_HostAddress}}/author
 Content-Type: application/json
 
 {
-    "isbn": 126,
-    "title": "chuj",
-    "author": "dupa",
-    "yearPublished": 2137
-}
+    "id": 1,  
+    "firstName": "John",
+    "middleName": "A.",
+    "lastName": "Doe"
+    }
 
 ###
 PUT {{MAN_HostAddress}}/author/4
