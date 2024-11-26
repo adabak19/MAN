@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Library.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241126135521_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241126150559_MyFirstMigration")]
+    partial class MyFirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,7 @@ namespace Library.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .HasMaxLength(250)
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

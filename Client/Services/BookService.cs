@@ -46,9 +46,9 @@ namespace MAN.Client.Services
         }
 
 // Search Books Implementation
-        public async Task<IEnumerable<Book>> SearchBooksAsync(string? title, string? author, string? genre)
+        public async Task<List<object>> SearchBooksAsync(string? title, string? author, string? genre)
         {
-            var query = _context.Books
+            var query = _httpClient.Books
                 .Include(b => b.Author)
                 .Include(b => b.BookGenres)
                 .ThenInclude(bg => bg.Genre)

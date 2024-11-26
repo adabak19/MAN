@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Library.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class MyFirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace Library.Api.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     FirstName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    MiddleName = table.Column<string>(type: "TEXT", maxLength: 250, nullable: true),
+                    MiddleName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
                 },
                 constraints: table =>

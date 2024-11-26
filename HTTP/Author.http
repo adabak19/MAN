@@ -4,7 +4,7 @@ Accept: application/json
 
 ###
 
-GET {{MAN_HostAddress}}/author/
+GET {{MAN_HostAddress}}/book/
 Accept: application/json
 
 ###
@@ -32,7 +32,7 @@ Content-Type: application/json
 
 ###
 
-DELETE {{MAN_HostAddress}}/author/4
+DELETE {{MAN_HostAddress}}/author/1
 
 ###
 GET {{MAN_HostAddress}}/author/1

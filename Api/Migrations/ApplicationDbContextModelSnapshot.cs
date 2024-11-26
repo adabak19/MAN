@@ -34,7 +34,7 @@ namespace Library.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MiddleName")
-                        .HasMaxLength(250)
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
