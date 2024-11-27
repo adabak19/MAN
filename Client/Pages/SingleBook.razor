@@ -1,33 +1,19 @@
-@page "/books"
+@page "/singleBook/{id:int}"
 @using MAN.Shared.Interfaces;
 @using MAN.Shared.Models;
 @using MAN.Shared.DTO;
 @inject IBookService BookService
-<h3>Books</h3>
+<h3>Book</h3>
 
-@if (books == null)
+@if (book == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    
-    @foreach (var book in books)
-    {
-    <a href="/singleBook/@book.Id"><SingleBook Id="@book.Id" /></a>
-    }
-}
-@* @if (books == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    foreach (var book in books){
     
     <div>
     <ul>
-        <li>ID: @book.Id</li>
         @if (book.ISBN == null){
             <li>ISBN: Unknown</li>
             }else{
@@ -51,21 +37,22 @@ else
             </li>
     </ul>
     </div>
-    }
-} *@
-
-<button @onclick="AddBook">Add New Book</button>
+    
+}
+@* <button @onclick="AddBook">Add New Book</button> *@
 
 @code {
-    private List<BookDto>? books;
+    private BookDto? book;
+    [Parameter]
+    public int Id {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
         // Load all authors when the page is initialized
-        books = await BookService.GetAllAsync();
+        book = await BookService.GetAsyncById(Id);
     }
 
-    private async Task AddBook()
+    @* private async Task AddBook()
     {
         var newBook = new Book
         {
@@ -84,5 +71,5 @@ else
 
         // Refresh the list of authors after adding a new one
         books = await BookService.GetAllAsync();
-    }
+    } *@
 }

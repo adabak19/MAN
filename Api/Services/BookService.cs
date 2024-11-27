@@ -19,6 +19,7 @@ public BookService(ApplicationDbContext context)
     public async Task<List<BookDto>> GetAllAsync(){
         using ApplicationDbContext context = new();
         return await context.Books.Select(b => new BookDto{
+            Id = b.Id,
             ISBN = b.ISBN,
             Title = b.Title,
             AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
@@ -37,6 +38,7 @@ public BookService(ApplicationDbContext context)
         .Where(b => b.Id == id)
         .Select(b => new BookDto
         {
+            Id = b.Id,
             ISBN = b.ISBN,
             Title = b.Title,
             AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
@@ -95,6 +97,7 @@ public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author,
     // Flatten the results
     var result = await query.Select(b => new BookDto
     {
+        Id = b.Id,
         ISBN = b.ISBN,
         Title = b.Title,
         AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
