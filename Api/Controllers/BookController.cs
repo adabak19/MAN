@@ -50,13 +50,9 @@ public class BookController : ControllerBase
 
  // Search books by title, author, or genre
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string? title, [FromQuery] string? author, [FromQuery] string? genre)
+    public async Task<IActionResult> Search(string? title, string? author, string? genre)
     {
         var books = await _bookService.SearchBooksAsync(title, author, genre);
         return Ok(books);
     }
-
-
-
-
 }

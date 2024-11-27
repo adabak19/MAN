@@ -1,0 +1,44 @@
+@page "/review/{id:int}"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IBookReadService BookReadService
+
+<h3>Reviews</h3>
+
+@if (bookReads == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (bookReads.Count == 0)
+{
+    <p>No reviews found for this book.</p>
+}
+else
+{
+   
+     <div >
+        @foreach (var review in bookReads) {
+                    <h4>@review.Book.Title</h4>
+                    <p><strong>Reviewed by:</strong> @review.Profile.FirstName @review.Profile.LastName</p>
+                    <p><strong>Review:</strong> @review.Review</p>
+                    <p><strong>Rating:</strong> @review.Rating</p>
+                    <p><strong>Date Added:</strong> @review.DateFinished</p>
+                
+            
+        }
+    </div>
+}
+
+
+@code {
+    private List<BookRead>? bookReads;
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        bookReads = await BookReadService.GetAsyncByBookId(Id);
+    }
+
+}

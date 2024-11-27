@@ -1,7 +1,10 @@
 @page "/singleBook/{id:int}"
 @using MAN.Shared.Interfaces;
 @using MAN.Shared.DTO;
+@using MAN.Shared.Models;
 @inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject NavigationManager Navigation
 
 <h3>Book Details</h3>
 
@@ -40,13 +43,89 @@ else
     </div>
 }
 
+<button @onclick="BorrowBook">Borrow This Book</button>
+<input @bind="Review" placeholder="Enter your review" />
+<input @bind="Rating" placeholder="Enter your rating" />
+<button @onclick="ReturnBook">Return This Book</button>
+<button @onclick="SeeReviews">SeeReviews</button>
+
 @code {
     private BookDto? book;
     [Parameter]
     public int Id { get; set; }
+    public string Review {get; set;}
+    public int Rating {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
         book = await BookService.GetAsyncById(Id);
+    }
+
+    private async Task BorrowBook()
+    {
+        var newBookRead = new BookRead
+        {
+            ProfileId = 1,
+            BookId = book.Id,
+            Rating = null,
+            Review = null,
+            DateStarted = DateOnly.FromDateTime(DateTime.Now),
+            DateFinished = null,
+            Status = "reading"
+        };
+
+        var newBook = new Book
+        {
+            Id = book.Id,
+            ISBN = "1243242",
+            Title = "Book2",
+            PageCount = 120,
+            YearPublished = 1929,
+            BindingTypeId = 3,
+            PublisherId = 2,
+            AuthorId = 3,
+            Amount = book.Amount - 1
+        };
+
+       
+        await BookService.Update(newBook);
+        await BookReadService.Add(newBookRead);
+        book = await BookService.GetAsyncById(Id);
+    }
+    private async Task ReturnBook()
+    {
+        var bookRead = await BookReadService.GetAsyncById(1, book.Id);
+        var newBookRead = new BookRead
+        {
+            ProfileId = bookRead.ProfileId,
+            BookId = book.Id,
+            Rating = Rating,
+            Review = Review,
+            DateStarted = bookRead.DateStarted,
+            DateFinished = DateOnly.FromDateTime(DateTime.Now),
+            Status = "read"
+        };
+
+        var newBook = new Book
+        {
+            Id = book.Id,
+            ISBN = "1243242",
+            Title = "Book2",
+            PageCount = 120,
+            YearPublished = 1929,
+            BindingTypeId = 3,
+            PublisherId = 2,
+            AuthorId = 3,
+            Amount = book.Amount + 1
+        };
+
+       
+        await BookService.Update(newBook);
+        await BookReadService.Update(newBookRead);
+        book = await BookService.GetAsyncById(Id);
+    }
+
+    private async Task SeeReviews(){
+        Navigation.NavigateTo($"/review/{Id}");
     }
 }

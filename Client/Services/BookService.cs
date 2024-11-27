@@ -47,22 +47,22 @@ namespace MAN.Client.Services
         }
 
 // Search Books Implementation
-        public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
-        {
-            var query = await _httpClient.GetFromJsonAsync<List<BookDto>>("api/book")
-                   ?? new List<BookDto>();
+       public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
+{
+    var query = await _httpClient.GetFromJsonAsync<List<BookDto>>("api/book")
+               ?? new List<BookDto>();
 
-            if (!string.IsNullOrWhiteSpace(title))
-                query = (List<BookDto>)query.Where(b => b.Title.Contains(title));
+    if (!string.IsNullOrWhiteSpace(title))
+        query = query.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            if (!string.IsNullOrWhiteSpace(author))
-                query = (List<BookDto>)query.Where(b => b.AuthorName.Contains(author));
+    if (!string.IsNullOrWhiteSpace(author))
+        query = query.Where(b => b.AuthorName.Contains(author, StringComparison.OrdinalIgnoreCase)).ToList();
 
-            if (!string.IsNullOrWhiteSpace(genre))
-                query = (List<BookDto>)query.Where(b => b.Genres.Contains(genre));
+    if (!string.IsNullOrWhiteSpace(genre))
+        query = query.Where(b => b.Genres.Any(g => g.Contains(genre, StringComparison.OrdinalIgnoreCase))).ToList();
 
-            return query;
-        }
+    return query;
+}
 
 
 
