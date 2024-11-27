@@ -27,7 +27,6 @@ else
 }
 
 <button @onclick="AddBook">Add New Book</button>
-
 @code {
     private List<BookDto>? books;
 
@@ -54,4 +53,5 @@ else
         await BookService.Add(newBook);
         books = await BookService.GetAllAsync();
     }
+    
 }

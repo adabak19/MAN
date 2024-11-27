@@ -44,5 +44,18 @@ namespace MAN.Api.Services
             context.BookReads.Update(bookRead);
             await context.SaveChangesAsync();
         }
+        
+       public async Task<List<BookRead>> GetAsyncByBookId(int bookId)
+        {
+            using ApplicationDbContext context = new();
+            return await context.BookReads
+                .Include(br => br.Book) // Eagerly load Book
+                .Include(br => br.Profile) // Eagerly load Profile
+                .Where(br => br.BookId == bookId)
+                .ToListAsync();
+        }
+
+        
+
     }
 }

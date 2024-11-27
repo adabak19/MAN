@@ -7,4 +7,5 @@ public interface IBookReadService
     Task<BookRead> Add(BookRead bookRead);
     Task Delete(int profileId, int bookId);
     Task Update(BookRead bookRead);
+    Task<List<BookRead>> GetAsyncByBookId(int bookId);
 }

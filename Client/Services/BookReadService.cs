@@ -45,5 +45,14 @@ namespace MAN.Client.Services
             var response = await _httpClient.PutAsJsonAsync($"api/bookRead/{bookRead.ProfileId}/{bookRead.BookId}", bookRead);
             response.EnsureSuccessStatusCode();
         }
+        public async Task<List<BookRead>> GetAsyncByBookId(int bookId)
+    {
+        var response = await _httpClient.GetFromJsonAsync<List<BookRead>>($"api/bookRead/{bookId}");
+        if (response == null)
+        {
+            throw new Exception("Failed to fetch book reads.");
+        }
+        return response;
+    }
     }
 }

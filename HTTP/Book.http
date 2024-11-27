@@ -4,7 +4,7 @@ GET {{MAN_HostAddress}}/book
 Accept: application/json
 
 ###
-GET {{MAN_HostAddress}}/book/1
+GET {{MAN_HostAddress}}/bookRead/1
 Accept: application/json
 
 ###

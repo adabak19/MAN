@@ -31,6 +31,12 @@ namespace MAN.Api.Controllers
             return bookRead;
         }
 
+        [HttpGet("{bookId}")]
+        public async Task<IActionResult> GetAsyncByBookId(int bookId){
+            var bookReads = await _bookReadService.GetAsyncByBookId(bookId);
+            return Ok(bookReads);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(BookRead bookRead)
         {
