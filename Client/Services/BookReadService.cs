@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MAN.Shared.DTO;
 
 
 namespace MAN.Client.Services
@@ -45,9 +46,9 @@ namespace MAN.Client.Services
             var response = await _httpClient.PutAsJsonAsync($"api/bookRead/{bookRead.ProfileId}/{bookRead.BookId}", bookRead);
             response.EnsureSuccessStatusCode();
         }
-        public async Task<List<BookRead>> GetAsyncByBookId(int bookId)
+        public async Task<List<BookReadDto>> GetAsyncByBookId(int bookId)
     {
-        var response = await _httpClient.GetFromJsonAsync<List<BookRead>>($"api/bookRead/{bookId}");
+        var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/{bookId}");
         if (response == null)
         {
             throw new Exception("Failed to fetch book reads.");

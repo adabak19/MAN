@@ -17,22 +17,21 @@ else if (bookReads.Count == 0)
 else
 {
    
-     <div >
-        @foreach (var review in bookReads) {
-                    <h4>@review.Book.Title</h4>
-                    <p><strong>Reviewed by:</strong> @review.Profile.FirstName @review.Profile.LastName</p>
-                    <p><strong>Review:</strong> @review.Review</p>
-                    <p><strong>Rating:</strong> @review.Rating</p>
-                    <p><strong>Date Added:</strong> @review.DateFinished</p>
-                
-            
-        }
-    </div>
+     <div>
+    @foreach (var review in bookReads)
+    {
+        <h4>@(review.BookTitle ?? "Unknown Book")</h4>
+        <p><strong>Reviewed by:</strong> @(review.ReviewerName ?? "Anonymous")</p>
+        <p><strong>Review:</strong> @(review.Review ?? "No review provided")</p>
+        <p><strong>Rating:</strong> @(review.Rating?.ToString() ?? "No rating")</p>
+        <p><strong>Date Added:</strong> @(review.DateFinished?.ToString("yyyy-MM-dd") ?? "Not finished")</p>
+    }
+</div>
 }
 
 
 @code {
-    private List<BookRead>? bookReads;
+    private List<BookReadDto>? bookReads;
     [Parameter]
     public int Id { get; set; }
 
@@ -40,5 +39,6 @@ else
     {
         bookReads = await BookReadService.GetAsyncByBookId(Id);
     }
+    
 
 }
