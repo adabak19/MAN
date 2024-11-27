@@ -1,48 +1,75 @@
 using System.Collections.Specialized;
+using MAN.Shared.DTO;
 using MAN.Shared.Models;
 using MAN.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MAN.Api.Services;
 
 public class BookService : IBookService{
+    private readonly ApplicationDbContext _context;
 
-    public async Task<List<Book>> GetAllAsync(){
+public BookService(ApplicationDbContext context)
+{
+    _context = context;
+}
+
+    public async Task<List<BookDto>> GetAllAsync(){
         using ApplicationDbContext context = new();
-        return await context.Books.ToListAsync();
+        return await context.Books.Select(b => new BookDto{
+            ISBN = b.ISBN,
+            Title = b.Title,
+            AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
+            Publisher = b.Publisher.PublisherName,
+            PageCount = b.PageCount,
+            YearPublished = b.YearPublished,
+            Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
+            CoAuthors = (List<string>)b.Coauthors.Select(ca => $"{ca.Author.FirstName} {ca.Author.LastName}"),
+            Amount = b.Amount
+        }).ToListAsync();
     }
 
-    public async Task<Book?> GetAsyncById(int id){
+    public async Task<BookDto?> GetAsyncById(int id){
         using ApplicationDbContext context = new();
-        Book? book = await context.Books.FindAsync(id);
-        return book;
+        return await context.Books
+        .Where(b => b.Id == id)
+        .Select(b => new BookDto
+        {
+            ISBN = b.ISBN,
+            Title = b.Title,
+            AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
+            Publisher = b.Publisher.PublisherName,
+            PageCount = b.PageCount,
+            YearPublished = b.YearPublished,
+            Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
+            CoAuthors = (List<string>)b.Coauthors.Select(ca => $"{ca.Author.FirstName} {ca.Author.LastName}"),
+            Amount = b.Amount
+        })
+        .FirstOrDefaultAsync();
     }
     public async Task<Book> Add(Book book){
-        using ApplicationDbContext context = new();
-        EntityEntry<Book> entry = await context.Books.AddAsync(book);
-        await context.SaveChangesAsync();
+        EntityEntry<Book> entry = await _context.Books.AddAsync(book);
+        await _context.SaveChangesAsync();
         return entry.Entity;
     }
     public async Task Delete(int id){
-        using ApplicationDbContext context = new();
-        var book = await context.Books.FindAsync(id);
+        var book = await _context.Books.FindAsync(id);
         if(book is null)
             return;
-        context.Books.Remove(book);
-        await context.SaveChangesAsync();
+        _context.Books.Remove(book);
+        await _context.SaveChangesAsync();
     }
     public async Task Update(Book book){
-        using ApplicationDbContext context = new();
-        context.Books.Update(book);
-        await context.SaveChangesAsync();
+        _context.Books.Update(book);
+        await _context.SaveChangesAsync();
     }
 
  // Add SearchBooksAsync
-public async Task<List<object>> SearchBooksAsync(string? title, string? author, string? genre)
+public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
 {
-    using ApplicationDbContext context = new();
-    var query = context.Books
+    var query = _context.Books
         .Include(b => b.Author) // Include only necessary related data
         .Include(b => b.BookGenres).ThenInclude(bg => bg.Genre)
         .AsQueryable();
@@ -66,16 +93,20 @@ public async Task<List<object>> SearchBooksAsync(string? title, string? author, 
     }
 
     // Flatten the results
-    var result = await query.Select(b => new
+    var result = await query.Select(b => new BookDto
     {
-        b.Id,
-        b.Title,
-        b.ISBN,
-        AuthorName = b.Author != null ? $"{b.Author.FirstName} {b.Author.LastName}" : null,
-        Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList()
+        ISBN = b.ISBN,
+        Title = b.Title,
+        AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
+        Publisher = b.Publisher.PublisherName,
+        PageCount = b.PageCount,
+        YearPublished = b.YearPublished,
+        Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
+        CoAuthors = (List<string>)b.Coauthors.Select(ca => $"{ca.Author.FirstName} {ca.Author.LastName}"),
+        Amount = b.Amount
     }).ToListAsync();
 
-    return result.Cast<object>().ToList(); // Return a simplified object list
+    return result.ToList(); // Return a simplified object list
 }
 
 

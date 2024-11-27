@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 public class BookRead
     {
@@ -21,7 +22,8 @@ public class BookRead
 
         [MaxLength(7)]
         public string? Status { get; set; }
-       
+        [JsonIgnore]       
         public Profile? Profile { get; set; }
+        [JsonIgnore]
         public Book? Book { get; set; }
     }

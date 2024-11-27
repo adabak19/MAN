@@ -1,5 +1,6 @@
 using MAN.Shared.Interfaces;
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Collections.Generic;
@@ -15,15 +16,15 @@ namespace MAN.Client.Services
         {
             _httpClient = httpClient;
         }
-        public async Task<List<Book>> GetAllAsync()
+        public async Task<List<BookDto>> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<Book>>("api/book")
-                   ?? new List<Book>();
+            return await _httpClient.GetFromJsonAsync<List<BookDto>>("api/book")
+                   ?? new List<BookDto>();
         }
 
-        public async Task<Book?> GetAsyncById(int id)
+        public async Task<BookDto?> GetAsyncById(int id)
         {
-            return await _httpClient.GetFromJsonAsync<Book>($"api/book/{id}");
+            return await _httpClient.GetFromJsonAsync<BookDto>($"api/book/{id}");
         }
 
         public async Task<Book> Add(Book book)
@@ -46,24 +47,21 @@ namespace MAN.Client.Services
         }
 
 // Search Books Implementation
-        public async Task<List<object>> SearchBooksAsync(string? title, string? author, string? genre)
+        public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
         {
-            var query = _httpClient.Books
-                .Include(b => b.Author)
-                .Include(b => b.BookGenres)
-                .ThenInclude(bg => bg.Genre)
-                .AsQueryable();
+            var query = await _httpClient.GetFromJsonAsync<List<BookDto>>("api/book")
+                   ?? new List<BookDto>();
 
             if (!string.IsNullOrWhiteSpace(title))
-                query = query.Where(b => b.Title.Contains(title));
+                query = (List<BookDto>)query.Where(b => b.Title.Contains(title));
 
             if (!string.IsNullOrWhiteSpace(author))
-                query = query.Where(b => b.Author.FirstName.Contains(author) || b.Author.LastName.Contains(author));
+                query = (List<BookDto>)query.Where(b => b.AuthorName.Contains(author));
 
             if (!string.IsNullOrWhiteSpace(genre))
-                query = query.Where(b => b.BookGenres.Any(bg => bg.Genre.GenreName.Contains(genre)));
+                query = (List<BookDto>)query.Where(b => b.Genres.Contains(genre));
 
-            return await query.ToListAsync();
+            return query;
         }
 
 

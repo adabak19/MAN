@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Collections.Generic;
-
+using System.Text.Json.Serialization;
 
 public class Book
     {
@@ -29,9 +29,10 @@ public class Book
         public int AuthorId { get; set; }
         public int Amount { get; set; }
        
-    
+    [JsonIgnore]
     public BindingType? BindingType { get; set; }
     public Publisher? Publisher { get; set; }
+    [JsonIgnore]
     public Author? Author { get; set; }
     public ICollection<BookGenre>? BookGenres { get; set; }
     public ICollection<BookRead>? BookReads { get; set; }

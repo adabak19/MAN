@@ -1,9 +1,10 @@
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 namespace MAN.Shared.Interfaces;
 public interface IAuthorService
 {
-    Task<List<Author>> GetAllAsync();
-    Task<Author?> GetAsyncById(int id);
+    Task<List<AuthorDto>> GetAllAsync();
+    Task<AuthorDto?> GetAsyncById(int id);
     Task<Author> Add(Author author);
     Task Delete(int id);
     Task Update(Author author);
