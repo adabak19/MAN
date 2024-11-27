@@ -1,9 +1,9 @@
 @page "/singleBook/{id:int}"
 @using MAN.Shared.Interfaces;
-@using MAN.Shared.Models;
 @using MAN.Shared.DTO;
 @inject IBookService BookService
-<h3>Book</h3>
+
+<h3>Book Details</h3>
 
 @if (book == null)
 {
@@ -11,65 +11,42 @@
 }
 else
 {
-    
-    <div>
-    <ul>
-        @if (book.ISBN == null){
-            <li>ISBN: Unknown</li>
-            }else{
-                <li>ISBN: @book.ISBN</li>
-            }
-            <li>Title: @book.Title</li>
-            <li>Author: @book.AuthorName</li>
-            <li>Publisher: @book.Publisher</li>
-            <li>Page Count: @book.PageCount</li>
-            <li>Year Published: @book.YearPublished</li>
-            <li>Amount: @book.Amount</li>
-            <li>Genres: @foreach (var genre in book.Genres){
+    <div class="single-book">
+        <ul>
+            <li><strong>ISBN:</strong> @(string.IsNullOrEmpty(book.ISBN) ? "Unknown" : book.ISBN)</li>
+            <li><strong>Title:</strong> @book.Title</li>
+            <li><strong>Author:</strong> @book.AuthorName</li>
+            <li><strong>Publisher:</strong> @book.Publisher</li>
+            <li><strong>Page Count:</strong> @book.PageCount</li>
+            <li><strong>Year Published:</strong> @book.YearPublished</li>
+            <li><strong>Amount:</strong> @book.Amount</li>
+            <li><strong>Genres:</strong>
                 <ul>
-                    <li>@genre</li>
-                </ul>} 
+                    @foreach (var genre in book.Genres)
+                    {
+                        <li>@genre</li>
+                    }
+                </ul>
             </li>
-            <li>Co Authors: @foreach (var coauthor in book.CoAuthors){
+            <li><strong>Co-Authors:</strong>
                 <ul>
-                    <li>@coauthor</li>
-                </ul>} 
+                    @foreach (var coauthor in book.CoAuthors)
+                    {
+                        <li>@coauthor</li>
+                    }
+                </ul>
             </li>
-    </ul>
+        </ul>
     </div>
-    
 }
-@* <button @onclick="AddBook">Add New Book</button> *@
 
 @code {
     private BookDto? book;
     [Parameter]
-    public int Id {get; set;}
+    public int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        // Load all authors when the page is initialized
         book = await BookService.GetAsyncById(Id);
     }
-
-    @* private async Task AddBook()
-    {
-        var newBook = new Book
-        {
-            Id = 3,
-            ISBN = "1243242",
-            Title = "Book2",
-            PageCount = 120,
-            YearPublished = 1929,
-            BindingTypeId = 3,
-            PublisherId = 2,
-            AuthorId = 3,
-            Amount = 4
-        };
-
-        await BookService.Add(newBook);
-
-        // Refresh the list of authors after adding a new one
-        books = await BookService.GetAllAsync();
-    } *@
 }
