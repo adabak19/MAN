@@ -1,4 +1,5 @@
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 using MAN.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using MAN.Shared.Interfaces;
@@ -19,11 +20,11 @@ public class BookController : ControllerBase
          return Ok(books);
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<Book>> Get(int id){
+    public async Task<ActionResult<BookDto>> Get(int id){
         var book = await _bookService.GetAsyncById(id);
         if (book is null)
             return NotFound();
-        return book;
+        return Ok(book);
     }
     [HttpPost]
     public async Task<IActionResult> Create(Book book){

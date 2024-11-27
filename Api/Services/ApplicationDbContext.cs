@@ -80,6 +80,8 @@ public partial class ApplicationDbContext : DbContext
             .WithMany(a => a.Coauthors)
             .HasForeignKey(ca => ca.AuthorId);
 
+
+
         // Partial method for additional configurations
         OnModelCreatingPartial(modelBuilder);
     }

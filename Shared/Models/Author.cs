@@ -1,4 +1,5 @@
 namespace MAN.Shared.Models;
+using MAN.Shared.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

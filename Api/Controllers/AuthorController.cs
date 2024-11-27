@@ -1,4 +1,5 @@
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 using MAN.Api.Services;
 using MAN.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ public class AuthorController : ControllerBase
         return Ok(authors);
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<Author>> Get(int id){
+    public async Task<ActionResult<AuthorDto>> Get(int id){
         var author = await _authorService.GetAsyncById(id);
         if (author is null)
             return NotFound();

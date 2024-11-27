@@ -1,5 +1,6 @@
 using MAN.Shared.Interfaces;
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Collections.Generic;
@@ -15,15 +16,15 @@ namespace MAN.Client.Services
         {
             _httpClient = httpClient;
         }
-        public async Task<List<Author>> GetAllAsync()
+        public async Task<List<AuthorDto>> GetAllAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<Author>>("api/author")
-                   ?? new List<Author>();
+            return await _httpClient.GetFromJsonAsync<List<AuthorDto>>("api/author")
+                   ?? new List<AuthorDto>();
         }
 
-        public async Task<Author?> GetAsyncById(int id)
+        public async Task<AuthorDto?> GetAsyncById(int id)
         {
-            return await _httpClient.GetFromJsonAsync<Author>($"api/author/{id}");
+            return await _httpClient.GetFromJsonAsync<AuthorDto>($"api/author/{id}");
         }
 
         public async Task<Author> Add(Author author)

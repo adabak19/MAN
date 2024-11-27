@@ -1,6 +1,10 @@
 @MAN_HostAddress = https://localhost:7216/api
 
-GET {{MAN_HostAddress}}/book
+GET {{MAN_HostAddress}}/bookGenre
+Accept: application/json
+
+###
+GET {{MAN_HostAddress}}/book/1
 Accept: application/json
 
 ###
@@ -8,13 +12,15 @@ POST {{MAN_HostAddress}}/book
 Content-Type: application/json
 
 {
+    "id": 4,
     "isbn": "1243242",
     "title": "Book",
     "pageCount": 120,
     "yearPublished": 1929,
     "bindingTypeId": 3,
     "publisherId": 2,
-    "authorId": 3
+    "authorId": 3,
+    "amount": 4
 }
 
 ###
@@ -37,5 +43,14 @@ Content-Type: application/json
 DELETE {{MAN_HostAddress}}/book/58419579
 
 ###
-GET {{MAN_HostAddress}}/book/2
+GET {{MAN_HostAddress}}/bookGenre/4/2
 Accept: application/json
+
+###
+POST {{MAN_HostAddress}}/bookGenre
+Content-Type: application/json
+
+  {
+      "genreId": 5,
+      "bookId": 4
+  }

@@ -13,9 +13,9 @@ public class BookGenreService : IBookGenreService{
         return await context.BookGenres.ToListAsync();
     }
 
-    public async Task<BookGenre?> GetAsyncById(int bookId, int genreId){
+    public async Task<BookGenre?> GetAsyncById(int genreId, int bookId){
         using ApplicationDbContext context = new();
-        BookGenre? bookGenre = await context.BookGenres.FirstOrDefaultAsync(bg => bg.BookId == bookId && bg.GenreId == genreId);
+        BookGenre? bookGenre = await context.BookGenres.FirstOrDefaultAsync(bg => bg.GenreId == genreId && bg.BookId == bookId);
         return bookGenre;
     }
     public async Task<BookGenre> Add(BookGenre bookGenre){
@@ -24,9 +24,9 @@ public class BookGenreService : IBookGenreService{
         await context.SaveChangesAsync();
         return entry.Entity;
     }
-    public async Task Delete(int bookId, int genreId){
+    public async Task Delete(int genreId, int bookId){
         using ApplicationDbContext context = new();
-        var bookGenre = await context.BookGenres.FirstOrDefaultAsync(bg => bg.BookId == bookId && bg.GenreId == genreId);
+        var bookGenre = await context.BookGenres.FirstOrDefaultAsync(bg => bg.GenreId == genreId && bg.BookId == bookId);
         if(bookGenre is null)
             return;
         context.BookGenres.Remove(bookGenre);
