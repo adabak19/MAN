@@ -40,3 +40,13 @@ DELETE {{MAN_HostAddress}}/book/58419579
 ###
 GET {{MAN_HostAddress}}/book/2
 Accept: application/json
+
+###
+POST {{MAN_HostAddress}}/auth/login
+Content-Type: application/json
+
+{
+    
+    "profileName": "sweet_kristy",
+    "password": "123456"
+}
