@@ -1,4 +1,5 @@
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 namespace MAN.Shared.Interfaces;
 public interface IBookReadService
 {
@@ -7,4 +8,5 @@ public interface IBookReadService
     Task<BookRead> Add(BookRead bookRead);
     Task Delete(int profileId, int bookId);
     Task Update(BookRead bookRead);
+    Task<List<BookReadDto>> GetAsyncByBookId(int bookId);
 }

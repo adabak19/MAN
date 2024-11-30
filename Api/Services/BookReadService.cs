@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using MAN.Shared.Models;
+using MAN.Shared.DTO;
 using MAN.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+
 
 namespace MAN.Api.Services
 {
@@ -44,5 +46,29 @@ namespace MAN.Api.Services
             context.BookReads.Update(bookRead);
             await context.SaveChangesAsync();
         }
+        
+      public async Task<List<BookReadDto>> GetAsyncByBookId(int bookId)
+{ using ApplicationDbContext context = new();
+    var bookReads = await context.BookReads
+        .Include(br => br.Book)
+        .Include(br => br.Profile)
+        .Where(br => br.BookId == bookId)
+        .ToListAsync();
+
+    return bookReads.Select(br => new BookReadDto
+    {
+        BookId = br.BookId,
+        BookTitle = br.Book?.Title,
+        ProfileId = br.ProfileId,
+        ReviewerName = br.Profile != null ? $"{br.Profile.FirstName} {br.Profile.LastName}" : null,
+        Rating = br.Rating,
+        Review = br.Review,
+        DateFinished = br.DateFinished
+    }).ToList();
+}
+
+
+        
+
     }
 }

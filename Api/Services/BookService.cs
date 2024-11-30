@@ -109,7 +109,7 @@ public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author,
         Amount = b.Amount
     }).ToListAsync();
 
-    return result.ToList(); // Return a simplified object list
+    return result; // Return a simplified object list
 }
 
 

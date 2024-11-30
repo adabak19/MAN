@@ -1,8 +1,9 @@
 @page "/books"
 @using MAN.Shared.Interfaces;
-@using MAN.Shared.Models;
 @using MAN.Shared.DTO;
+@using MAN.Shared.Models
 @inject IBookService BookService
+
 <h3>Books</h3>
 
 @if (books == null)
@@ -11,57 +12,26 @@
 }
 else
 {
-    
-    @foreach (var book in books)
-    {
-    <a href="/singleBook/@book.Id"><SingleBook Id="@book.Id" /></a>
-    }
-}
-@* @if (books == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    foreach (var book in books){
-    
-    <div>
-    <ul>
-        <li>ID: @book.Id</li>
-        @if (book.ISBN == null){
-            <li>ISBN: Unknown</li>
-            }else{
-                <li>ISBN: @book.ISBN</li>
-            }
-            <li>Title: @book.Title</li>
-            <li>Author: @book.AuthorName</li>
-            <li>Publisher: @book.Publisher</li>
-            <li>Page Count: @book.PageCount</li>
-            <li>Year Published: @book.YearPublished</li>
-            <li>Amount: @book.Amount</li>
-            <li>Genres: @foreach (var genre in book.Genres){
-                <ul>
-                    <li>@genre</li>
-                </ul>} 
-            </li>
-            <li>Co Authors: @foreach (var coauthor in book.CoAuthors){
-                <ul>
-                    <li>@coauthor</li>
-                </ul>} 
-            </li>
-    </ul>
+    <div class="book-container">
+        @foreach (var book in books)
+        {
+            <div class="book-item">
+                <a href="/singleBook/@book.Id">
+                    <h4>@book.Title</h4>
+                    <p><strong>Author:</strong> @book.AuthorName</p>
+                    <p><strong>Publisher:</strong> @book.Publisher</p>
+                </a>
+            </div>
+        }
     </div>
-    }
-} *@
+}
 
 <button @onclick="AddBook">Add New Book</button>
-
 @code {
     private List<BookDto>? books;
 
     protected override async Task OnInitializedAsync()
     {
-        // Load all authors when the page is initialized
         books = await BookService.GetAllAsync();
     }
 
@@ -81,8 +51,7 @@ else
         };
 
         await BookService.Add(newBook);
-
-        // Refresh the list of authors after adding a new one
         books = await BookService.GetAllAsync();
     }
+    
 }
