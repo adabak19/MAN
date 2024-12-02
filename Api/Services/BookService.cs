@@ -9,12 +9,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 namespace MAN.Api.Services;
 
 public class BookService : IBookService{
-    private readonly ApplicationDbContext _context;
-
-public BookService(ApplicationDbContext context)
-{
-    _context = context;
-}
+    
 
     public async Task<List<BookDto>> GetAllAsync(){
         using ApplicationDbContext context = new();
@@ -52,26 +47,42 @@ public BookService(ApplicationDbContext context)
         .FirstOrDefaultAsync();
     }
     public async Task<Book> Add(Book book){
-        EntityEntry<Book> entry = await _context.Books.AddAsync(book);
-        await _context.SaveChangesAsync();
+        using ApplicationDbContext context = new();
+        EntityEntry<Book> entry = await context.Books.AddAsync(book);
+        await context.SaveChangesAsync();
         return entry.Entity;
     }
     public async Task Delete(int id){
-        var book = await _context.Books.FindAsync(id);
+        using ApplicationDbContext context = new();
+        var book = await context.Books.FindAsync(id);
         if(book is null)
             return;
-        _context.Books.Remove(book);
-        await _context.SaveChangesAsync();
+        context.Books.Remove(book);
+        await context.SaveChangesAsync();
     }
-    public async Task Update(Book book){
-        _context.Books.Update(book);
-        await _context.SaveChangesAsync();
+    public async Task Update(BookDto bookDto){
+        using ApplicationDbContext context = new();
+        Book? book = await context.Books.Where(b => b.Id == bookDto.Id).FirstOrDefaultAsync();
+        Book? newBook = new Book{
+            Id = bookDto.Id,
+            ISBN = bookDto.ISBN,
+            Title = bookDto.Title,
+            PageCount = bookDto.PageCount,
+            YearPublished = bookDto.YearPublished,
+            BindingTypeId = book.BindingTypeId,
+            PublisherId = book.PublisherId,
+            AuthorId = book.AuthorId,
+            Amount = bookDto.Amount
+        }; 
+        context.Books.Update(newBook);
+        await context.SaveChangesAsync();
     }
 
  // Add SearchBooksAsync
 public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
 {
-    var query = _context.Books
+    using ApplicationDbContext context = new();
+    var query = context.Books
         .Include(b => b.Author) // Include only necessary related data
         .Include(b => b.BookGenres).ThenInclude(bg => bg.Genre)
         .AsQueryable();

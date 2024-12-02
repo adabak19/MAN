@@ -19,6 +19,7 @@ public class JwtAuthService(HttpClient client, IJSRuntime jsRuntime) : IAuthServ
 
     public async Task LoginAsync(string username, string password)
     {
+        Console.Write("whoop whoop");
         ProfileLoginDto profileLoginDto = new()
         {
             ProfileName = username,
@@ -28,11 +29,12 @@ public class JwtAuthService(HttpClient client, IJSRuntime jsRuntime) : IAuthServ
         string userAsJson = JsonSerializer.Serialize(profileLoginDto);
         StringContent content = new(userAsJson, Encoding.UTF8, "application/json");
 
-        HttpResponseMessage response = await client.PostAsync("http://localhost:5189/auth/login", content);
+        HttpResponseMessage response = await client.PostAsync("https://localhost:7216/auth/login", content);
         string responseContent = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
         {
+            Console.Write("whoop whoop");
             throw new Exception(responseContent);
         }
 

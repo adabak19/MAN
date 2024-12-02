@@ -1,4 +1,4 @@
-@page "/auth/login"
+@page "/login"
 @using MAN.Shared.DTO
 @using MAN.Shared.Interfaces
 @inject IAuthServiceWEB AuthService
@@ -36,6 +36,7 @@
     {
         try
         {
+            Console.Write("whoop whoop");
             await AuthService.LoginAsync(loginModel.ProfileName, loginModel.Password);
             Navigation.NavigateTo("/");
         }

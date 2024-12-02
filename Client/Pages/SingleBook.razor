@@ -33,32 +33,57 @@ else
             </li>
             <li><strong>Co-Authors:</strong>
                 <ul>
-                    @foreach (var coauthor in book.CoAuthors)
+                    @if(book.CoAuthors != null)
                     {
-                        <li>@coauthor</li>
+                        @foreach (var coauthor in book.CoAuthors)
+                        {
+                            <li>@coauthor</li>
+                        }
+                    }else{
+                        <li>-</li>
                     }
                 </ul>
             </li>
         </ul>
     </div>
+    @if (bookRead == null){
+        <button @onclick="BorrowBook">Borrow This Book</button>
+    }else if (bookRead.DateStarted != null && bookRead.DateFinished == null){
+        <input @bind="Review" placeholder="Enter your review" />
+        <input @bind="Rating" placeholder="Enter your rating" />
+        <button @onclick="ReturnBook">Return This Book</button>
+    }
+    <button @onclick="SeeReviews">SeeReviews</button>
 }
-
-<button @onclick="BorrowBook">Borrow This Book</button>
-<input @bind="Review" placeholder="Enter your review" />
-<input @bind="Rating" placeholder="Enter your rating" />
-<button @onclick="ReturnBook">Return This Book</button>
-<button @onclick="SeeReviews">SeeReviews</button>
 
 @code {
     private BookDto? book;
+    private BookRead? bookRead;
     [Parameter]
     public int Id { get; set; }
-    public string Review {get; set;}
+    public string? Review {get; set;}
     public int Rating {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
+        try
+    {
         book = await BookService.GetAsyncById(Id);
+        if (book == null)
+        {
+            Console.WriteLine("Book not found.");
+        }
+
+        bookRead = await BookReadService.GetAsyncById(1, Id);
+        if (bookRead == null)
+        {
+            Console.WriteLine("BookRead not found.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error fetching data: {ex.Message}");
+    }
     }
 
     private async Task BorrowBook()
@@ -74,19 +99,19 @@ else
             Status = "reading"
         };
 
-        var newBook = new Book
+        var newBook = new BookDto
         {
             Id = book.Id,
-            ISBN = "1243242",
-            Title = "Book2",
-            PageCount = 120,
-            YearPublished = 1929,
-            BindingTypeId = 3,
-            PublisherId = 2,
-            AuthorId = 3,
+            ISBN = book.ISBN,
+            Title = book.Title,
+            AuthorName = book.AuthorName,
+            Publisher = book.Publisher,
+            PageCount = book.PageCount,
+            YearPublished = book.YearPublished,
+            Genres = book.Genres,
+            CoAuthors = book.CoAuthors,
             Amount = book.Amount - 1
         };
-
        
         await BookService.Update(newBook);
         await BookReadService.Add(newBookRead);
@@ -106,16 +131,13 @@ else
             Status = "read"
         };
 
-        var newBook = new Book
+        var newBook = new BookDto
         {
             Id = book.Id,
-            ISBN = "1243242",
-            Title = "Book2",
-            PageCount = 120,
-            YearPublished = 1929,
-            BindingTypeId = 3,
-            PublisherId = 2,
-            AuthorId = 3,
+            ISBN = book.ISBN,
+            Title = book.Title,
+            PageCount = book.PageCount,
+            YearPublished = book.YearPublished,
             Amount = book.Amount + 1
         };
 

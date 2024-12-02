@@ -13,7 +13,7 @@ public class AuthService : IAuthServiceAPI
 
     // Use ToLower() for case-insensitive comparison
     Profile? existingProfile = await context.Profiles
-        .FirstOrDefaultAsync(p => p.ProfileName.ToLower() == profilename.ToLower())
+        .FirstOrDefaultAsync(p => p.ProfileName == profilename)
         ?? throw new Exception("User not found");
 
     if (!existingProfile.Password.Equals(password))
