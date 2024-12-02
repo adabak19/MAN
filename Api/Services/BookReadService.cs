@@ -48,24 +48,48 @@ namespace MAN.Api.Services
         }
         
       public async Task<List<BookReadDto>> GetAsyncByBookId(int bookId)
-{ using ApplicationDbContext context = new();
-    var bookReads = await context.BookReads
-        .Include(br => br.Book)
-        .Include(br => br.Profile)
-        .Where(br => br.BookId == bookId)
-        .ToListAsync();
+        {   
+            using ApplicationDbContext context = new();
+            var bookReads = await context.BookReads
+            .Include(br => br.Book)
+            .Include(br => br.Profile)
+            .Where(br => br.BookId == bookId)
+            .ToListAsync();
 
-    return bookReads.Select(br => new BookReadDto
-    {
-        BookId = br.BookId,
-        BookTitle = br.Book?.Title,
-        ProfileId = br.ProfileId,
-        ReviewerName = br.Profile != null ? $"{br.Profile.FirstName} {br.Profile.LastName}" : null,
-        Rating = br.Rating,
-        Review = br.Review,
-        DateFinished = br.DateFinished
-    }).ToList();
-}
+            return bookReads.Select(br => new BookReadDto
+                {
+                    BookId = br.BookId,
+                    BookTitle = br.Book?.Title,
+                    AuthorName = br.Book?.Author?.MiddleName == null ? $"{br.Book?.Author?.FirstName} {br.Book?.Author?.LastName}" : $"{br.Book?.Author?.FirstName} {br.Book?.Author?.MiddleName} {br.Book?.Author?.LastName}",
+                    ProfileId = br.ProfileId,
+                    ReviewerName = br.Profile != null ? $"{br.Profile.FirstName} {br.Profile.LastName}" : null,
+                    Rating = br.Rating,
+                    Review = br.Review,
+                    DateFinished = br.DateFinished
+                }).ToList();
+        }
+        public async Task<List<BookReadDto>> GetAsyncByProfileId(int profileId)
+        {   
+            using ApplicationDbContext context = new();
+            var bookReads = await context.BookReads
+            .Include(br => br.Book)
+            .Include(br => br.Profile)
+            .Where(br => br.ProfileId == profileId)
+            .ToListAsync();
+
+            return bookReads.Select(br => new BookReadDto
+                {
+                    BookId = br.BookId,
+                    BookTitle = br.Book?.Title,
+                    AuthorName = br.Book?.Author?.MiddleName == null ? $"{br.Book?.Author?.FirstName} {br.Book?.Author?.LastName}" : $"{br.Book?.Author?.FirstName} {br.Book?.Author?.MiddleName} {br.Book?.Author?.LastName}",
+                    ProfileId = br.ProfileId,
+                    ReviewerName = br.Profile != null ? $"{br.Profile.FirstName} {br.Profile.LastName}" : null,
+                    Rating = br.Rating,
+                    Review = br.Review,
+                    DateStarted = br.DateStarted,
+                    DateFinished = br.DateFinished
+                }).ToList();
+        }
 
 
         

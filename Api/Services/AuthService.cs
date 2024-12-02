@@ -24,10 +24,8 @@ public class AuthService : IAuthServiceAPI
     return existingProfile;
 }
 
-    public Task RegisterUser(Profile profile)
+    public async Task<bool> RegisterUserAsync(Profile profile)
     {
-        using ApplicationDbContext context = new();
-
         if (string.IsNullOrEmpty(profile.ProfileName))
         {
             throw new ValidationException("Username cannot be null");
@@ -41,8 +39,27 @@ public class AuthService : IAuthServiceAPI
 
         // save to persistence instead of list
 
+        try
+        {
+        using var context = new ApplicationDbContext();
+
+        // Check if the username already exists
+        if (await context.Profiles.AnyAsync(p => p.ProfileName == profile.ProfileName))
+        {
+            throw new ValidationException("Username already exists");
+        }
+
+        // Add the profile to the database
         context.Profiles.Add(profile);
 
-        return Task.CompletedTask;
+        return true;
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or handle it appropriately
+            Console.WriteLine($"Error registering user: {ex.Message}");
+            return false;
+        }
     }
+    
 }

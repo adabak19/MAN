@@ -5,14 +5,9 @@
 <AuthorizeView>
     <Authorized>
         <h1>Hello @context.User.Claims.First(claim => claim.Type.Equals("Username")).Value</h1>
-        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Gap="0.5rem" class="rz-p-12">
-    <RadzenLabel Text="Select Date" Component="RadzenDatePickerBindValue" />
-    <RadzenDatePicker @bind-Value=@value Name="RadzenDatePickerBindValue" ShowCalendarWeek />
-</RadzenStack>
+        
 
-@code {
-    DateTime? value;
-}
+
     </Authorized>
     <NotAuthorized>
         <h1>Hello World!</h1>

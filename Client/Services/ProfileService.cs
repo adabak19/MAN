@@ -44,5 +44,10 @@ namespace MAN.Client.Services
             var response = await _httpClient.PutAsJsonAsync($"api/profile/{profile.Id}", profile);
             response.EnsureSuccessStatusCode();
         }
+        public async Task<Profile?> GetAsyncByUsername(string username)
+        {
+            return await _httpClient.GetFromJsonAsync<Profile>($"api/profile/{username}");
+        }
+
     }
 }

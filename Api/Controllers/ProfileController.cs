@@ -18,9 +18,16 @@ public class ProfileController : ControllerBase
         var profile = await _profileService.GetAllAsync();
         return Ok(profile);
     }
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     public async Task<ActionResult<Profile>> Get(int id){
         var profile = await _profileService.GetAsyncById(id);
+        if (profile is null)
+            return NotFound();
+        return profile;
+    }
+    [HttpGet("{username}")]
+    public async Task<ActionResult<Profile>> GetByName(string username){
+        var profile = await _profileService.GetAsyncByUsername(username);
         if (profile is null)
             return NotFound();
         return profile;

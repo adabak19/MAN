@@ -9,4 +9,5 @@ public interface IBookReadService
     Task Delete(int profileId, int bookId);
     Task Update(BookRead bookRead);
     Task<List<BookReadDto>> GetAsyncByBookId(int bookId);
+    Task<List<BookReadDto>> GetAsyncByProfileId(int profileId);
 }

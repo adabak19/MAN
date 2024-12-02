@@ -35,6 +35,7 @@ public partial class ApplicationDbContext : DbContext
 
         // Property configurations
         modelBuilder.Entity<Book>().Property(b => b.Id).ValueGeneratedOnAdd();
+        modelBuilder.Entity<Profile>().Property(p => p.Id).ValueGeneratedOnAdd();
         modelBuilder.Entity<Book>()
             .Property(b => b.ISBN)
             .HasMaxLength(15);

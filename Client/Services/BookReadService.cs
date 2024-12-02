@@ -47,13 +47,23 @@ namespace MAN.Client.Services
             response.EnsureSuccessStatusCode();
         }
         public async Task<List<BookReadDto>> GetAsyncByBookId(int bookId)
-    {
-        var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/{bookId}");
-        if (response == null)
         {
-            throw new Exception("Failed to fetch book reads.");
+            var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/{bookId}");
+            if (response == null)
+            {
+                throw new Exception("Failed to fetch book reads.");
+            }
+            return response;
         }
-        return response;
-    }
+
+        public async Task<List<BookReadDto>> GetAsyncByProfileId(int profileId)
+        {
+            var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/profile/{profileId}");
+            if (response == null)
+            {
+                throw new Exception("Failed to fetch book reads.");
+            }
+            return response;
+        }
     }
 }

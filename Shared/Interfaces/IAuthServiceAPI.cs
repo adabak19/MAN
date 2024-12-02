@@ -4,5 +4,5 @@ namespace MAN.Shared.Interfaces;
 public interface IAuthServiceAPI
 {
     Task<Profile> ValidateUser(string profilename, string password);
-    Task RegisterUser(Profile profile);
+    Task<bool> RegisterUserAsync(Profile profile);
 }
