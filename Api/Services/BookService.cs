@@ -63,7 +63,7 @@ public class BookService : IBookService{
     public async Task Update(BookDto bookDto){
         using ApplicationDbContext context = new();
         Book? book = await context.Books.Where(b => b.Id == bookDto.Id).FirstOrDefaultAsync();
-        Book? newBook = new Book{
+        Book? newBook = new() {
             Id = bookDto.Id,
             ISBN = bookDto.ISBN,
             Title = bookDto.Title,

@@ -42,7 +42,7 @@ namespace MAN.Client.Services
 
         public async Task Update(BookDto bookDto)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/book/{bookDto.Id}", bookDto);
+            var response = await _httpClient.PutAsJsonAsync($"https://localhost:7216/api/book/{bookDto.Id}", bookDto);
             response.EnsureSuccessStatusCode();
         }
 
