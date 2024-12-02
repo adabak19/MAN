@@ -18,6 +18,7 @@ public partial class ApplicationDbContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data Source = library.db");
+        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

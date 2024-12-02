@@ -29,10 +29,8 @@ public class Book
         public int AuthorId { get; set; }
         public int Amount { get; set; }
        
-    [JsonIgnore]
     public BindingType? BindingType { get; set; }
     public Publisher? Publisher { get; set; }
-    [JsonIgnore]
     public Author? Author { get; set; }
     public ICollection<BookGenre>? BookGenres { get; set; }
     public ICollection<BookRead>? BookReads { get; set; }
