@@ -15,7 +15,7 @@ public class Book
 
         [Required]
         [MaxLength(200)]
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public int? PageCount { get; set; }
 

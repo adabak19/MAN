@@ -7,7 +7,7 @@ public interface IBookService
     Task<BookDto?> GetAsyncById(int id);
     Task<Book> Add(Book book);
     Task Delete(int id);
-    Task Update(Book book);
+    Task Update(BookDto bookDto);
 
 
         // New method for searching books

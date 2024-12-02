@@ -32,7 +32,7 @@ public class BookController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = book.Id}, book);
     }
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, Book book){
+    public async Task<IActionResult> Update(int id, BookDto book){
         var existingBook = await _bookService.GetAsyncById(id);
         if(existingBook is null)
             return NotFound();

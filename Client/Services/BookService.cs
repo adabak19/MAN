@@ -40,9 +40,9 @@ namespace MAN.Client.Services
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task Update(Book book)
+        public async Task Update(BookDto bookDto)
         {
-            var response = await _httpClient.PutAsJsonAsync($"api/book/{book.Id}", book);
+            var response = await _httpClient.PutAsJsonAsync($"api/book/{bookDto.Id}", bookDto);
             response.EnsureSuccessStatusCode();
         }
 
