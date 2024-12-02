@@ -27,6 +27,7 @@
 
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
+<button @onclick="Register">Register</button>
 
 @code {
     private ProfileLoginDto loginModel = new ProfileLoginDto();
@@ -36,7 +37,6 @@
     {
         try
         {
-            Console.Write("whoop whoop");
             await AuthService.LoginAsync(loginModel.ProfileName, loginModel.Password);
             Navigation.NavigateTo("/");
         }
@@ -44,5 +44,8 @@
         {
             errorMessage = ex.Message;
         }
+    }
+    private async Task Register(){
+        Navigation.NavigateTo($"/register");
     }
 }

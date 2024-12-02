@@ -37,6 +37,12 @@ namespace MAN.Api.Controllers
             return Ok(bookReads);
         }
 
+        [HttpGet("profile/{profileId}")]
+        public async Task<IActionResult> GetAsyncByProfileId(int profileId){
+            var bookReads = await _bookReadService.GetAsyncByProfileId(profileId);
+            return Ok(bookReads);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(BookRead bookRead)
         {

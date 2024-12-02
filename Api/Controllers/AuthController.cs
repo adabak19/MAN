@@ -22,14 +22,12 @@ public class AuthController(IConfiguration config, IAuthServiceAPI authService) 
         try
         {
             Profile profile = await authService.ValidateUser(profileLoginDto.ProfileName, profileLoginDto.Password);
-            Console.Write("whoop whoop");
             string token = GenerateJwt(profile);
 
             return Ok(token);
         }
         catch (Exception e)
         {
-            Console.Write("whoop whoop");
             return BadRequest(e.Message);
         }
     }
@@ -73,7 +71,18 @@ private string GenerateJwt(Profile profile)
     //     new Claim(ClaimTypes.Name, profile.ProfileName),
     //     new Claim(ClaimTypes.Role, profile.Role)
     // };
+    }
+    [HttpPost("register")]
+    public async Task<IActionResult> RegisterAsync(Profile registerModel)
+    {
+        var result = await authService.RegisterUserAsync(registerModel);
+        if (result)
+        {
+            return Ok();
+        }
+        return BadRequest("Registration failed");
+    }
 }
 
 
-}
+

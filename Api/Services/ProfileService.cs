@@ -37,4 +37,9 @@ public class ProfileService : IProfileService{
         context.Profiles.Update(profile);
         await context.SaveChangesAsync();
     }
+
+    public async Task<Profile?> GetAsyncByUsername(string username){
+        using ApplicationDbContext context = new();
+        return await context.Profiles.Where(x => x.ProfileName == username).FirstOrDefaultAsync();
+    }
 }
