@@ -19,7 +19,6 @@ public class JwtAuthService(HttpClient client, IJSRuntime jsRuntime) : IAuthServ
 
     public async Task LoginAsync(string username, string password)
     {
-        Console.Write("whoop whoop");
         ProfileLoginDto profileLoginDto = new()
         {
             ProfileName = username,
@@ -34,7 +33,6 @@ public class JwtAuthService(HttpClient client, IJSRuntime jsRuntime) : IAuthServ
 
         if (!response.IsSuccessStatusCode)
         {
-            Console.Write("whoop whoop");
             throw new Exception(responseContent);
         }
 

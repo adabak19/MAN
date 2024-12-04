@@ -63,14 +63,7 @@ private string GenerateJwt(Profile profile)
         new Claim("Role", profile.Role),
     };
     return [.. claims];
-    // return new List<Claim>
-    // {
-    //     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub, config["Jwt:Subject"] ?? ""),
-    //     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-    //     new Claim(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString(), ClaimValueTypes.DateTime),
-    //     new Claim(ClaimTypes.Name, profile.ProfileName),
-    //     new Claim(ClaimTypes.Role, profile.Role)
-    // };
+    
     }
     [HttpPost("register")]
     public async Task<IActionResult> RegisterAsync(Profile registerModel)

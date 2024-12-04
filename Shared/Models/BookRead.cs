@@ -21,9 +21,7 @@ public class BookRead
         public DateOnly? DateFinished { get; set; }
 
         [MaxLength(7)]
-        public string? Status { get; set; }
-        [JsonIgnore]       
+        public string? Status { get; set; }    
         public Profile? Profile { get; set; }
-        [JsonIgnore]
         public Book? Book { get; set; }
     }

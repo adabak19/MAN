@@ -1,0 +1,168 @@
+@page "/singleBook/{id:int}"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider CustomAuthProvider
+@inject IProfileService ProfileService
+@rendermode InteractiveServer
+
+<h3>Book Details</h3>
+
+@if (book == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="single-book">
+        <ul>
+            <li><strong>ISBN:</strong> @(string.IsNullOrEmpty(book.ISBN) ? "Unknown" : book.ISBN)</li>
+            <li><strong>Title:</strong> @book.Title</li>
+            <li><strong>Author:</strong> @book.AuthorName</li>
+            <li><strong>Publisher:</strong> @book.Publisher</li>
+            <li><strong>Page Count:</strong> @book.PageCount</li>
+            <li><strong>Year Published:</strong> @book.YearPublished</li>
+            <li><strong>Amount:</strong> @book.Amount</li>
+            <li><strong>Genres:</strong>
+                <ul>
+                    @foreach (var genre in book.Genres)
+                    {
+                        <li>@genre</li>
+                    }
+                </ul>
+            </li>
+            <li><strong>Co-Authors:</strong>
+                <ul>
+                    @if(book.CoAuthors != null)
+                    {
+                        @foreach (var coauthor in book.CoAuthors)
+                        {
+                            <li>@coauthor</li>
+                        }
+                    }else{
+                        <li>-</li>
+                    }
+                </ul>
+            </li>
+        </ul>
+    </div>
+    @if (bookRead == null || bookRead.DateFinished != null){
+        <button @onclick="BorrowBook">Borrow This Book</button>
+    }else if (bookRead.DateStarted != null && bookRead.DateFinished == null){
+        <input @bind="Review" placeholder="Enter your review" />
+        <input @bind="Rating" placeholder="Enter your rating" />
+        <button @onclick="ReturnBook">Return This Book</button>
+    }
+    <button @onclick="SeeReviews">SeeReviews</button>
+}
+
+@code {
+    private BookDto? book;
+    private Profile? profile;
+    private BookRead? bookRead;
+    [Parameter]
+    public int Id { get; set; }
+    public string? Review {get; set;}
+    public int Rating {get; set;}
+    public string? Username {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+    {
+        book = await BookService.GetAsyncById(Id);
+        if (book == null)
+        {
+            Console.WriteLine("Book not found.");
+        }
+        var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+        }
+        profile = await ProfileService.GetAsyncByUsername(Username);
+
+        bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+        if (bookRead == null)
+        {
+            Console.WriteLine("BookRead not found.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error fetching data: {ex.Message}");
+    }
+    }
+
+    private async Task BorrowBook()
+    {
+        var newBookRead = new BookRead
+        {
+            ProfileId = profile.Id,
+            BookId = book.Id,
+            Rating = null,
+            Review = null,
+            DateStarted = DateOnly.FromDateTime(DateTime.Now),
+            DateFinished = null,
+            Status = "reading"
+        };
+
+        var newBook = new BookDto
+        {
+            Id = book.Id,
+            ISBN = book.ISBN,
+            Title = book.Title,
+            AuthorName = book.AuthorName,
+            Publisher = book.Publisher,
+            PageCount = book.PageCount,
+            YearPublished = book.YearPublished,
+            Genres = book.Genres,
+            CoAuthors = book.CoAuthors,
+            Amount = book.Amount - 1
+        };
+       
+        await BookService.Update(newBook);
+        await BookReadService.Add(newBookRead);
+        book = await BookService.GetAsyncById(Id);
+        bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+    }
+    private async Task ReturnBook()
+    {
+        var bookRead = await BookReadService.GetAsyncById(1, book.Id);
+        var newBookRead = new BookRead
+        {
+            ProfileId = bookRead.ProfileId,
+            BookId = book.Id,
+            Rating = Rating,
+            Review = Review,
+            DateStarted = bookRead.DateStarted,
+            DateFinished = DateOnly.FromDateTime(DateTime.Now),
+            Status = "read"
+        };
+
+        var newBook = new BookDto
+        {
+            Id = book.Id,
+            ISBN = book.ISBN,
+            Title = book.Title,
+            PageCount = book.PageCount,
+            YearPublished = book.YearPublished,
+            Amount = book.Amount + 1
+        };
+
+       
+        await BookService.Update(newBook);
+        await BookReadService.Update(newBookRead);
+        book = await BookService.GetAsyncById(Id);
+        bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+    }
+
+    private async Task SeeReviews(){
+        Navigation.NavigateTo($"/review/{Id}");
+    }
+}

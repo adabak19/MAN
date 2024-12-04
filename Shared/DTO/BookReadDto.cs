@@ -10,6 +10,7 @@ public class BookReadDto
     public string? ReviewerName { get; set; }
     public int? Rating { get; set; }
     public string? Review { get; set; }
+    public string? Status {get; set;}
     public DateOnly? DateStarted {get; set;}
     public DateOnly? DateFinished { get; set; }
     

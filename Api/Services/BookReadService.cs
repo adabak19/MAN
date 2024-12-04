@@ -65,7 +65,8 @@ namespace MAN.Api.Services
                     ReviewerName = br.Profile != null ? $"{br.Profile.FirstName} {br.Profile.LastName}" : null,
                     Rating = br.Rating,
                     Review = br.Review,
-                    DateFinished = br.DateFinished
+                    DateFinished = br.DateFinished,
+                    Status = br.Status
                 }).ToList();
         }
         public async Task<List<BookReadDto>> GetAsyncByProfileId(int profileId)
@@ -87,7 +88,8 @@ namespace MAN.Api.Services
                     Rating = br.Rating,
                     Review = br.Review,
                     DateStarted = br.DateStarted,
-                    DateFinished = br.DateFinished
+                    DateFinished = br.DateFinished,
+                    Status = br.Status
                 }).ToList();
         }
 

@@ -10,17 +10,6 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
-// builder.Services.AddCors(options =>
-// {
-//     options.AddPolicy("AllowSpecificOrigin", policy =>
-//     {
-//         policy.WithOrigins("http://localhost:5189") // Allow only your frontend's URL
-//               .WithMethods("GET", "POST", "PUT", "DELETE") // Allow necessary HTTP methods
-//               .WithHeaders("Content-Type", "Authorization"); // Allow headers such as Content-Type and Authorization
-//     });
-// });
-
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>();
 
@@ -32,7 +21,7 @@ if (string.IsNullOrEmpty(jwtKey))
 }
 
 builder.Services.AddAuthentication()
-.AddJwtBearer(options =>
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 {
     options.MapInboundClaims = false;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -44,6 +33,7 @@ builder.Services.AddAuthentication()
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+        ClockSkew = TimeSpan.Zero,
     };
 });
 

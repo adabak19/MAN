@@ -46,24 +46,23 @@ namespace MAN.Client.Services
             response.EnsureSuccessStatusCode();
         }
 
-// Search Books Implementation
-       public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
-{
-    var query = await _httpClient.GetFromJsonAsync<List<BookDto>>("api/book")
-               ?? new List<BookDto>();
+        // Search Books Implementation
+        public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
+        {
+            var query = await _httpClient.GetFromJsonAsync<List<BookDto>>("api/book")
+                       ?? new List<BookDto>();
 
-    if (!string.IsNullOrWhiteSpace(title))
-        query = query.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (!string.IsNullOrWhiteSpace(title))
+                query = query.Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase)).ToList();
 
-    if (!string.IsNullOrWhiteSpace(author))
-        query = query.Where(b => b.AuthorName.Contains(author, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (!string.IsNullOrWhiteSpace(author))
+                query = query.Where(b => b.AuthorName.Contains(author, StringComparison.OrdinalIgnoreCase)).ToList();
 
-    if (!string.IsNullOrWhiteSpace(genre))
-        query = query.Where(b => b.Genres.Any(g => g.Contains(genre, StringComparison.OrdinalIgnoreCase))).ToList();
+            if (!string.IsNullOrWhiteSpace(genre))
+                query = query.Where(b => b.Genres.Any(g => g.Contains(genre, StringComparison.OrdinalIgnoreCase))).ToList();
 
-    return query;
-}
-
+            return query;
+        }
 
 
     }

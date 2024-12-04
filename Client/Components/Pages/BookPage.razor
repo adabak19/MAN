@@ -1,0 +1,96 @@
+@page "/books"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IBookService BookService;
+
+<h3>Books</h3>
+
+<div>
+    <input 
+        @bind="searchTitle" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Title" />
+
+    <input 
+        @bind="searchAuthor" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Author" />
+
+    <input 
+        @bind="searchGenre" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Genre" />
+
+    <button @onclick="SearchBooks">Search</button>
+</div>
+
+@if (books == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!books.Any())
+{
+    <p><em>No books found.</em></p>
+}
+else
+{
+    <div class="book-container">
+        @foreach (var book in books)
+        {
+            <div class="book-item">
+                <a href="/singleBook/@book.Id">
+                    <h4>@book.Title</h4>
+                    <p><strong>Author:</strong> @book.AuthorName</p>
+                    <p><strong>Publisher:</strong> @book.Publisher</p>
+                </a>
+            </div>
+        }
+    </div>
+}
+
+<button @onclick="AddBook">Add New Book</button>
+
+@code {
+    private List<BookDto>? books;
+    private string? searchTitle;
+    private string? searchAuthor;
+    private string? searchGenre;
+
+    protected override async Task OnInitializedAsync()
+    {
+        books = await BookService.GetAllAsync();
+    }
+
+    private async Task SearchBooks()
+    {
+        books = await BookService.SearchBooksAsync(searchTitle, searchAuthor, searchGenre);
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SearchBooks();
+        }
+    }
+
+    private async Task AddBook()
+    {
+        var newBook = new Book
+        {
+            Id = 3,
+            ISBN = "1243242",
+            Title = "Book2",
+            PageCount = 120,
+            YearPublished = 1929,
+            BindingTypeId = 3,
+            PublisherId = 2,
+            AuthorId = 3,
+            Amount = 4
+        };
+
+        await BookService.Add(newBook);
+        books = await BookService.GetAllAsync();
+    }
+}

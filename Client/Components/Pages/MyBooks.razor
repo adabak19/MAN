@@ -1,0 +1,107 @@
+@page "/myBooks"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject IProfileService ProfileService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider CustomAuthProvider
+@rendermode InteractiveServer
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You have to be logged in to see this page</h3>
+    </NotAuthorized>
+    <Authorized>
+<h3>My Books</h3>
+
+@if (bookReads == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <h1>Current books</h1>
+    <div class="book-container">
+        @foreach (var book in bookReads)
+        {
+            @if(book.Status == "reading"){
+                <div class="book-item">
+                <a href="/singleBook/@book.BookId">
+                    <h4>@book.BookTitle</h4>
+                    <p><strong>Author:</strong> @book.AuthorName</p>
+                    </a>
+            </div>
+            }
+        }
+    </div>
+        
+        <h1>Books to read</h1>
+        <div class="book-container">
+        @foreach (var book in bookReads)
+        {
+            @if(book.Status == "to-read"){
+                <div class="book-item">
+                <a href="/singleBook/@book.BookId">
+                    <h4>@book.BookTitle</h4>
+                    <p><strong>Author:</strong> @book.AuthorName</p>
+                    </a>
+            </div>
+            }
+        }
+        </div>
+        <h1>Books you already read</h1>
+        <div class="book-container">
+        @foreach (var book in bookReads)
+        {
+            @if(book.Status == "read"){
+                <div class="book-item">
+                <a href="/singleBook/@book.BookId">
+                    <h4>@book.BookTitle</h4>
+                    <p><strong>Author:</strong> @book.AuthorName</p>
+                    </a>
+            </div>
+            }
+        }
+        </div>
+}
+</Authorized>
+@code {
+    private List<BookReadDto>? bookReads;
+    private Profile? profile;
+    [Parameter]
+    public string? Username { get; set; }
+    public string? Review {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+            }
+            profile = await ProfileService.GetAsyncByUsername(Username);
+            if (profile == null)
+            {
+                Console.WriteLine("Profile not found.");
+            }
+
+            bookReads = await BookReadService.GetAsyncByProfileId(profile.Id);
+            if (bookReads == null)
+            {
+                Console.WriteLine("BookRead not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+    
+}
+</AuthorizeView>

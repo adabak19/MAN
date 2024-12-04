@@ -18,21 +18,6 @@ public class CustomAuthProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        // var tokenHandler = new JwtSecurityTokenHandler();
-        // var identity = new ClaimsIdentity();
-
-        // if (tokenHandler.CanReadToken(_authService.Jwt))
-        // {
-        //     var jwtSecurityToken = tokenHandler.ReadJwtToken(_authService.Jwt);
-        //     identity = new ClaimsIdentity(jwtSecurityToken.Claims, "Blazor School");
-        // }
-
-        // var principal = new ClaimsPrincipal(identity);
-        // var authenticationState = new AuthenticationState(principal);
-        // var authenticationTask = await Task.FromResult(authenticationState);
-
-        // return authenticationTask;
-        Console.Write("whoop whoop");
         ClaimsPrincipal principal = await _authService.GetAuthAsync();
 
         return new AuthenticationState(principal);
