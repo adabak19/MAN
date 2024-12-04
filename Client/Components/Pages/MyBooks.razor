@@ -16,6 +16,32 @@
     <Authorized>
 <h3>My Books</h3>
 
+<BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" />
+
+        @if (book == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else if (!books.Any())
+        {
+            <p><em>No books found.</em></p>
+        }
+        else
+        {
+            <div class="book-container">
+                @foreach (var book in books)
+                {
+                    <div class="book-item">
+                        <a href="/singleBook/@book.Id">
+                            <h4>@book.Title</h4>
+                            <p><strong>Author:</strong> @book.AuthorName</p>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+
+  
 @if (bookReads == null)
 {
     <p><em>Loading...</em></p>
@@ -68,6 +94,8 @@ else
 }
 </Authorized>
 @code {
+    
+     private List<BookDto>? books;
     private List<BookReadDto>? bookReads;
     private Profile? profile;
     [Parameter]
@@ -101,6 +129,11 @@ else
         {
             Console.WriteLine($"Error fetching data: {ex.Message}");
         }
+    }
+
+    private void HandleSearchResults(List<BookDto> searchResults)
+    {
+        books = searchResults;
     }
     
 }

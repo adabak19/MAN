@@ -123,5 +123,56 @@ public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author,
     return result; // Return a simplified object list
 }
 
+public async Task<List<BookDto>> SearchBooksForUserAsync(int profileId, string? title, string? author, string? genre)
+{
+    using var context = new ApplicationDbContext(); // If using dependency injection, use _context
+
+    // Start with the user's books
+    var userBooks = context.BookReads
+        .Include(br => br.Book)
+        .ThenInclude(b => b.Author)
+        .Include(br => br.Book)
+        .ThenInclude(b => b.BookGenres)
+        .ThenInclude(bg => bg.Genre)
+        .Where(br => br.ProfileId == profileId)
+        .Select(br => br.Book)
+        .AsQueryable();
+
+    // Apply filters
+    if (!string.IsNullOrWhiteSpace(title))
+    {
+        userBooks = userBooks.Where(b => EF.Functions.Like(b.Title.ToLower(), $"%{title.ToLower()}%"));
+    }
+
+    if (!string.IsNullOrWhiteSpace(author))
+    {
+        userBooks = userBooks.Where(b =>
+            EF.Functions.Like(b.Author.FirstName.ToLower(), $"%{author.ToLower()}%") ||
+            EF.Functions.Like(b.Author.LastName.ToLower(), $"%{author.ToLower()}%"));
+    }
+
+    if (!string.IsNullOrWhiteSpace(genre))
+    {
+        userBooks = userBooks.Where(b => b.BookGenres.Any(bg =>
+            EF.Functions.Like(bg.Genre.GenreName.ToLower(), $"%{genre.ToLower()}%")));
+    }
+
+    // Map results to DTOs
+    var result = await userBooks.Select(b => new BookDto
+    {
+        Id = b.Id,
+        Title = b.Title,
+        AuthorName = $"{b.Author.FirstName} {b.Author.LastName}",
+        Publisher = b.Publisher.PublisherName,
+        PageCount = b.PageCount,
+        YearPublished = b.YearPublished,
+        Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
+        Amount = b.Amount
+    }).ToListAsync();
+
+    return result;
+}
+
+
 
 }

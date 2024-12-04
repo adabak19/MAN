@@ -48,6 +48,13 @@ public class BookController : ControllerBase
         return NoContent();
     }
 
+[HttpGet("user/{profileId}")]
+public async Task<ActionResult<List<BookDto>>> SearchBooksForUser(int profileId, [FromQuery] string? title, [FromQuery] string? author, [FromQuery] string? genre)
+{
+    var books = await _bookService.SearchBooksForUserAsync(profileId, title, author, genre);
+    return Ok(books);
+}
+
  // Search books by title, author, or genre
     [HttpGet("search")]
     public async Task<IActionResult> Search(string? title, string? author, string? genre)

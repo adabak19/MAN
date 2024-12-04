@@ -46,6 +46,13 @@ namespace MAN.Client.Services
             response.EnsureSuccessStatusCode();
         }
 
+
+public async Task<List<BookDto>> SearchBooksForUserAsync(int profileId, string? title, string? author, string? genre)
+{
+    var query = $"api/book/user/{profileId}?title={title}&author={author}&genre={genre}";
+    return await _httpClient.GetFromJsonAsync<List<BookDto>>(query) ?? new List<BookDto>();
+}
+
         // Search Books Implementation
         public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
         {

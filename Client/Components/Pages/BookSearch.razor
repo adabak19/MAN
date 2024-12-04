@@ -1,0 +1,54 @@
+@inject IBookService BookService
+@using MAN.Shared.Interfaces
+@using MAN.Shared.DTO
+
+
+<div class="search-container">
+    <input 
+        @bind="searchTitle" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Title" />
+
+    <input 
+        @bind="searchAuthor" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Author" />
+
+    <input 
+        @bind="searchGenre" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Genre" />
+
+    <button @onclick="PerformSearch">Search</button>
+</div>
+
+@code {
+    [Parameter] public EventCallback<List<BookDto>> OnSearchResultsChanged { get; set; }
+ [Parameter]
+    public bool IsForMyBooks { get; set; }
+     [Parameter] public int? ProfileId { get; set; }
+    private string? searchTitle;
+    private string? searchAuthor;
+    private string? searchGenre;
+
+    private async Task PerformSearch()
+    {
+        if (IsForMyBooks && ProfileId.HasValue)
+        {
+            var results = await BookService.SearchBooksForUserAsync(ProfileId.Value, searchTitle, searchAuthor, searchGenre);
+            await OnSearchResultsChanged.InvokeAsync(results);
+        }
+        else
+        {
+            var results = await BookService.SearchBooksAsync(searchTitle, searchAuthor, searchGenre);
+            await OnSearchResultsChanged.InvokeAsync(results);
+        }
+    }
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await PerformSearch();
+        }
+    }
+}
