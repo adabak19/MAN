@@ -3,6 +3,8 @@
 @using MAN.Shared.DTO;
 @using MAN.Shared.Models;
 @inject IBookService BookService;
+@inject AuthenticationStateProvider CustomAuthProvider
+@rendermode InteractiveServer
 
 <h3>Books</h3>
 
@@ -38,13 +40,16 @@ else
     <div class="book-container">
         @foreach (var book in books)
         {
-            <div class="book-item">
+            @* <div class="book-item">
                 <a href="/singleBook/@book.Id">
                     <h4>@book.Title</h4>
                     <p><strong>Author:</strong> @book.AuthorName</p>
                     <p><strong>Publisher:</strong> @book.Publisher</p>
                 </a>
-            </div>
+            </div> *@
+            <a href="/singleBook/@book.Id">
+            <BookComponent Id="book.Id" Username="@Username" />
+            </a>
         }
     </div>
 }
@@ -57,9 +62,18 @@ else
     private string? searchAuthor;
     private string? searchGenre;
 
+    public string? Username {get; set;}
+
     protected override async Task OnInitializedAsync()
     {
         books = await BookService.GetAllAsync();
+        var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+        }
     }
 
     private async Task SearchBooks()

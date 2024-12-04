@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace MAN.Api.Services;
 
 public class ProfileService : IProfileService{
+    
     public async Task<List<Profile>> GetAllAsync(){
         using ApplicationDbContext context = new();
         return await context.Profiles.ToListAsync();
