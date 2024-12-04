@@ -4,6 +4,7 @@
 @using MAN.Shared.Models;
 @inject IBookService BookService;
 @inject AuthenticationStateProvider CustomAuthProvider
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <h3>Books</h3>
@@ -40,16 +41,9 @@ else
     <div class="book-container">
         @foreach (var book in books)
         {
-            @* <div class="book-item">
-                <a href="/singleBook/@book.Id">
-                    <h4>@book.Title</h4>
-                    <p><strong>Author:</strong> @book.AuthorName</p>
-                    <p><strong>Publisher:</strong> @book.Publisher</p>
-                </a>
-            </div> *@
-            <a href="/singleBook/@book.Id">
-            <BookComponent Id="book.Id" Username="@Username" />
-            </a>
+            <BookComponent Id="book.Id" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
+            <BorrowButton Id="book.Id" Username="@Username" OnBorrow="RefreshBook"/>
+            </BookComponent>
         }
     </div>
 }

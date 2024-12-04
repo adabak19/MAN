@@ -1,0 +1,122 @@
+@page "/borrowButton"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject AuthenticationStateProvider CustomAuthProvider
+@inject IProfileService ProfileService
+@rendermode InteractiveServer
+
+@if (book != null && bookRead == null && book.Amount > 0)
+{
+    <button @onclick="BorrowBook">Borrow This Book</button>
+}
+else if (bookRead != null && bookRead.DateStarted != null && bookRead.DateFinished == null)
+{
+    <p>You currently have this book</p>
+}
+else
+{
+    <p>  </p>
+}
+
+@code {
+    private BookDto? book;
+    private Profile? profile;
+    private BookRead? bookRead;
+    [Parameter]
+    public int Id {get; set;}
+
+    [Parameter]
+    public string? Username { get; set; }
+    [Parameter]
+    public EventCallback OnBorrow { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(Username))
+            {
+                Console.WriteLine("Username is null or empty.");
+                return;
+            }
+
+            book = await BookService.GetAsyncById(Id);
+            if (book == null)
+            {
+                Console.WriteLine("Book not found.");
+                return;
+            }
+
+            profile = await ProfileService.GetAsyncByUsername(Username);
+            if (profile == null)
+            {
+                Console.WriteLine("Profile not found.");
+                return;
+            }
+
+            bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    private async Task BorrowBook()
+    {
+        if (book == null || profile == null)
+        {
+            Console.WriteLine("Cannot borrow book: Book or Profile is null.");
+            return;
+        }
+
+        if (book.Amount <= 0)
+        {
+            Console.WriteLine("Cannot borrow book: No copies available.");
+            return;
+        }
+
+        try
+        {
+            var newBookRead = new BookRead
+            {
+                ProfileId = profile.Id,
+                BookId = book.Id,
+                Rating = null,
+                Review = null,
+                DateStarted = DateOnly.FromDateTime(DateTime.Now),
+                DateFinished = null,
+                Status = "reading"
+            };
+
+            var updatedBook = new BookDto
+            {
+                Id = book.Id,
+                ISBN = book.ISBN,
+                Title = book.Title,
+                AuthorName = book.AuthorName,
+                Publisher = book.Publisher,
+                PageCount = book.PageCount,
+                YearPublished = book.YearPublished,
+                Genres = book.Genres,
+                CoAuthors = book.CoAuthors,
+                Amount = book.Amount - 1
+            };
+
+            await BookService.Update(updatedBook);
+            await BookReadService.Add(newBookRead);
+
+            // Refresh the state after changes
+            book = await BookService.GetAsyncById(Id);
+            bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during borrowing process: {ex.Message}");
+        }
+        await OnBorrow.InvokeAsync();
+    }
+}
