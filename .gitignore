@@ -24,5 +24,7 @@ obj/
 .idea/
 
 # Ignore SQLite temporary files
+*.db
 *.db-shm
 *.db-wal
+Migrations/
