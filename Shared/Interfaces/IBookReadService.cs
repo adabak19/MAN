@@ -10,4 +10,7 @@ public interface IBookReadService
     Task Update(BookRead bookRead);
     Task<List<BookReadDto>> GetAsyncByBookId(int bookId);
     Task<List<BookReadDto>> GetAsyncByProfileId(int profileId);
+    
+    Task<List<BookReadDto>> GetAllReading();
+
 }

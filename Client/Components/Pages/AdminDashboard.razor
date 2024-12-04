@@ -1,0 +1,47 @@
+@page "/adminDashboard"
+@using MAN.Shared.Interfaces
+@using MAN.Shared.DTO
+@using MAN.Shared.Models
+@inject IBookReadService BookReadService
+
+@rendermode InteractiveServer
+
+<h3>Admin Dashboard</h3>
+
+@if (bookReads == null)
+{
+    <p>Loading...</p>
+}
+else if (bookReads.Count == 0)
+{
+    <p>No book reads found.</p>
+}
+else
+{
+    <div class="book-reads">
+        <h4>Active loans</h4>
+        @foreach (var bookRead in bookReads)
+        {
+            <LoanComponent loan="@bookRead" />
+        }
+    </div>
+}
+
+@code {
+    private List<BookReadDto> bookReads;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            bookReads = await BookReadService.GetAllReading();
+
+        Console.WriteLine($"Fetched {bookReads?.Count ?? 0} book reads");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+        
+    }
+}

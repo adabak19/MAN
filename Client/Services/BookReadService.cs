@@ -65,5 +65,15 @@ namespace MAN.Client.Services
             }
             return response;
         }
+        
+        public async Task<List<BookReadDto>> GetAllReading()
+        {
+            var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>("api/bookRead/reading");
+            if (response == null)
+            {
+                throw new Exception("Failed to fetch book reads.");
+            }
+            return response;
+        }
     }
 }

@@ -92,7 +92,29 @@ namespace MAN.Api.Services
                     Status = br.Status
                 }).ToList();
         }
+        public async Task<List<BookReadDto>> GetAllReading()
+        {
+            using ApplicationDbContext context = new();
+            var bookReads = await context.BookReads
+            .Include(br => br.Book)
+            .Include(br => br.Profile)
+            .Where(br => br.Status == "reading")
+            .ToListAsync();
 
+            return bookReads.Select(br => new BookReadDto
+                {
+                    BookId = br.BookId,
+                    BookTitle = br.Book?.Title,
+                    AuthorName = br.Book?.Author?.MiddleName == null ? $"{br.Book?.Author?.FirstName} {br.Book?.Author?.LastName}" : $"{br.Book?.Author?.FirstName} {br.Book?.Author?.MiddleName} {br.Book?.Author?.LastName}",
+                    ProfileId = br.ProfileId,
+                    ReviewerName = br.Profile != null ? $"{br.Profile.FirstName} {br.Profile.LastName}" : null,
+                    Rating = br.Rating,
+                    Review = br.Review,
+                    DateStarted = br.DateStarted,
+                    DateFinished = br.DateFinished,
+                    Status = br.Status
+                }).ToList();
+        }
 
         
 

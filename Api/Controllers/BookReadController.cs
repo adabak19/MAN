@@ -74,5 +74,10 @@ namespace MAN.Api.Controllers
 
             return NoContent();
         }
+        [HttpGet("reading")]
+        public async Task<IActionResult> GetAllReading(){
+            var bookReads = await _bookReadService.GetAllReading();
+            return Ok(bookReads);
+        }
     }
 }
