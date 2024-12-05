@@ -2,10 +2,18 @@
 @using MAN.Shared.Interfaces
 @using MAN.Shared.Models
 @inject IProfileService UserService
+@inject AuthenticationStateProvider CustomAuthProvider
+@using System.Security.Claims
 
 @rendermode InteractiveServer
 
 <h3>Admin User Management</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You must be Admin admin to access this page.</h3>
+    </NotAuthorized>
+    <Authorized>
 
 @if (users == null)
 {
@@ -60,16 +68,28 @@ else
     </div>
 }
 
+    </Authorized>
+</AuthorizeView>
+
 @code {
     private List<Profile>? users;
     private Profile? editingUser;
     private int CurrentPage { get; set; } = 1;
     private int PageSize { get; set; } = 24;
-
+    private bool isAdmin = false;
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            // Ensure the user is authenticated
+            if (user.Identity.IsAuthenticated)
+            {
+                // Check if the user has the "Admin" role
+                isAdmin = user.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");}
+
             users = await UserService.GetAllAsync();
         }
         catch (Exception ex)

@@ -1,6 +1,6 @@
 @MAN_HostAddress = https://localhost:7216/api
 
-GET {{MAN_HostAddress}}/profile
+GET {{MAN_HostAddress}}/profile/6969
 Accept: application/json
 
 ###
@@ -52,4 +52,19 @@ Content-Type: application/json
     
     "profileName": "sweet_kristy",
     "password": "123456"
+}
+
+### Create a New Profile
+POST {{MAN_HostAddress}}/api/profile
+Content-Type: application/json
+
+{
+    "id": 696969,
+    "firstName": "Nat",
+    "lastName": "W",
+    "profileName": "siematoja",
+    "password": "123456",
+    "role": "Admin",
+    "active": true,
+    "bookReads": null
 }
