@@ -45,5 +45,15 @@ namespace MAN.Client.Services
             var response = await _httpClient.PutAsJsonAsync($"api/author/{author.Id}", author);
             response.EnsureSuccessStatusCode();
         }
+        public async Task<List<AuthorDto>> SearchAuthorsAsync(string? name)
+        {
+            var query = await _httpClient.GetFromJsonAsync<List<AuthorDto>>("api/author")
+                       ?? new List<AuthorDto>();
+
+            if (!string.IsNullOrWhiteSpace(name))
+                query = query.Where(a => a.AuthorName.Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return query;
+        }
     }
 }
