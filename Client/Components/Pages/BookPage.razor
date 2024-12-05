@@ -4,25 +4,17 @@
 @using MAN.Shared.Models;
 @inject IBookService BookService;
 @inject AuthenticationStateProvider CustomAuthProvider
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <h3>Books</h3>
 
 <div>
-    <input 
-        @bind="searchTitle" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Title" />
+    <input @bind="searchTitle" @onkeyup="HandleKeyPress" placeholder="Search by Title" />
 
-    <input 
-        @bind="searchAuthor" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Author" />
+    <input @bind="searchAuthor" @onkeyup="HandleKeyPress" placeholder="Search by Author" />
 
-    <input 
-        @bind="searchGenre" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Genre" />
+    <input @bind="searchGenre" @onkeyup="HandleKeyPress" placeholder="Search by Genre" />
 
     <button @onclick="SearchBooks">Search</button>
 </div>
@@ -40,16 +32,9 @@ else
     <div class="book-container">
         @foreach (var book in books)
         {
-            @* <div class="book-item">
-                <a href="/singleBook/@book.Id">
-                    <h4>@book.Title</h4>
-                    <p><strong>Author:</strong> @book.AuthorName</p>
-                    <p><strong>Publisher:</strong> @book.Publisher</p>
-                </a>
-            </div> *@
-            <a href="/singleBook/@book.Id">
-            <BookComponent Id="book.Id" Username="@Username" />
-            </a>
+            <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
+                <BorrowButton BookDto="book" Username="@Username" />
+            </BookComponent>
         }
     </div>
 }
@@ -62,7 +47,7 @@ else
     private string? searchAuthor;
     private string? searchGenre;
 
-    public string? Username {get; set;}
+    public string? Username { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -92,17 +77,17 @@ else
     private async Task AddBook()
     {
         var newBook = new Book
-        {
-            Id = 3,
-            ISBN = "1243242",
-            Title = "Book2",
-            PageCount = 120,
-            YearPublished = 1929,
-            BindingTypeId = 3,
-            PublisherId = 2,
-            AuthorId = 3,
-            Amount = 4
-        };
+            {
+                Id = 3,
+                ISBN = "1243242",
+                Title = "Book2",
+                PageCount = 120,
+                YearPublished = 1929,
+                BindingTypeId = 3,
+                PublisherId = 2,
+                AuthorId = 3,
+                Amount = 4
+            };
 
         await BookService.Add(newBook);
         books = await BookService.GetAllAsync();
