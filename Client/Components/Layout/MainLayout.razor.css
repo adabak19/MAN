@@ -13,6 +13,12 @@ main {
     margin: 20px;
 }
 
+.navbar .logo {
+    height: 40px; /* Adjust size as needed */
+    margin-right: 10px; /* Space between the logo and text */
+    vertical-align: middle; /* Aligns the logo with the text */
+}
+
 /* Navigation bar at the top */
 .top-row {
     background-color: #ffd700; /* Warm gold color for navigation bar */

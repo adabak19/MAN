@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     background-color: #fff7e6; /* Soft warm background color */
-    color: #333; /* Neutral text color for readability */
+    color: #faf9f7ee; /* Neutral text color for readability */
     font-family: 'Georgia', 'Times New Roman', serif; /* Classic and friendly font */
 }
 
@@ -25,7 +25,7 @@ main[b-4kdmjuawjh] {
 }
 
 .top-row a[b-4kdmjuawjh] {
-    color: #5d4037; /* Warm brown color for links */
+    color: #fff7e6; /* Warm brown color for links */
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: bold;
@@ -192,6 +192,10 @@ nav[b-b3bxtejbwi] {
     display: flex;
     gap: 1rem;
 }
+/* .navbar-brand img[b-b3bxtejbwi] {
+    height: 10px;
+    width: auto;
+} */
 
 /* Individual navigation links */
 .nav-link[b-b3bxtejbwi] {
