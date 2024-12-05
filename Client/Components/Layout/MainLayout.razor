@@ -4,38 +4,36 @@
 @inject IAuthServiceWEB AuthService
 @rendermode InteractiveServer
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
+<header class="top-row">
+    <div>
+        <a class="navbar-brand" href="/">MAN Library</a>
+        <a href="/">Home</a>
+        <a href="/counter">Counter</a>
+        <a href="/login">Login</a>
+        <a href="/authors">Authors</a>
+        <a href="/books">Books</a>
+        <a href="/myBooks">My Books</a>
     </div>
+    <AuthorizeView>
+        <Authorized>
+            <button @onclick="Logout">Logout</button>
+        </Authorized>
+    </AuthorizeView>
+</header>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
-        
-        <AuthorizeView>
-            <Authorized>
-                <div class="top-row px-4">
-                    <button @onclick="Logout">Logout</button>
-                </div>
-            </Authorized>
-        </AuthorizeView>
+<main>
+    <article class="content">
+        @Body
+    </article>
+</main>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+<footer class="footer">
+    <p>&copy; 2024 MAN Library Management System</p>
+</footer>
 
-<div id="blazor-error-ui">
-    An unhandled error has occurred.
-    <a href="" class="reload">Reload</a>
-    <a class="dismiss">🗙</a>
-</div>
-@code{
-    private async Task Logout(){
+@code {
+    private async Task Logout() {
         await AuthService.LogoutAsync();
-        Navigation.NavigateTo($"/login");
+        Navigation.NavigateTo("/login");
     }
 }
