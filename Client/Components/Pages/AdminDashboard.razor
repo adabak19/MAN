@@ -1,92 +1,60 @@
-@page "/adminDashboard"
+@page "/dashboard"
 @using MAN.Shared.Interfaces
-@using MAN.Shared.DTO
 @inject IBookReadService BookReadService
+@inject IBookService BookService
+@inject IProfileService ProfileService
+@inject NavigationManager Navigation
 
-@rendermode InteractiveServer
+<h3>Dashboard</h3>
 
-<h3>Admin Dashboard</h3>
-
-@if (bookReads == null)
+@if (isLoading)
 {
-    <p>Loading...</p>
-}
-else if (bookReads.Count == 0)
-{
-    <p>No book reads found.</p>
+    <p>Loading data...</p>
 }
 else
 {
-    <div class="book-reads">
-        <h4>Active loans</h4>
-        @foreach (var bookRead in bookReads)
-        {
-            <div class="loan-item">
-                @if (editingLoan == bookRead)
-                {
-                    <div class="edit-dialog">
-                        <h4>Edit Loan</h4>
-                        <p><strong>User:</strong> @editingLoan.ReviewerName</p>
-                        <p><strong>Book:</strong> @editingLoan.BookTitle</p>
-                        <label for="status">Status:</label>
-                        <select id="status" @bind="editingLoan.Status">
-                            <option value="reading">Reading</option>
-                            <option value="read">Read</option>
-                        </select>
-                        <button @onclick="SaveChanges">Save</button>
-                        <button @onclick="CancelEdit">Cancel</button>
-                    </div>
-                }
-                else
-                {
-                    <LoanComponent loan="@bookRead" OnEdit="HandleEdit" />
-                }
-            </div>
-        }
+    <div class="dashboard-container">
+        <div class="dashboard-card" @onclick="NavigateToActiveLoans">
+            <h4>Active Loans</h4>
+            <p>@activeLoansCount</p>
+        </div>
+        <div class="dashboard-card" @onclick="NavigateToBooks">
+            <h4>Books</h4>
+            <p>@booksCount</p>
+        </div>
+        <div class="dashboard-card" @onclick="NavigateToUsers">
+            <h4>Users</h4>
+            <p>@usersCount</p>
+        </div>
     </div>
 }
 
 @code {
-    private List<BookReadDto>? bookReads;
-    private BookReadDto? editingLoan;
+    private int activeLoansCount = 0;
+    private int booksCount = 0;
+    private int usersCount = 0;
+    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            // Fetch all active loans
-            bookReads = await BookReadService.GetAllReading();
+            isLoading = true;
+            activeLoansCount = (await BookReadService.GetAllReading()).Count;
+            booksCount = (await BookService.GetAllAsync()).Count;
+            usersCount = (await ProfileService.GetAllAsync()).Count;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error fetching data: {ex.Message}");
+            Console.WriteLine($"Error loading data: {ex.Message}");
         }
-    }
-
-    private void HandleEdit(BookReadDto loan)
-    {
-        editingLoan = loan;
-    }
-
-    private async Task SaveChanges()
-    {
-        if (editingLoan != null)
+        finally
         {
-            try
-            {
-                await BookReadService.UpdateFromDto(editingLoan);
-                editingLoan = null;
-                bookReads = await BookReadService.GetAllReading();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error saving changes: {ex.Message}");
-            }
+            isLoading = false;
         }
     }
 
-    private void CancelEdit()
-    {
-        editingLoan = null;
-    }
+    private void NavigateToActiveLoans() => Navigation.NavigateTo("/activeLoans");
+    private void NavigateToBooks() => Navigation.NavigateTo("/books");
+    private void NavigateToUsers() => Navigation.NavigateTo("/adminUsers");
 }
