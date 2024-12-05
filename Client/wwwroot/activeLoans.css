@@ -1,0 +1,90 @@
+.book-reads {
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fffdf3; /* Soft warm white */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.book-reads h4 {
+    color: #5d4037; /* Warm brown for headings */
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center; /* Center heading */
+}
+
+.loan-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    background-color: #fef8e7; /* Light warm beige */
+    border: 1px solid #d2b48c; /* Tan border for consistency */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.loan-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Stronger shadow on hover */
+}
+
+.loan-item p {
+    margin: 5px 0;
+    color: #5a4633; /* Warm brown for text */
+    font-size: 1rem;
+}
+
+.loan-item strong {
+    color: #8b4513; /* Darker brown for labels */
+}
+
+button {
+    background-color: #8b4513; /* Warm brown for buttons */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    background-color: #a0522d; /* Slightly lighter brown for hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.edit-dialog {
+    padding: 15px;
+    background-color: #fffdf3;
+    border: 1px solid #d2b48c;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+}
+
+.edit-dialog h4 {
+    margin-bottom: 10px;
+    color: #5d4037;
+    font-size: 1.2rem;
+}
+
+.edit-dialog label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #5a4633;
+}
+
+.edit-dialog select {
+    margin-top: 5px;
+    padding: 5px;
+    border: 1px solid #d2b48c;
+    border-radius: 5px;
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+}

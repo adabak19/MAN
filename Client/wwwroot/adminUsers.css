@@ -1,0 +1,117 @@
+.user-container {
+    margin: 20px auto;
+    max-width: 900px;
+    padding: 20px;
+    background-color: #fffdf3; /* Light warm background */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.user-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background-color: #fef8e7; /* Soft warm beige */
+    border: 1px solid #d2b48c; /* Tan border for consistency */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.user-item:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Slight hover effect */
+}
+
+.user-item p {
+    margin: 3px 0;
+    font-size: 1rem;
+    color: #5a4633; /* Warm brown for text */
+}
+
+.user-item strong {
+    color: #8b4513; /* Darker brown for labels */
+}
+
+button {
+    background-color: #8b4513; /* Warm brown */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    align-self: start; /* Aligns the button on the left */
+}
+
+button:hover {
+    background-color: #a0522d; /* Slightly lighter brown */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.edit-dialog {
+    padding: 15px;
+    background-color: #fffdf3;
+    border: 1px solid #d2b48c;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 15px;
+}
+
+.edit-dialog label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    color: #5a4633;
+}
+
+.edit-dialog input[type="text"],
+.edit-dialog select,
+.edit-dialog input[type="checkbox"] {
+    margin-top: 5px;
+    padding: 8px;
+    border: 1px solid #d2b48c;
+    border-radius: 5px;
+    font-family: 'Georgia', serif;
+    font-size: 0.9rem;
+    width: 100%; /* Full width for inputs */
+}
+
+.edit-dialog button {
+    margin-top: 10px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #8b4513;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pagination button:disabled {
+    background-color: #d2b48c; /* Disabled buttons with lighter color */
+    cursor: not-allowed;
+}
+
+.pagination span {
+    font-size: 1rem;
+    color: #5a4633;
+    font-weight: bold;
+}
