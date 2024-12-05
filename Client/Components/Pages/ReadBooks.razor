@@ -1,0 +1,130 @@
+@page "/readBooks"
+@using MAN.Shared.Interfaces
+@using MAN.Shared.DTO
+@using MAN.Shared.Models
+@inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject IProfileService ProfileService
+@inject AuthenticationStateProvider CustomAuthProvider
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You must be logged in to access this page.</h3>
+    </NotAuthorized>
+    <Authorized>
+        <h3>Read Books</h3>
+
+        <BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" ProfileId="@profile?.Id" />
+
+        @if (filteredBookReads == null || filteredBookReads.Count == 0)
+        {
+            <p><em>No books found.</em></p>
+        }
+        else
+        {
+            <div class="book-container">
+                @foreach (var (bookRead, bookDto) in PaginatedBooks)
+                {
+                    <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")" />
+                }
+            </div>
+        }
+
+        <div class="pagination">
+            <button @onclick="PreviousPage" disabled="@(!HasPreviousPage)">Previous</button>
+            <span>Page @CurrentPage of @TotalPages</span>
+            <button @onclick="NextPage" disabled="@(!HasNextPage)">Next</button>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private List<(BookReadDto bookRead, BookDto bookDto)>? booksWithStatus;
+    private List<(BookReadDto bookRead, BookDto bookDto)>? filteredBookReads;
+    
+    private List<BookDto>? books = new();
+    private Profile? profile;
+    private string? Username;
+    private int CurrentPage = 1;
+    private int PageSize = 6;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+                profile = await ProfileService.GetAsyncByUsername(Username);
+
+                if (profile != null)
+                {
+                    var allBooks = await BookReadService.GetAsyncByProfileId(profile.Id);
+                    booksWithStatus = new List<(BookReadDto, BookDto)>();
+
+                    foreach (var bookRead in allBooks.Where(b => b.Status == "read"))
+                    {
+                        BookDto? bookDto = await BookService.GetAsyncById(bookRead.BookId);
+                        if (bookDto != null)
+                        {
+                            booksWithStatus.Add((bookRead, bookDto));
+                        }
+                    }
+
+                    filteredBookReads = new List<(BookReadDto, BookDto)>(booksWithStatus);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    private IEnumerable<(BookReadDto bookRead, BookDto bookDto)> PaginatedBooks =>
+        filteredBookReads?.Skip((CurrentPage - 1) * PageSize).Take(PageSize) ?? Enumerable.Empty<(BookReadDto, BookDto)>();
+
+    private int TotalPages => (int)Math.Ceiling((double)(filteredBookReads?.Count ?? 0) / PageSize);
+
+    private bool HasPreviousPage => CurrentPage > 1;
+    private bool HasNextPage => CurrentPage < TotalPages;
+
+    private void PreviousPage() => CurrentPage--;
+    private void NextPage() => CurrentPage++;
+
+    private async void HandleSearchResults(List<BookDto> searchResults)
+    {
+        books = searchResults;
+        filteredBookReads = new List<(BookReadDto, BookDto)>();
+        foreach (var book in books)
+        {
+            BookRead? bookRead1 = await BookReadService.GetAsyncById(profile.Id, book.Id);
+            if (bookRead1 != null && bookRead1.Status == "read")
+            {
+                BookReadDto bookReadDto = new()
+                {
+                    BookId = bookRead1.BookId,
+                    ProfileId = bookRead1.ProfileId,
+                    BookTitle = bookRead1.Book?.Title,
+                    AuthorName = bookRead1.Book?.Author?.MiddleName == null
+                        ? $"{bookRead1.Book?.Author?.FirstName} {bookRead1.Book?.Author?.LastName}"
+                        : $"{bookRead1.Book?.Author?.FirstName} {bookRead1.Book?.Author?.MiddleName} {bookRead1.Book?.Author?.LastName}",
+                    ReviewerName = bookRead1.Profile != null
+                        ? $"{bookRead1.Profile.FirstName} {bookRead1.Profile.LastName}"
+                        : null,
+                    Rating = bookRead1.Rating,
+                    Review = bookRead1.Review,
+                    DateFinished = bookRead1.DateFinished,
+                    DateStarted = bookRead1.DateStarted,
+                    Status = bookRead1.Status
+                };
+                filteredBookReads.Add((bookReadDto, book));
+            }
+        }
+        CurrentPage = 1; // Reset pagination
+        StateHasChanged();
+    }
+}

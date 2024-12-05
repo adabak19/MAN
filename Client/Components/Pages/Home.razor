@@ -1,16 +1,36 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 
+@inject NavigationManager Navigation
+
 <PageTitle>Home</PageTitle>
 
 <AuthorizeView>
     <Authorized>
         <h1>Hello @context.User.Claims.First(claim => claim.Type.Equals("Username")).Value</h1>
-        
 
-
+        <div class="dashboard-container">
+            <div class="dashboard-card" @onclick="NavigateToCurrentBooks">
+                <h4>Current Books</h4>
+                <p>Explore your current reads</p>
+            </div>
+            <div class="dashboard-card" @onclick="NavigateToToRead">
+                <h4>To Read</h4>
+                <p>Books you plan to read</p>
+            </div>
+            <div class="dashboard-card" @onclick="NavigateToReadBooks">
+                <h4>Read</h4>
+                <p>Books you've finished</p>
+            </div>
+        </div>
     </Authorized>
     <NotAuthorized>
-        <h1>Hello World!</h1>
+        <h1>Hello and welcome to your library! Log in or register to begin your reading :)</h1>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    private void NavigateToCurrentBooks() => Navigation.NavigateTo("/currentBooks");
+    private void NavigateToToRead() => Navigation.NavigateTo("/toRead");
+    private void NavigateToReadBooks() => Navigation.NavigateTo("/readBooks");
+}

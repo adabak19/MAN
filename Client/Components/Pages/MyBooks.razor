@@ -8,20 +8,22 @@
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider CustomAuthProvider
 @rendermode InteractiveServer
-
+ 
 <AuthorizeView>
     <NotAuthorized>
         <h3>You have to be logged in to see this page</h3>
     </NotAuthorized>
     <Authorized>
 <h3>My Books</h3>
-
+ 
 <BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" ProfileId="@profile?.Id" />
 
         @if (filteredBookReads == null)
         {
             <p><em></em></p>
+            <p><em></em></p>
         }
+        else if (!filteredBookReads.Any())
         else if (!filteredBookReads.Any())
         {
             <p><em> </em></p>
@@ -30,7 +32,10 @@
         {
             <div class="book-container">
                 @foreach (var (bookRead, book) in filteredBookReads)
+                @foreach (var (bookRead, book) in filteredBookReads)
                 {
+                    <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
+                    </BookComponent>
                     <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
                     </BookComponent>
                 }
@@ -54,10 +59,26 @@ else
                     </BookComponent>
         }
     }
+        @foreach (var (bookRead, bookDto) in booksWithStatus)
+    {
+        @if (bookRead.Status == "to-read")
+        {
+            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
+                    </BookComponent>
+        }
+    }
     </div>
-        
+       
         <h1>Books to read</h1>
         <div class="book-container">
+        @foreach (var (bookRead, bookDto) in booksWithStatus)
+    {
+        @if (bookRead.Status == "to-read")
+        {
+            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
+                    </BookComponent>
+        }
+    }
         @foreach (var (bookRead, bookDto) in booksWithStatus)
     {
         @if (bookRead.Status == "to-read")
@@ -77,27 +98,37 @@ else
                     </BookComponent>
         }
     }
+        @foreach (var (bookRead, bookDto) in booksWithStatus)
+    {
+        @if (bookRead.Status == "to-read")
+        {
+            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
+                    </BookComponent>
+        }
+    }
         </div>
 }
 </Authorized>
 @code {
     private List<(BookReadDto bookRead, BookDto bookDto)>? booksWithStatus;
+    private List<(BookReadDto bookRead, BookDto bookDto)>? booksWithStatus;
     private List<BookDto>? books = new();
      @* private List<BookDto>? books; *@
     private List<BookReadDto>? bookReads;
+    private List<(BookReadDto bookRead, BookDto bookDto)>? filteredBookReads;
     private List<(BookReadDto bookRead, BookDto bookDto)>? filteredBookReads;
     private Profile? profile;
     [Parameter]
     public string? Username { get; set; }
     public string? Review {get; set;}
-
+ 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
             var user = authState.User;
-
+ 
             if (user.Identity.IsAuthenticated)
             {
                 Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
@@ -159,3 +190,5 @@ else
     }
 }
 </AuthorizeView>
+ 
+ 
