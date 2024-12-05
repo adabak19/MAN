@@ -1,4 +1,4 @@
-# User Types and Log-In Functionality
+# User Management
 
 ## User Types
 
