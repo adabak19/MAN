@@ -47,11 +47,55 @@ namespace MAN.Client.Services
         }
 
 
-public async Task<List<BookDto>> SearchBooksForUserAsync(int profileId, string? title, string? author, string? genre)
-{
-    var query = $"api/book/user/{profileId}?title={title}&author={author}&genre={genre}";
-    return await _httpClient.GetFromJsonAsync<List<BookDto>>(query) ?? new List<BookDto>();
-}
+        public async Task<List<BookDto>> SearchBooksForUserAsync(int profileId, string? title, string? author, string? genre)
+        {
+            // Fetch book reads for the user
+            var query = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/profile/{profileId}")
+                       ?? new List<BookReadDto>();
+
+
+            // Transform BookReadDto into BookDto (filter is not applied yet)
+            var userBooks = query.Select(br => new BookDto
+            {
+                Id = br.BookId,
+                Title = br.BookTitle,
+                AuthorName = br.AuthorName,
+                Genres = new List<string>() // Adjust if genre data is provided elsewhere
+            }).ToList();
+
+
+
+            // Apply filters to userBooks
+            if (!string.IsNullOrWhiteSpace(title))
+            {
+                userBooks = userBooks
+                    .Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(author))
+            {
+                userBooks = userBooks
+                    .Where(b => b.AuthorName.Contains(author, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            }
+
+            if (!string.IsNullOrWhiteSpace(genre))
+            {
+                userBooks = userBooks
+                    .Where(b => b.Genres.Any(g => g.Contains(genre, StringComparison.OrdinalIgnoreCase)))
+                    .ToList();
+
+            }
+
+
+            return userBooks;
+        }
+
+
+
 
         // Search Books Implementation
         public async Task<List<BookDto>> SearchBooksAsync(string? title, string? author, string? genre)
