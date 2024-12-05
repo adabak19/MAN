@@ -51,10 +51,11 @@ namespace MAN.Api.Services
         {   
             using ApplicationDbContext context = new();
             var bookReads = await context.BookReads
-            .Include(br => br.Book)
+            .Include(br => br.Book).ThenInclude(b => b.Author)
             .Include(br => br.Profile)
             .Where(br => br.BookId == bookId)
             .ToListAsync();
+            Console.Write(bookReads);
 
             return bookReads.Select(br => new BookReadDto
                 {
@@ -73,7 +74,7 @@ namespace MAN.Api.Services
         {   
             using ApplicationDbContext context = new();
             var bookReads = await context.BookReads
-            .Include(br => br.Book)
+            .Include(br => br.Book).ThenInclude(b => b.Author)
             .Include(br => br.Profile)
             .Where(br => br.ProfileId == profileId)
             .ToListAsync();

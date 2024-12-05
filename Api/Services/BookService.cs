@@ -135,39 +135,38 @@ public async Task<List<BookDto>> SearchBooksForUserAsync(int profileId, string? 
         .ThenInclude(b => b.BookGenres)
         .ThenInclude(bg => bg.Genre)
         .Where(br => br.ProfileId == profileId)
-        .Select(br => br.Book)
         .AsQueryable();
 
     // Apply filters
     if (!string.IsNullOrWhiteSpace(title))
     {
-        userBooks = userBooks.Where(b => EF.Functions.Like(b.Title.ToLower(), $"%{title.ToLower()}%"));
+        userBooks = userBooks.Where(b => EF.Functions.Like(b.Book.Title.ToLower(), $"%{title.ToLower()}%"));
     }
 
     if (!string.IsNullOrWhiteSpace(author))
     {
         userBooks = userBooks.Where(b =>
-            EF.Functions.Like(b.Author.FirstName.ToLower(), $"%{author.ToLower()}%") ||
-            EF.Functions.Like(b.Author.LastName.ToLower(), $"%{author.ToLower()}%"));
+            EF.Functions.Like(b.Book.Author.FirstName.ToLower(), $"%{author.ToLower()}%") ||
+            EF.Functions.Like(b.Book.Author.LastName.ToLower(), $"%{author.ToLower()}%"));
     }
 
     if (!string.IsNullOrWhiteSpace(genre))
     {
-        userBooks = userBooks.Where(b => b.BookGenres.Any(bg =>
+        userBooks = userBooks.Where(b => b.Book.BookGenres.Any(bg =>
             EF.Functions.Like(bg.Genre.GenreName.ToLower(), $"%{genre.ToLower()}%")));
     }
 
     // Map results to DTOs
     var result = await userBooks.Select(b => new BookDto
     {
-        Id = b.Id,
-        Title = b.Title,
-        AuthorName = $"{b.Author.FirstName} {b.Author.LastName}",
-        Publisher = b.Publisher.PublisherName,
-        PageCount = b.PageCount,
-        YearPublished = b.YearPublished,
-        Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
-        Amount = b.Amount
+        Id = b.Book.Id,
+        Title = b.Book.Title,
+        AuthorName = $"{b.Book.Author.FirstName} {b.Book.Author.LastName}",
+        Publisher = b.Book.Publisher.PublisherName,
+        PageCount = b.Book.PageCount,
+        YearPublished = b.Book.YearPublished,
+        Genres = b.Book.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
+        Amount = b.Book.Amount
     }).ToListAsync();
 
     return result;
