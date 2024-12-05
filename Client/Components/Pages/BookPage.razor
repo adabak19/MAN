@@ -8,16 +8,19 @@
 @rendermode InteractiveServer
 
 <h3>Books</h3>
-
-<div>
-    <input @bind="searchTitle" @onkeyup="HandleKeyPress" placeholder="Search by Title" />
+<BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="false" />
+@* <div>
+    <input 
+        @bind="searchTitle" 
+        @onkeyup="HandleKeyPress" 
+        placeholder="Search by Title" />
 
     <input @bind="searchAuthor" @onkeyup="HandleKeyPress" placeholder="Search by Author" />
 
     <input @bind="searchGenre" @onkeyup="HandleKeyPress" placeholder="Search by Genre" />
 
     <button @onclick="SearchBooks">Search</button>
-</div>
+</div> *@
 
 @if (books == null)
 {
@@ -33,7 +36,6 @@ else
         @foreach (var book in books)
         {
             <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
-                <BorrowButton BookDto="book" Username="@Username" />
             </BookComponent>
         }
     </div>
@@ -42,12 +44,12 @@ else
 <button @onclick="AddBook">Add New Book</button>
 
 @code {
-    private List<BookDto>? books;
-    private string? searchTitle;
+    
+    @* private string? searchTitle;
     private string? searchAuthor;
-    private string? searchGenre;
-
-    public string? Username { get; set; }
+    private string? searchGenre; *@
+private List<BookDto>? books;
+    public string? Username {get; set;}
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,7 +63,7 @@ else
         }
     }
 
-    private async Task SearchBooks()
+    @* private async Task SearchBooks()
     {
         books = await BookService.SearchBooksAsync(searchTitle, searchAuthor, searchGenre);
     }
@@ -72,6 +74,12 @@ else
         {
             await SearchBooks();
         }
+    } *@
+
+
+private void HandleSearchResults(List<BookDto> searchResults)
+    {
+        books = searchResults;
     }
 
     private async Task AddBook()
@@ -93,3 +101,5 @@ else
         books = await BookService.GetAllAsync();
     }
 }
+ 
+

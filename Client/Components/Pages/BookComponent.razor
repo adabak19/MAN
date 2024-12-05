@@ -1,4 +1,3 @@
-
 @page "/bookComponent"
 @using MAN.Shared.Interfaces;
 @using MAN.Shared.DTO;
@@ -16,18 +15,18 @@
 }
 else
 {
-    <div @onclick="Navigate" class="single-book">
+    <div @onclick="Navigate" class="book-item">
         <ul>
             <li><strong>Title:</strong> @BookDto.Title</li>
             <li><strong>Author:</strong> @BookDto.AuthorName</li>
             <li><strong>Amount:</strong> @BookDto.Amount</li>
         </ul>
-        @if (ChildContent != null)
+        @* @if (ChildContent != null)
     {
         <div>
        @ChildContent
        </div>
-    }
+    } *@
     
     </div>
 }
@@ -37,8 +36,8 @@ else
     private Profile? profile;
     private BookRead? bookRead;
 
-    [Parameter]
-    public int Id { get; set; }
+    @* [Parameter]
+    public int Id { get; set; } *@
 
     [Parameter]
     public string? Username { get; set; }
@@ -73,7 +72,7 @@ else
                 return;
             } *@
 
-            bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+            bookRead = await BookReadService.GetAsyncById(profile.Id, BookDto.Id);
             @* if (bookRead == null)
             {
                 Console.WriteLine("BookRead not found.");
@@ -95,7 +94,7 @@ else
     public async Task RefreshBook()
     {
         //book = await BookService.GetAsyncById(Id); // Re-fetch the book data after borrowing
-        bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+        bookRead = await BookReadService.GetAsyncById(profile.Id, BookDto.Id);
         StateHasChanged(); // Update the UI
     }
 }
