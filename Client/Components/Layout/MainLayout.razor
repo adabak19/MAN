@@ -3,22 +3,39 @@
 @inject NavigationManager Navigation
 @inject IAuthServiceWEB AuthService
 @rendermode InteractiveServer
+@using System.Security.Claims
+@inject AuthenticationStateProvider CustomAuthProvider
 
 <header class="top-row">
-    <div>
-        <a class="navbar-brand" href="/">MAN Library</a>
-        <a href="/">Home</a>
-        <a href="/counter">Counter</a>
-        <a href="/login">Login</a>
-        <a href="/authors">Authors</a>
-        <a href="/books">Books</a>
-        <a href="/myBooks">My Books</a>
+    <div class="navbar-brand">
+        <a href="/">MAN Library</a>
     </div>
-    <AuthorizeView>
-        <Authorized>
-            <button @onclick="Logout">Logout</button>
-        </Authorized>
-    </AuthorizeView>
+    <nav>
+        <AuthorizeView>
+            <NotAuthorized>
+                <a href="/">Home</a>
+            </NotAuthorized>
+            <Authorized>
+                <a href="/">Home</a>
+                <a href="/authors">Authors</a>
+                <a href="/books">Books</a>
+                <a href="/myBooks">My Books</a>
+            </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Policy="MustBeAdmin">
+                    <a href="/dashboard">Admin Dashboard</a>
+                </AuthorizeView>
+                <AuthorizeView>
+            
+            <NotAuthorized>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            </NotAuthorized>
+            <Authorized>
+                <button @onclick="Logout">Logout</button>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
 </header>
 
 <main>
@@ -32,6 +49,8 @@
 </footer>
 
 @code {
+    
+
     private async Task Logout() {
         await AuthService.LogoutAsync();
         Navigation.NavigateTo("/login");
