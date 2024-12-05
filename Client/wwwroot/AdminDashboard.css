@@ -14,8 +14,8 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    background-color: #f0f0f0;
-    border: 2px solid #ccc;
+    background-color: #fffdf3; /* Soft warm white */
+    border: 2px solid #d2b48c; /* Warm tan border */
     border-radius: 10px;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
     cursor: pointer;
@@ -30,12 +30,18 @@
 .dashboard-card h4 {
     margin: 0;
     font-size: 1.2rem;
-    color: #333;
+    color: #5d4037; /* Warm brown */
+    font-weight: bold;
 }
 
 .dashboard-card p {
     margin: 5px 0 0;
     font-size: 1.5rem;
     font-weight: bold;
-    color: #007bff;
+    color: #8b4513; /* Warm brown for text */
+    transition: color 0.3s;
+}
+
+.dashboard-card:hover p {
+    color: #a0522d; /* Slightly lighter brown on hover */
 }

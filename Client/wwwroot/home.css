@@ -1,0 +1,48 @@
+.dashboard-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin: 20px;
+}
+
+.dashboard-card {
+    width: 250px;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #fff8e7; /* Warm beige */
+    border: 2px solid #d2b48c; /* Subtle tan border */
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
+}
+
+.dashboard-card h4 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #8b4513; /* Warm brown for headers */
+    font-weight: bold;
+}
+
+.dashboard-card p {
+    margin: 5px 0 0;
+    font-size: 1rem;
+    color: #5a4633; /* Softer brown for text */
+}
+
+h1 {
+    text-align: center;
+    color: #8b4513;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
