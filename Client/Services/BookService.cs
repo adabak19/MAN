@@ -53,18 +53,6 @@ namespace MAN.Client.Services
             var query = await _httpClient.GetFromJsonAsync<List<BookDto>>($"api/book/book/{profileId}")
                        ?? new List<BookDto>();
 
-
-            // Transform BookReadDto into BookDto (filter is not applied yet)
-            // var userBooks = query.Select(br => new BookDto
-            // {
-            //     Id = br.Id,
-            //     Title = br.BookTitle,
-            //     AuthorName = br.AuthorName,
-            //     Genres = new List<string>() // Adjust if genre data is provided elsewhere
-            // }).ToList();
-
-
-
             // Apply filters to userBooks
             if (!string.IsNullOrWhiteSpace(title))
             {
