@@ -115,6 +115,26 @@ namespace MAN.Api.Services
                     Status = br.Status
                 }).ToList();
         }
+         public async Task UpdateFromDto(BookReadDto bookReadDto)
+        {
+            using ApplicationDbContext context = new();
+
+            // Fetch the corresponding BookRead entity
+            var bookRead = await context.BookReads.FirstOrDefaultAsync(br => br.ProfileId == bookReadDto.ProfileId && br.BookId == bookReadDto.BookId);
+
+            if (bookRead == null)
+            {
+                throw new KeyNotFoundException($"BookRead with ProfileId {bookReadDto.ProfileId} and BookId {bookReadDto.BookId} not found.");
+            }
+
+            // Update the entity's properties based on the DTO
+            bookRead.Status = bookReadDto.Status;
+            bookRead.DateFinished = bookReadDto.DateFinished;
+
+            // Save changes to the database
+            context.BookReads.Update(bookRead);
+            await context.SaveChangesAsync();
+        }
 
         
 

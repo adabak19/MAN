@@ -75,5 +75,10 @@ namespace MAN.Client.Services
             }
             return response;
         }
+        public async Task UpdateFromDto(BookReadDto bookReadDto)
+        {
+            var response = await _httpClient.PutAsJsonAsync($"api/bookRead/{bookReadDto.ProfileId}/{bookReadDto.BookId}", bookReadDto);
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

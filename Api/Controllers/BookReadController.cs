@@ -93,5 +93,6 @@ namespace MAN.Api.Controllers
             var bookReads = await _bookReadService.GetAllReading();
             return Ok(bookReads);
         }
+        
     }
 }

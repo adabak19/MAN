@@ -59,4 +59,10 @@ public class AuthorController : ControllerBase
         var authors = await _authorService.SearchAuthorsAsync(name);
         return Ok(authors);
     }
+    
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllAuthors(){
+        var authors = await _authorService.GetAllAuthors();
+        return Ok(authors);
+    }
 }

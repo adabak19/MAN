@@ -1,0 +1,107 @@
+@page "/myProfile"
+@using MAN.Shared.Interfaces
+@using MAN.Shared.Models
+@inject IProfileService ProfileService
+@inject AuthenticationStateProvider CustomAuthProvider
+@inject NavigationManager Navigation
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You need to be logged in to view this page.</h3>
+    </NotAuthorized>
+    <Authorized>
+        <h3>My Profile</h3>
+        @if (profile == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            @if (isEditing)
+            {
+                <div class="edit-dialog">
+                    <h4>Edit Profile</h4>
+                    <label for="firstName">First Name:</label>
+                    <input id="firstName" @bind="profile.FirstName" />
+
+                    <label for="lastName">Last Name:</label>
+                    <input id="lastName" @bind="profile.LastName" />
+
+                    <label for="profileName">Profile Name:</label>
+                    <input id="profileName" @bind="profile.ProfileName" />
+
+                    <button @onclick="SaveChanges">Save</button>
+                    <button @onclick="CancelEdit">Cancel</button>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <p><strong>First Name:</strong> @profile.FirstName</p>
+                    <p><strong>Last Name:</strong> @profile.LastName</p>
+                    <p><strong>Profile Name:</strong> @profile.ProfileName</p>
+                    <button @onclick="EnableEdit">Edit</button>
+                </div>
+            }
+        }
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private Profile? profile;
+    private string? username;
+    private bool isEditing = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Get authentication state and extract username from claims
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated == true)
+            {
+                username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+            }
+
+            // Fetch the profile using the username
+            profile = await ProfileService.GetAsyncByUsername(username);
+
+            if (profile == null)
+            {
+                Console.WriteLine("Profile not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing profile page: {ex.Message}");
+        }
+    }
+
+    private void EnableEdit()
+    {
+        isEditing = true;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (profile != null)
+        {
+            try
+            {
+                await ProfileService.UpdateAsync(profile);
+                isEditing = false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+            }
+        }
+    }
+
+    private void CancelEdit()
+    {
+        isEditing = false;
+    }
+}

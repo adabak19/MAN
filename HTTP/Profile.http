@@ -17,13 +17,16 @@ Content-Type: application/json
     "authorId": 3,
     "amount": 2
 }
+###
+GET {{MAN_HostAddress}}/book
+Content-Type: application/json
 
 ###
 PUT {{MAN_HostAddress}}/book/
 Content-Type: application/json
 
   {
-    "id": 58419579,
+    "id": 58419577,
     "isbn": "1243241",
     "title": "Book2",
     "pageCount": 120,

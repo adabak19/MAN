@@ -1,16 +1,14 @@
 @page "/loanComponent"
-@using MAN.Shared.Interfaces
 @using MAN.Shared.DTO
-@using MAN.Shared.Models
-@inject IBookService BookService
-@inject IBookReadService BookReadService
-@inject NavigationManager Navigation
-@inject AuthenticationStateProvider CustomAuthProvider
-@inject IProfileService ProfileService
+@code {
+    [Parameter]
+    public BookReadDto? Loan { get; set; }
 
-@rendermode InteractiveServer
+    [Parameter]
+    public EventCallback<BookReadDto> OnEdit { get; set; }
+}
 
-@if (loan == null)
+@if (Loan == null)
 {
     <p>Loan not found or loading...</p>
 }
@@ -18,10 +16,11 @@ else
 {
     <div class="loans">
         <ul>
-            <li><strong>User:</strong> @(loan.ReviewerName ?? "Unknown User")</li>
-            <li><strong>Book:</strong> @(loan.BookTitle ?? "Unknown Book")</li>
-            <li><strong>Date borrowed:</strong> @loan.DateStarted?.ToString("yyyy-MM-dd")</li>
-            @if (loan.DateStarted.HasValue && (DateTime.Now - loan.DateStarted.Value.ToDateTime(TimeOnly.MinValue)).TotalDays > 30){
+            <li><strong>User:</strong> @(Loan.ReviewerName ?? "Unknown User")</li>
+            <li><strong>Book:</strong> @(Loan.BookTitle ?? "Unknown Book")</li>
+            <li><strong>Date borrowed:</strong> @Loan.DateStarted?.ToString("yyyy-MM-dd")</li>
+            @if (Loan.DateStarted.HasValue && (DateTime.Now - Loan.DateStarted.Value.ToDateTime(TimeOnly.MinValue)).TotalDays > 30)
+            {
                 <li><strong>Status:</strong> Overdue</li>
             }
             else
@@ -29,10 +28,6 @@ else
                 <li><strong>Status:</strong> On time</li>
             }
         </ul>
+        <button @onclick="() => OnEdit.InvokeAsync(Loan)">Edit</button>
     </div>
-}
-
-@code {
-    [Parameter]
-    public BookReadDto? loan { get; set; }
 }

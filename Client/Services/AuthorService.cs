@@ -45,6 +45,10 @@ namespace MAN.Client.Services
             var response = await _httpClient.PutAsJsonAsync($"api/author/{author.Id}", author);
             response.EnsureSuccessStatusCode();
         }
+        public async Task<List<Author>> GetAllAuthors()
+        {
+            return await _httpClient.GetFromJsonAsync<List<Author>>("api/author")
+                   ?? new List<Author>();}
         public async Task<List<AuthorDto>> SearchAuthorsAsync(string? name)
         {
             var query = await _httpClient.GetFromJsonAsync<List<AuthorDto>>("api/author")
