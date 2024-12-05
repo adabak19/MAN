@@ -3,6 +3,7 @@ using MAN.Shared.DTO;
 using MAN.Api.Services;
 using MAN.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.CodeDom.Compiler;
 
 namespace MAN.Api.Controllers;
 
@@ -25,6 +26,14 @@ public class AuthorController : ControllerBase
     public async Task<ActionResult<AuthorDto>> Get(int id)
     {
         var author = await _authorService.GetAsyncById(id);
+        if (author is null)
+            return NotFound();
+        return author;
+    }
+
+    [HttpGet("author/{id}")]
+    public async Task<ActionResult<Author>> GetAuthorById(int id){
+        var author = await _authorService.GetAuthorByIdAsync(id);
         if (author is null)
             return NotFound();
         return author;

@@ -38,6 +38,11 @@ public class AuthorService : IAuthorService
         })
         .FirstOrDefaultAsync();
     }
+
+    public async Task<Author?> GetAuthorByIdAsync(int id){
+        using ApplicationDbContext context = new();
+        return await context.Authors.Include(a => a.Books).Where(a => a.Id == id).FirstOrDefaultAsync();
+    }
     public async Task<Author> Add(Author author)
     {
         using ApplicationDbContext context = new();

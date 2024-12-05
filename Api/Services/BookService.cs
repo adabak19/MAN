@@ -27,6 +27,26 @@ public class BookService : IBookService{
         }).ToListAsync();
     }
 
+    public async Task<BookDto?> GetAsyncByName(string name){
+        using ApplicationDbContext context = new();
+        return await context.Books
+        .Where(b => b.Title == name)
+        .Select(b => new BookDto
+        {
+            Id = b.Id,
+            ISBN = b.ISBN,
+            Title = b.Title,
+            AuthorName = b.Author.MiddleName == null ? $"{b.Author.FirstName} {b.Author.LastName}" : $"{b.Author.FirstName} {b.Author.MiddleName} {b.Author.LastName}",
+            Publisher = b.Publisher.PublisherName,
+            PageCount = b.PageCount,
+            YearPublished = b.YearPublished,
+            Genres = b.BookGenres.Select(bg => bg.Genre.GenreName).ToList(),
+            CoAuthors = (List<string>)b.Coauthors.Select(ca => $"{ca.Author.FirstName} {ca.Author.LastName}"),
+            Amount = b.Amount
+        })
+        .FirstOrDefaultAsync();
+    }
+
     public async Task<BookDto?> GetAsyncById(int id){
         using ApplicationDbContext context = new();
         return await context.Books
