@@ -4,29 +4,19 @@
 
 
 <div class="search-container">
-    <input 
-        @bind="searchTitle" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Title" />
+    <input @bind="searchTitle" @onkeyup="HandleKeyPress" placeholder="Search by Title" />
 
-    <input 
-        @bind="searchAuthor" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Author" />
+    <input @bind="searchAuthor" @onkeyup="HandleKeyPress" placeholder="Search by Author" />
 
-    <input 
-        @bind="searchGenre" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Genre" />
+    <input @bind="searchGenre" @onkeyup="HandleKeyPress" placeholder="Search by Genre" />
 
     <button @onclick="PerformSearch">Search</button>
 </div>
 
 @code {
     [Parameter] public EventCallback<List<BookDto>> OnSearchResultsChanged { get; set; }
- [Parameter]
-    public bool IsForMyBooks { get; set; }
-     [Parameter] public int? ProfileId { get; set; }
+    [Parameter] public bool IsForMyBooks { get; set; }
+    [Parameter] public int? ProfileId { get; set; }
     private string? searchTitle;
     private string? searchAuthor;
     private string? searchGenre;
