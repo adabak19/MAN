@@ -88,5 +88,10 @@ namespace MAN.Api.Controllers
             await _bookReadService.Delete(profileId, bookId);
             return NoContent();
         }
+        [HttpGet("reading")]
+        public async Task<IActionResult> GetAllReading(){
+            var bookReads = await _bookReadService.GetAllReading();
+            return Ok(bookReads);
+        }
     }
 }

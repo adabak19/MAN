@@ -1,0 +1,38 @@
+@page "/loanComponent"
+@using MAN.Shared.Interfaces
+@using MAN.Shared.DTO
+@using MAN.Shared.Models
+@inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider CustomAuthProvider
+@inject IProfileService ProfileService
+
+@rendermode InteractiveServer
+
+@if (loan == null)
+{
+    <p>Loan not found or loading...</p>
+}
+else
+{
+    <div class="loans">
+        <ul>
+            <li><strong>User:</strong> @(loan.ReviewerName ?? "Unknown User")</li>
+            <li><strong>Book:</strong> @(loan.BookTitle ?? "Unknown Book")</li>
+            <li><strong>Date borrowed:</strong> @loan.DateStarted?.ToString("yyyy-MM-dd")</li>
+            @if (loan.DateStarted.HasValue && (DateTime.Now - loan.DateStarted.Value.ToDateTime(TimeOnly.MinValue)).TotalDays > 30){
+                <li><strong>Status:</strong> Overdue</li>
+            }
+            else
+            {
+                <li><strong>Status:</strong> On time</li>
+            }
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public BookReadDto? loan { get; set; }
+}

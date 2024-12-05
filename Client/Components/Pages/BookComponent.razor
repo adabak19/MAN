@@ -1,90 +1,4 @@
-@* @page "/bookComponent"
-@using MAN.Shared.Interfaces;
-@using MAN.Shared.DTO;
-@using MAN.Shared.Models;
-@inject IBookService BookService
-@inject IBookReadService BookReadService
-@inject NavigationManager Navigation
-@inject AuthenticationStateProvider CustomAuthProvider
-@inject IProfileService ProfileService
-@rendermode InteractiveServer
-    <div class="single-book">
-        <ul>
-            <li><strong>Title:</strong> @book.Title</li>
-            <li><strong>Author:</strong> @book.AuthorName</li>
-            <li><strong>Amount:</strong> @book.Amount</li>
-        </ul>
-    </div>
-    @if (bookRead == null || bookRead.DateFinished != null){
-        <button @onclick="BorrowBook">Borrow This Book</button>
-    }
-}
 
-@code {
-    private BookDto? book;
-    private Profile? profile;
-    private BookRead? bookRead;
-    [Parameter]
-    public int Id { get; set; }
-    [Parameter]
-    public string? Username {get; set;}
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-    {
-        book = await BookService.GetAsyncById(Id);
-        if (book == null)
-        {
-            Console.WriteLine("Book not found.");
-        }
-        profile = await ProfileService.GetAsyncByUsername(Username);
-
-        bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
-        if (bookRead == null)
-        {
-            Console.WriteLine("BookRead not found.");
-        }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error fetching data: {ex.Message}");
-    }
-    }
-
-    private async Task BorrowBook()
-    {
-        var newBookRead = new BookRead
-        {
-            ProfileId = profile.Id,
-            BookId = book.Id,
-            Rating = null,
-            Review = null,
-            DateStarted = DateOnly.FromDateTime(DateTime.Now),
-            DateFinished = null,
-            Status = "reading"
-        };
-
-        var newBook = new BookDto
-        {
-            Id = book.Id,
-            ISBN = book.ISBN,
-            Title = book.Title,
-            AuthorName = book.AuthorName,
-            Publisher = book.Publisher,
-            PageCount = book.PageCount,
-            YearPublished = book.YearPublished,
-            Genres = book.Genres,
-            CoAuthors = book.CoAuthors,
-            Amount = book.Amount - 1
-        };
-       
-        await BookService.Update(newBook);
-        await BookReadService.Add(newBookRead);
-        book = await BookService.GetAsyncById(Id);
-        bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
-    }
-} *@
 @page "/bookComponent"
 @using MAN.Shared.Interfaces;
 @using MAN.Shared.DTO;
@@ -96,27 +10,30 @@
 @inject IProfileService ProfileService
 @rendermode InteractiveServer
 
-@if (book == null)
+@if (BookDto == null)
 {
-    <p>Book not found or loading...</p>
+    <p>loading...</p>
 }
 else
 {
-    <div class="single-book">
+    <div @onclick="Navigate" class="single-book">
         <ul>
-            <li><strong>Title:</strong> @book.Title</li>
-            <li><strong>Author:</strong> @book.AuthorName</li>
-            <li><strong>Amount:</strong> @book.Amount</li>
+            <li><strong>Title:</strong> @BookDto.Title</li>
+            <li><strong>Author:</strong> @BookDto.AuthorName</li>
+            <li><strong>Amount:</strong> @BookDto.Amount</li>
         </ul>
-    @if (bookRead == null || bookRead.DateFinished != null)
+        @if (ChildContent != null)
     {
-        <button @onclick="BorrowBook">Borrow This Book</button>
+        <div>
+       @ChildContent
+       </div>
     }
+    
     </div>
 }
 
 @code {
-    private BookDto? book;
+    //private BookDto? book;
     private Profile? profile;
     private BookRead? bookRead;
 
@@ -125,6 +42,12 @@ else
 
     [Parameter]
     public string? Username { get; set; }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+    [Parameter]
+    public string? NavigateTo { get; set; }
+    [Parameter]
+    public BookDto? BookDto {get; set;} 
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,7 +59,7 @@ else
                 return;
             } *@
 
-            book = await BookService.GetAsyncById(Id);
+            //book = await BookService.GetAsyncById(Id);
             @* if (book == null)
             {
                 Console.WriteLine("Book not found.");
@@ -161,43 +84,18 @@ else
             Console.WriteLine($"Error fetching data: {ex.Message}");
         }
     }
-
-    private async Task BorrowBook()
+    private void Navigate()
     {
-        if (profile == null || book == null)
+        if (!string.IsNullOrEmpty(NavigateTo))
         {
-            Console.WriteLine("Cannot borrow book: Profile or Book is null.");
-            return;
+            Navigation.NavigateTo(NavigateTo);
         }
+    }
 
-        var newBookRead = new BookRead
-        {
-            ProfileId = profile.Id,
-            BookId = book.Id,
-            Rating = null,
-            Review = null,
-            DateStarted = DateOnly.FromDateTime(DateTime.Now),
-            DateFinished = null,
-            Status = "reading"
-        };
-
-        var newBook = new BookDto
-        {
-            Id = book.Id,
-            ISBN = book.ISBN,
-            Title = book.Title,
-            AuthorName = book.AuthorName,
-            Publisher = book.Publisher,
-            PageCount = book.PageCount,
-            YearPublished = book.YearPublished,
-            Genres = book.Genres,
-            CoAuthors = book.CoAuthors,
-            Amount = book.Amount - 1
-        };
-
-        await BookService.Update(newBook);
-        await BookReadService.Add(newBookRead);
-        book = await BookService.GetAsyncById(Id);
+    public async Task RefreshBook()
+    {
+        //book = await BookService.GetAsyncById(Id); // Re-fetch the book data after borrowing
         bookRead = await BookReadService.GetAsyncById(profile.Id, Id);
+        StateHasChanged(); // Update the UI
     }
 }

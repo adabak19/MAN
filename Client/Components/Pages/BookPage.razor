@@ -4,6 +4,7 @@
 @using MAN.Shared.Models;
 @inject IBookService BookService;
 @inject AuthenticationStateProvider CustomAuthProvider
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 <h3>Books</h3>
@@ -14,15 +15,9 @@
         @onkeyup="HandleKeyPress" 
         placeholder="Search by Title" />
 
-    <input 
-        @bind="searchAuthor" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Author" />
+    <input @bind="searchAuthor" @onkeyup="HandleKeyPress" placeholder="Search by Author" />
 
-    <input 
-        @bind="searchGenre" 
-        @onkeyup="HandleKeyPress" 
-        placeholder="Search by Genre" />
+    <input @bind="searchGenre" @onkeyup="HandleKeyPress" placeholder="Search by Genre" />
 
     <button @onclick="SearchBooks">Search</button>
 </div> *@
@@ -98,17 +93,17 @@ private void HandleSearchResults(List<BookDto> searchResults)
     private async Task AddBook()
     {
         var newBook = new Book
-        {
-            Id = 3,
-            ISBN = "1243242",
-            Title = "Book2",
-            PageCount = 120,
-            YearPublished = 1929,
-            BindingTypeId = 3,
-            PublisherId = 2,
-            AuthorId = 3,
-            Amount = 4
-        };
+            {
+                Id = 3,
+                ISBN = "1243242",
+                Title = "Book2",
+                PageCount = 120,
+                YearPublished = 1929,
+                BindingTypeId = 3,
+                PublisherId = 2,
+                AuthorId = 3,
+                Amount = 4
+            };
 
         await BookService.Add(newBook);
         books = await BookService.GetAllAsync();
