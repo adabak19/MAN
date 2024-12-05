@@ -17,13 +17,11 @@
 <h3>My Books</h3>
  
 <BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" ProfileId="@profile?.Id" />
-
+ 
         @if (filteredBookReads == null)
         {
             <p><em></em></p>
-            <p><em></em></p>
         }
-        else if (!filteredBookReads.Any())
         else if (!filteredBookReads.Any())
         {
             <p><em> </em></p>
@@ -32,17 +30,14 @@
         {
             <div class="book-container">
                 @foreach (var (bookRead, book) in filteredBookReads)
-                @foreach (var (bookRead, book) in filteredBookReads)
                 {
-                    <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
-                    </BookComponent>
                     <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
                     </BookComponent>
                 }
             </div>
         }
-
-  
+ 
+ 
 @if (booksWithStatus == null)
 {
     <p><em>Loading...</em></p>
@@ -51,14 +46,6 @@ else
 {
     <h1>Current books</h1>
     <div class="book-container">
-        @foreach (var (bookRead, bookDto) in booksWithStatus)
-    {
-        @if (bookRead.Status == "to-read")
-        {
-            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
-                    </BookComponent>
-        }
-    }
         @foreach (var (bookRead, bookDto) in booksWithStatus)
     {
         @if (bookRead.Status == "to-read")
@@ -79,25 +66,9 @@ else
                     </BookComponent>
         }
     }
-        @foreach (var (bookRead, bookDto) in booksWithStatus)
-    {
-        @if (bookRead.Status == "to-read")
-        {
-            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
-                    </BookComponent>
-        }
-    }
         </div>
         <h1>Books you already read</h1>
         <div class="book-container">
-        @foreach (var (bookRead, bookDto) in booksWithStatus)
-    {
-        @if (bookRead.Status == "to-read")
-        {
-            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
-                    </BookComponent>
-        }
-    }
         @foreach (var (bookRead, bookDto) in booksWithStatus)
     {
         @if (bookRead.Status == "to-read")
@@ -111,11 +82,9 @@ else
 </Authorized>
 @code {
     private List<(BookReadDto bookRead, BookDto bookDto)>? booksWithStatus;
-    private List<(BookReadDto bookRead, BookDto bookDto)>? booksWithStatus;
     private List<BookDto>? books = new();
      @* private List<BookDto>? books; *@
     private List<BookReadDto>? bookReads;
-    private List<(BookReadDto bookRead, BookDto bookDto)>? filteredBookReads;
     private List<(BookReadDto bookRead, BookDto bookDto)>? filteredBookReads;
     private Profile? profile;
     [Parameter]
@@ -139,14 +108,14 @@ else
                 Console.WriteLine("Profile not found.");
             }
             Console.WriteLine($"ProfileId: {profile?.Id}");
-
+ 
             bookReads = await BookReadService.GetAsyncByProfileId(profile.Id);
             if (bookReads == null)
             {
                 Console.WriteLine("BookRead not found.");
             }
             booksWithStatus = new List<(BookReadDto, BookDto)>();
-
+ 
             foreach (var bookRead in bookReads)
             {
                 BookDto? bookDto = await BookService.GetAsyncById(bookRead.BookId);
@@ -161,7 +130,7 @@ else
             Console.WriteLine($"Error fetching data: {ex.Message}");
         }
     }
-
+ 
      private async void HandleSearchResults(List<BookDto> searchResults)
     {
         books = searchResults;
@@ -186,7 +155,7 @@ else
                     filteredBookReads.Add((bookReadDto, book));
                 }
             }
-        StateHasChanged(); 
+        StateHasChanged();
     }
 }
 </AuthorizeView>
