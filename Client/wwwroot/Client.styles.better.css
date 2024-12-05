@@ -44,10 +44,14 @@ main[b-4kdmjuawjh] {
 
 /* Styling for content sections */
 .content[b-4kdmjuawjh] {
-    background-color: #fff; /* White background for content */
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+    min-height: 80vh; /* Ensures a consistent height for the content area */
+    width: 90%; /* Optional: Ensures a consistent width */
+    max-width: 1200px; /* Optional: Prevents content from being too wide */
+    margin: 0 auto; /* Centers the content on the page */
+    padding: 20px; /* Adds some spacing inside the content */
+    background-color: #ffffff; /* Matches the background color of the white area */
+    border-radius: 10px; /* Optional: Adds rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Adds a subtle shadow */
 }
 
 /* Buttons */

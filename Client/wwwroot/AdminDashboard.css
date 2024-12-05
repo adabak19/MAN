@@ -1,11 +1,15 @@
 .dashboard-container {
     display: flex;
     justify-content: space-around;
+    align-items: center; /* Vertically aligns items */
     flex-wrap: wrap;
     gap: 20px;
-    margin: 20px;
+    margin: 0 auto; /* Centers the dashboard horizontally */
+    padding: 20px;
+    height: calc(100vh - 300px); /* Dynamically adjusts, slightly higher than the center */
+    max-width: 1200px; /* Limits the dashboard width */
+    transform: translateY(-250px); /* Moves it slightly higher */
 }
-
 .dashboard-card {
     width: 200px;
     height: 150px;
