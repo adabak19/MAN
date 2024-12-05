@@ -8,16 +8,16 @@
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider CustomAuthProvider
 @rendermode InteractiveServer
-
+ 
 <AuthorizeView>
     <NotAuthorized>
         <h3>You have to be logged in to see this page</h3>
     </NotAuthorized>
     <Authorized>
 <h3>My Books</h3>
-
+ 
 <BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" ProfileId="@profile?.Id" />
-
+ 
         @if (filteredBookReads == null)
         {
             <p><em></em></p>
@@ -36,8 +36,8 @@
                 }
             </div>
         }
-
-  
+ 
+ 
 @if (booksWithStatus == null)
 {
     <p><em>Loading...</em></p>
@@ -55,7 +55,7 @@ else
         }
     }
     </div>
-        
+       
         <h1>Books to read</h1>
         <div class="book-container">
         @foreach (var (bookRead, bookDto) in booksWithStatus)
@@ -90,14 +90,14 @@ else
     [Parameter]
     public string? Username { get; set; }
     public string? Review {get; set;}
-
+ 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
             var user = authState.User;
-
+ 
             if (user.Identity.IsAuthenticated)
             {
                 Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
@@ -108,14 +108,14 @@ else
                 Console.WriteLine("Profile not found.");
             }
             Console.WriteLine($"ProfileId: {profile?.Id}");
-
+ 
             bookReads = await BookReadService.GetAsyncByProfileId(profile.Id);
             if (bookReads == null)
             {
                 Console.WriteLine("BookRead not found.");
             }
             booksWithStatus = new List<(BookReadDto, BookDto)>();
-
+ 
             foreach (var bookRead in bookReads)
             {
                 BookDto? bookDto = await BookService.GetAsyncById(bookRead.BookId);
@@ -130,7 +130,7 @@ else
             Console.WriteLine($"Error fetching data: {ex.Message}");
         }
     }
-
+ 
      private async void HandleSearchResults(List<BookDto> searchResults)
     {
         books = searchResults;
@@ -155,7 +155,9 @@ else
                     filteredBookReads.Add((bookReadDto, book));
                 }
             }
-        StateHasChanged(); 
+        StateHasChanged();
     }
 }
 </AuthorizeView>
+ 
+ 

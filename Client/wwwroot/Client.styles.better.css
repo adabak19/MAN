@@ -1,0 +1,238 @@
+/* _content/Client/Components/Layout/MainLayout.razor.rz.scp.css */
+/* General page styling */
+.page[b-4kdmjuawjh] {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff7e6; /* Soft warm background color */
+    color: #333; /* Neutral text color for readability */
+    font-family: 'Georgia', 'Times New Roman', serif; /* Classic and friendly font */
+}
+
+main[b-4kdmjuawjh] {
+    flex: 1;
+    margin: 20px;
+}
+
+/* Navigation bar at the top */
+.top-row[b-4kdmjuawjh] {
+    background-color: #5d4037 !important; /* Warm gold color for navigation bar */
+    border-bottom: 1px solid #e3ac1d; /* Slightly darker gold for separation */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.top-row a[b-4kdmjuawjh] {
+    color: #5d4037; /* Warm brown color for links */
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0 10px;
+}
+
+.top-row a:hover[b-4kdmjuawjh] {
+    text-decoration: underline;
+    color: #8d6e63; /* Slightly lighter brown on hover */
+}
+
+/* Sidebar styling (hidden or removed for horizontal nav layout) */
+.sidebar[b-4kdmjuawjh] {
+    display: none; /* Not required for top navigation */
+}
+
+/* Styling for content sections */
+.content[b-4kdmjuawjh] {
+    background-color: #fff; /* White background for content */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+/* Buttons */
+button[b-4kdmjuawjh] {
+    background-color: #8d6e63; /* Warm brown button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover[b-4kdmjuawjh] {
+    background-color: #5d4037; /* Darker shade on hover */
+}
+
+/* Cards for books */
+.card[b-4kdmjuawjh] {
+    background-color: #fffdf3; /* Soft warm white for book cards */
+    border: 1px solid #ddd; /* Light border */
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover[b-4kdmjuawjh] {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.card h3[b-4kdmjuawjh] {
+    font-size: 1.2rem;
+    color: #5d4037; /* Warm brown title */
+    margin-bottom: 5px;
+}
+
+.card p[b-4kdmjuawjh] {
+    color: #8d6e63; /* Lighter brown for other text */
+    font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .top-row[b-4kdmjuawjh] {
+        flex-wrap: wrap;
+    }
+
+    .card[b-4kdmjuawjh] {
+        margin: 10px auto;
+    }
+}
+
+@media (min-width: 641px) {
+    .page[b-4kdmjuawjh] {
+        flex-direction: row;
+    }
+
+    .sidebar[b-4kdmjuawjh] {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    .top-row[b-4kdmjuawjh] {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    .top-row.auth[b-4kdmjuawjh]  a:first-child {
+        flex: 1;
+        text-align: right;
+        width: 0;
+    }
+
+    .top-row[b-4kdmjuawjh], article[b-4kdmjuawjh] {
+        padding-left: 2rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+#blazor-error-ui[b-4kdmjuawjh] {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss[b-4kdmjuawjh] {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
+
+
+    .edit-dialog[b-4kdmjuawjh] {
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%; /* Ensure it fits well in the container */
+    }
+    
+    
+/* _content/Client/Components/Layout/NavMenu.razor.rz.scp.css */
+/* Navbar styles */
+.navbar[b-b3bxtejbwi] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #3e2723;  /* Warm brown for library theme */
+    padding: 0.8rem 1.5rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Brand name styling */
+.navbar-brand a[b-b3bxtejbwi] {
+    color: #ffcc80; /* Soft gold for branding */
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* Navigation items container */
+nav[b-b3bxtejbwi] {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Individual navigation links */
+.nav-link[b-b3bxtejbwi] {
+    color: #ffcc80; /* Soft gold for links */
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+/* Hover effect for links */
+.nav-link:hover[b-b3bxtejbwi] {
+    background-color: #5d4037; /* Slightly darker brown for hover */
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* Active link styling */
+.nav-link.active[b-b3bxtejbwi] {
+    background-color: #795548; /* Highlight active link */
+    color: white;
+    font-weight: bold;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+    .navbar[b-b3bxtejbwi] {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav[b-b3bxtejbwi] {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .nav-link[b-b3bxtejbwi] {
+        width: 100%;
+        text-align: left;
+    }
+}
