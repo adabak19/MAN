@@ -55,7 +55,6 @@ namespace MAN.Api.Services
             .Include(br => br.Profile)
             .Where(br => br.BookId == bookId)
             .ToListAsync();
-            Console.Write(bookReads);
 
             return bookReads.Select(br => new BookReadDto
                 {

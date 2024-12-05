@@ -13,7 +13,7 @@
 else
 {
     <div @onclick="Navigate" class="book-item">
-            <h2><strong>Name:</strong> @Author.AuthorName</h2>
+            <h2>@Author.AuthorName</h2>
     </div>
 }
 
@@ -23,18 +23,6 @@ else
     [Parameter]
     public string? NavigateTo {get; set;}
     private string? name;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            //name = Author?.MiddleName == null ? $"{Author?.FirstName} {Author?.LastName}" : $"{Author?.FirstName} {Author?.MiddleName} {Author?.LastName}";
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching data: {ex.Message}");
-        }
-    }
     private void Navigate()
     {
         if (!string.IsNullOrEmpty(NavigateTo))

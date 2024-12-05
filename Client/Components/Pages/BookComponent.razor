@@ -19,15 +19,8 @@ else
         <ul>
             <li><strong>Title:</strong> @BookDto.Title</li>
             <li><strong>Author:</strong> @BookDto.AuthorName</li>
-            <li><strong>Amount:</strong> @BookDto.Amount</li>
-        </ul>
-        @* @if (ChildContent != null)
-    {
-        <div>
-       @ChildContent
-       </div>
-    } *@
-    
+            <li><strong>Available copies:</strong> @BookDto.Amount</li>
+        </ul>    
     </div>
 }
 
@@ -35,9 +28,6 @@ else
     //private BookDto? book;
     private Profile? profile;
     private BookRead? bookRead;
-
-    @* [Parameter]
-    public int Id { get; set; } *@
 
     [Parameter]
     public string? Username { get; set; }
@@ -52,31 +42,10 @@ else
     {
         try
         {
-            @* if (string.IsNullOrEmpty(Username))
-            {
-                Console.WriteLine("Username is null or empty.");
-                return;
-            } *@
-
-            //book = await BookService.GetAsyncById(Id);
-            @* if (book == null)
-            {
-                Console.WriteLine("Book not found.");
-                return;
-            } *@
 
             profile = await ProfileService.GetAsyncByUsername(Username);
-            @* if (profile == null)
-            {
-                Console.WriteLine("Profile not found.");
-                return;
-            } *@
 
             bookRead = await BookReadService.GetAsyncById(profile.Id, BookDto.Id);
-            @* if (bookRead == null)
-            {
-                Console.WriteLine("BookRead not found.");
-            } *@
         }
         catch (Exception ex)
         {
@@ -93,7 +62,6 @@ else
 
     public async Task RefreshBook()
     {
-        //book = await BookService.GetAsyncById(Id); // Re-fetch the book data after borrowing
         bookRead = await BookReadService.GetAsyncById(profile.Id, BookDto.Id);
         StateHasChanged(); // Update the UI
     }

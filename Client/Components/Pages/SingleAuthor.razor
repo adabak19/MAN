@@ -20,17 +20,21 @@ else
 {
     <div class="single-book">
         <p><strong>Name:</strong> @author.AuthorName</p>
-            <h3><strong>Books:</strong></h3>
+        <h3><strong>Books:</strong></h3>
     </div>
-                    @if(author.Books != null)
-                    {
-                        @foreach (var (bookDto, book) in books)
-                        {
-                            <BookComponent BookDto="bookDto" NavigateTo="@($"/singleBook/{bookDto.Id}")"/>
-                        }
-                    }else{
-                        <p> </p>
-                    }
+    @if (author.Books != null)
+    {
+        @foreach (var (bookDto, book) in books)
+        {
+            <div class="book-container">
+                <BookComponent BookDto="bookDto" Username="Username" NavigateTo="@($"/singleBook/{bookDto.Id}")" />
+            </div>
+        }
+    }
+    else
+    {
+        <p> </p>
+    }
 }
 
 @code {
@@ -40,41 +44,62 @@ else
     private BookRead? bookRead;
     [Parameter]
     public int Id { get; set; }
-    public string? Username {get; set;}
+    public string? Username { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         try
-    {
-    
-        author = await AuthorService.GetAsyncById(Id);
-        if (author == null)
         {
-            Console.WriteLine("Author not found.");
-        }
-        var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
 
-        if (user.Identity.IsAuthenticated)
-        {
-            Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
-        }
-        profile = await ProfileService.GetAsyncByUsername(Username);
-
-        books = new List<(BookDto, string)>();
-
-            foreach (var book in author?.Books)
+            author = await AuthorService.GetAsyncById(Id);
+            if (author == null)
             {
-                BookDto? bookDto = await BookService.GetAsyncByName(book);
-                if (bookDto != null)
+                Console.WriteLine("Author not found.");
+            }
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+            }
+            profile = await ProfileService.GetAsyncByUsername(Username);
+
+            books = new List<(BookDto, string)>();
+
+            if (author?.Books != null)
+            {
+                foreach (var book in author?.Books)
                 {
-                    books.Add((bookDto, book));
+                    if (!string.IsNullOrEmpty(book))
+                    {
+                        try
+                        {
+                            // Encode the book title to handle special characters like #
+                            string encodedTitle = Uri.EscapeDataString(book);
+                            Console.WriteLine($"Fetching book: {book} (Encoded: {encodedTitle})");
+
+                            BookDto? bookDto = await BookService.GetAsyncByName(encodedTitle);
+                            if (bookDto != null)
+                            {
+                                books.Add((bookDto, book));
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Book not found: {book}");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Error fetching book '{book}': {ex.Message}");
+                        }
+                    }
                 }
             }
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Error fetching data: {ex.Message}");
-    }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
     }
 }
