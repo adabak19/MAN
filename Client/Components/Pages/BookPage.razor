@@ -33,7 +33,6 @@ else
         @foreach (var book in books)
         {
             <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
-                <BorrowButton BookDto="book" Username="@Username" />
             </BookComponent>
         }
     </div>
