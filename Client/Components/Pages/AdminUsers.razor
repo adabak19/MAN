@@ -1,0 +1,152 @@
+@page "/adminUsers"
+@using MAN.Shared.Interfaces
+@using MAN.Shared.Models
+@inject IProfileService UserService
+@inject AuthenticationStateProvider CustomAuthProvider
+@using System.Security.Claims
+
+@rendermode InteractiveServer
+
+<h3>Admin User Management</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You must be Admin admin to access this page.</h3>
+    </NotAuthorized>
+    <Authorized>
+
+@if (users == null)
+{
+    <p>Loading...</p>
+}
+else if (users.Count == 0)
+{
+    <p>No users found.</p>
+}
+else
+{
+    <div class="user-container">
+        @foreach (var user in PagedUsers)
+        {
+            <div class="user-item">
+                @if (editingUser == user)
+                {
+                    <div class="edit-dialog">
+                        <h4>Edit User</h4>
+                        <label for="firstName">First Name:</label>
+                        <input id="firstName" @bind="editingUser.FirstName" />
+                        <label for="lastName">Last Name:</label>
+                        <input id="lastName" @bind="editingUser.LastName" />
+                        <label for="profileName">Profile Name:</label>
+                        <input id="profileName" @bind="editingUser.ProfileName" />
+                        <label for="role">Role:</label>
+                        <input id="role" @bind="editingUser.Role" />
+                        <label for="active">Active:</label>
+                        <input id="active" type="checkbox" @bind="editingUser.Active" />
+                        <button @onclick="SaveChanges">Save</button>
+                        <button @onclick="CancelEdit">Cancel</button>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <p><strong>First Name:</strong> @user.FirstName</p>
+                        <p><strong>Last Name:</strong> @user.LastName</p>
+                        <p><strong>Profile Name:</strong> @user.ProfileName</p>
+                        <p><strong>Role:</strong> @user.Role</p>
+                        <p><strong>Active:</strong> @user.Active</p>
+                        <button @onclick="() => EditUser(user)">Edit</button>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="pagination">
+        <button @onclick="PreviousPage" disabled="@(!HasPreviousPage)">Previous</button>
+        <span>Page @CurrentPage of @TotalPages</span>
+        <button @onclick="NextPage" disabled="@(!HasNextPage)">Next</button>
+    </div>
+}
+
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    private List<Profile>? users;
+    private Profile? editingUser;
+    private int CurrentPage { get; set; } = 1;
+    private int PageSize { get; set; } = 24;
+    private bool isAdmin = false;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            // Ensure the user is authenticated
+            if (user.Identity.IsAuthenticated)
+            {
+                // Check if the user has the "Admin" role
+                isAdmin = user.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");}
+
+            users = await UserService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    private IEnumerable<Profile> PagedUsers => users
+        .Skip((CurrentPage - 1) * PageSize)
+        .Take(PageSize);
+
+    private int TotalPages => (int)Math.Ceiling((double)(users?.Count ?? 0) / PageSize);
+
+    private bool HasPreviousPage => CurrentPage > 1;
+    private bool HasNextPage => CurrentPage < TotalPages;
+
+    private void PreviousPage()
+    {
+        if (HasPreviousPage)
+        {
+            CurrentPage--;
+        }
+    }
+
+    private void NextPage()
+    {
+        if (HasNextPage)
+        {
+            CurrentPage++;
+        }
+    }
+
+    private void EditUser(Profile user)
+    {
+        editingUser = user;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (editingUser != null)
+        {
+            try
+            {
+                await UserService.UpdateAsync(editingUser);
+                editingUser = null;
+                users = await UserService.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+            }
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingUser = null;
+    }
+}

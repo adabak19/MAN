@@ -1,0 +1,191 @@
+@page "/adminBook"
+@using MAN.Shared.Interfaces
+@using MAN.Shared.DTO
+@inject IBookService BookService
+@inject NavigationManager Navigation
+
+@using System.Security.Claims
+@inject AuthenticationStateProvider CustomAuthProvider
+
+@rendermode InteractiveServer
+
+<h3>Admin Book Management</h3>
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You must be Admin admin to access this page.</h3>
+    </NotAuthorized>
+    <Authorized>
+<button @onclick="NavigateToAddBook">Add New Book</button>
+
+@if (books == null)
+{
+    <p>Loading...</p>
+}
+else if (books.Count == 0)
+{
+    <p>No books found.</p>
+}
+else
+{
+    <div class="book-container">
+        @foreach (var book in PagedBooks)
+        {
+            <div class="book-item">
+                @if (editingBook == book)
+                {
+                    <div class="edit-dialog">
+                        <h4>Edit Book</h4>
+                        <label for="isbn">ISBN:</label>
+                        <input id="isbn" @bind="editingBook.ISBN" />
+                        <label for="title">Title:</label>
+                        <input id="title" @bind="editingBook.Title" />
+                        <label for="pageCount">Page Count:</label>
+                        <input id="pageCount" type="number" @bind="editingBook.PageCount" />
+                        <label for="yearPublished">Year Published:</label>
+                        <input id="yearPublished" type="number" @bind="editingBook.YearPublished" />
+                        <label for="amount">Amount:</label>
+                        <input id="amount" type="number" @bind="editingBook.Amount" />
+                        <button @onclick="SaveChanges">Save</button>
+                        <button @onclick="CancelEdit">Cancel</button>
+                    </div>
+                }
+                else if (editingBookAmount == book)
+                {
+                    <div class="edit-dialog">
+                        <h4>Edit Book Amount</h4>
+                        <label for="amount">Amount:</label>
+                        <input id="amount" type="number" @bind="editingBookAmount.Amount" />
+                        <button @onclick="SaveAmountChanges">Save</button>
+                        <button @onclick="CancelEdit">Cancel</button>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <a href="/singleBook/@book.Id">@book.Title</a>
+                        <p><strong>ISBN:</strong> @book.ISBN</p>
+                        <p><strong>Year:</strong> @book.YearPublished</p>
+                        <p><strong>Amount:</strong> @book.Amount</p>
+                        <button @onclick="() => EditBook(book)">Edit All</button>
+                        <button @onclick="() => EditBookAmount(book)">Edit Amount</button>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="pagination">
+        <button @onclick="PreviousPage" disabled="@(!HasPreviousPage)">Previous</button>
+        <span>Page @CurrentPage of @TotalPages</span>
+        <button @onclick="NextPage" disabled="@(!HasNextPage)">Next</button>
+    </div>
+}
+</Authorized>
+</AuthorizeView>
+
+@code {
+    private List<BookDto>? books;
+    private BookDto? editingBook;
+    private BookDto? editingBookAmount;
+    private int CurrentPage { get; set; } = 1;
+    private int PageSize { get; set; } = 24;
+    private bool isAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {    var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            // Ensure the user is authenticated
+            if (user.Identity.IsAuthenticated)
+            {
+                // Check if the user has the "Admin" role
+                isAdmin = user.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");}
+            books = await BookService.GetAllAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+
+    private IEnumerable<BookDto> PagedBooks => books
+        .Skip((CurrentPage - 1) * PageSize)
+        .Take(PageSize);
+
+    private int TotalPages => (int)Math.Ceiling((double)(books?.Count ?? 0) / PageSize);
+
+    private bool HasPreviousPage => CurrentPage > 1;
+    private bool HasNextPage => CurrentPage < TotalPages;
+
+    private void PreviousPage()
+    {
+        if (HasPreviousPage)
+        {
+            CurrentPage--;
+        }
+    }
+
+    private void NextPage()
+    {
+        if (HasNextPage)
+        {
+            CurrentPage++;
+        }
+    }
+
+    private void EditBook(BookDto book)
+    {
+        editingBook = book;
+    }
+
+    private void EditBookAmount(BookDto book)
+    {
+        editingBookAmount = book;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (editingBook != null)
+        {
+            try
+            {
+                await BookService.Update(editingBook);
+                editingBook = null;
+                books = await BookService.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task SaveAmountChanges()
+    {
+        if (editingBookAmount != null)
+        {
+            try
+            {
+                await BookService.Update(editingBookAmount);
+                editingBookAmount = null;
+                books = await BookService.GetAllAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+            }
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingBook = null;
+        editingBookAmount = null;
+    }
+
+    private void NavigateToAddBook()
+    {
+        Navigation.NavigateTo("/addBook");
+    }
+}

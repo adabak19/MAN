@@ -1,6 +1,6 @@
 @MAN_HostAddress = https://localhost:7216/api
 
-GET {{MAN_HostAddress}}/profile
+GET {{MAN_HostAddress}}/profile/6969
 Accept: application/json
 
 ###
@@ -17,13 +17,16 @@ Content-Type: application/json
     "authorId": 3,
     "amount": 2
 }
+###
+GET {{MAN_HostAddress}}/book
+Content-Type: application/json
 
 ###
 PUT {{MAN_HostAddress}}/book/
 Content-Type: application/json
 
   {
-    "id": 58419579,
+    "id": 58419577,
     "isbn": "1243241",
     "title": "Book2",
     "pageCount": 120,
@@ -49,4 +52,19 @@ Content-Type: application/json
     
     "profileName": "sweet_kristy",
     "password": "123456"
+}
+
+### Create a New Profile
+POST {{MAN_HostAddress}}/api/profile
+Content-Type: application/json
+
+{
+    "id": 696969,
+    "firstName": "Nat",
+    "lastName": "W",
+    "profileName": "siematoja",
+    "password": "123456",
+    "role": "Admin",
+    "active": true,
+    "bookReads": null
 }
