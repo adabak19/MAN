@@ -9,6 +9,6 @@
 - [Project Update: Web Service Design & Implementation](https://github.com/adabak19/MAN/blob/main/Web%20Service%20Design%20%26%20Implementation.md)
 - [Project Update: Web Application]
 - [Project Update: User Management](https://github.com/adabak19/MAN/blob/main/User%20management.md)
-- [Project Update: Data Access]
+- [Project Update: Data Access](https://github.com/adabak19/MAN/blob/main/Data%20Access.md)
 - [Project Conclusion & Demonstration]
 

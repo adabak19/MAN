@@ -30,10 +30,7 @@ We chose this project because it combines key elements of user management, data 
 1. **Book Search and Filtering**
    - As a library member, I want to apply advanced filters like publication year and language, so that I can narrow down my book choices.
 
-2. **Borrowing and Returning Books**
-   - As a library member, I want to be able to return books through the system, so that I can complete my borrowing cycle easily.
-
-3. **Admin Dashboard for Inventory Management**
+2. **Admin Dashboard for Inventory Management**
    - As an admin, I want to add new books to the inventory, so that I can keep the library collection up-to-date.
    - As an admin, I want to update book details (such as title or author), so that I can correct any inaccuracies.
    - As an admin, I want to remove books from the system, so that I can manage the inventory efficiently.
