@@ -4,10 +4,17 @@
 @inject IBookService BookService
 @inject NavigationManager Navigation
 
+@using System.Security.Claims
+@inject AuthenticationStateProvider CustomAuthProvider
+
 @rendermode InteractiveServer
 
 <h3>Admin Book Management</h3>
-
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You must be Admin admin to access this page.</h3>
+    </NotAuthorized>
+    <Authorized>
 <button @onclick="NavigateToAddBook">Add New Book</button>
 
 @if (books == null)
@@ -72,6 +79,8 @@ else
         <button @onclick="NextPage" disabled="@(!HasNextPage)">Next</button>
     </div>
 }
+</Authorized>
+</AuthorizeView>
 
 @code {
     private List<BookDto>? books;
@@ -79,11 +88,19 @@ else
     private BookDto? editingBookAmount;
     private int CurrentPage { get; set; } = 1;
     private int PageSize { get; set; } = 24;
+    private bool isAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
         try
-        {
+        {    var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            // Ensure the user is authenticated
+            if (user.Identity.IsAuthenticated)
+            {
+                // Check if the user has the "Admin" role
+                isAdmin = user.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");}
             books = await BookService.GetAllAsync();
         }
         catch (Exception ex)

@@ -3,9 +3,18 @@
 @using MAN.Shared.DTO
 @inject IBookReadService BookReadService
 
+@using System.Security.Claims
+@inject AuthenticationStateProvider CustomAuthProvider
+
 @rendermode InteractiveServer
 
 <h3>Admin Dashboard</h3>
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h3>You must be Admin admin to access this page.</h3>
+    </NotAuthorized>
+    <Authorized>
 
 @if (bookReads == null)
 {
@@ -45,15 +54,26 @@ else
         }
     </div>
 }
+    </Authorized>
+</AuthorizeView>
 
 @code {
     private List<BookReadDto>? bookReads;
     private BookReadDto? editingLoan;
+    private bool isAdmin = false;
 
     protected override async Task OnInitializedAsync()
     {
         try
-        {
+        {   // Fetch the authentication state
+            var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            // Ensure the user is authenticated
+            if (user.Identity.IsAuthenticated)
+            {
+                // Check if the user has the "Admin" role
+                isAdmin = user.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");}
             // Fetch all active loans
             bookReads = await BookReadService.GetAllReading();
         }
