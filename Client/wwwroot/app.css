@@ -1,7 +1,7 @@
 html, body {
     font-family: 'Georgia', serif; /* Elegant and readable font */
     background-color: #fdf6e3; /* Warm and subtle background color */
-    color: #333; /* Neutral text color */
+    color: #5a4633; /* Neutral warm brown text color */
     margin: 0;
     padding: 0;
 }
@@ -42,6 +42,7 @@ h1, h2, h3 {
     font-family: 'Georgia', serif;
     color: #8b4513; /* Warm brown for headings */
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 h1:focus, h2:focus, h3:focus {
@@ -107,4 +108,53 @@ button {
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* Book cards styling */
+.book-item {
+    background-color: #fffdf3; /* Warm white background */
+    border: 1px solid #d2b48c; /* Subtle beige border */
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.book-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.book-item ul {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.book-item li {
+    margin: 5px 0;
+    font-size: 1rem;
+    color: #5a4633; /* Warm brown text color */
+}
+
+.book-item li strong {
+    font-weight: bold;
+    color: #8b4513; /* Darker brown for titles */
+}
+
+.book-item a {
+    text-decoration: none;
+    color: #8b4513; /* Warm brown */
+    font-weight: bold;
+}
+
+.book-item a:hover {
+    text-decoration: underline;
+    color: #a0522d;
 }
