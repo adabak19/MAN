@@ -16,15 +16,15 @@
     <Authorized>
 <h3>My Books</h3>
 
-<BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" />
+<BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" ProfileId="@profile?.Id" />
 
-        @if (book == null)
+        @if (books == null)
         {
             <p><em>Loading...</em></p>
         }
         else if (!books.Any())
         {
-            <p><em>No books found.</em></p>
+            <p><em> </em></p>
         }
         else
         {
@@ -94,9 +94,10 @@ else
 }
 </Authorized>
 @code {
-    
-     private List<BookDto>? books;
+    private List<BookDto>? books = new();
+     @* private List<BookDto>? books; *@
     private List<BookReadDto>? bookReads;
+         private List<BookReadDto>? filteredBookReads;
     private Profile? profile;
     [Parameter]
     public string? Username { get; set; }
@@ -118,6 +119,7 @@ else
             {
                 Console.WriteLine("Profile not found.");
             }
+Console.WriteLine($"ProfileId: {profile?.Id}");
 
             bookReads = await BookReadService.GetAsyncByProfileId(profile.Id);
             if (bookReads == null)
@@ -131,10 +133,10 @@ else
         }
     }
 
-    private void HandleSearchResults(List<BookDto> searchResults)
+     private void HandleSearchResults(List<BookDto> searchResults)
     {
         books = searchResults;
+    StateHasChanged(); 
     }
-    
 }
 </AuthorizeView>

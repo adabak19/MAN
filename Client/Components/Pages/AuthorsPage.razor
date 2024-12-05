@@ -6,30 +6,33 @@
 @rendermode InteractiveServer
 <h3>Authors</h3>
 
+<div class="search-container">
+    <input 
+        @bind="searchName"
+        @bind:event="oninput"
+        @onkeyup ="HandleKeyPress"
+        placeholder="Search by Name" />
+        <button @onclick="PerformSearch">Search</button>
+</div>
 @if (authors == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
+    <div class="book-container">
     @foreach (var author in authors)
     {
-    <div>
-    <ul>
-            <li>Name: @author.FirstName @author.LastName</li>
-            <li>Books: @foreach (var book in author.Books){
-                <ul>
-                    <li>@book</li>
-                </ul>} </li>
-    </ul>
-    </div>
+        <AuthorComponent Author="author" />
     }
+    </div>
 }
 
 <button @onclick="AddAuthor">Add New Author</button>
 
 @code {
     private List<AuthorDto>? authors;
+    private string? searchName;
 
     protected override async Task OnInitializedAsync()
     {
@@ -40,14 +43,25 @@ else
     private async Task AddAuthor()
     {
         var newAuthor = new Author
-        {
-            FirstName = "John",
-            LastName = "Doe",
-        };
+            {
+                FirstName = "John",
+                LastName = "Doe",
+            };
 
         await AuthorService.Add(newAuthor);
 
         // Refresh the list of authors after adding a new one
         authors = await AuthorService.GetAllAsync();
+    }
+    private async Task PerformSearch()
+    {
+        authors = await AuthorService.SearchAuthorsAsync(searchName);
+    }
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key != "Tab")
+        {
+            await PerformSearch();
+        }
     }
 }

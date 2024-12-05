@@ -8,4 +8,5 @@ public interface IAuthorService
     Task<Author> Add(Author author);
     Task Delete(int id);
     Task Update(Author author);
+    Task<List<AuthorDto>> SearchAuthorsAsync(string? name);
 }
