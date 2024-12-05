@@ -1,13 +1,43 @@
-﻿<header class="navbar">
+﻿@using System.Security.Claims
+@inject AuthenticationStateProvider CustomAuthProvider
+
+<header class="navbar">
     <div class="navbar-brand">
         <a href="/">Library</a>
     </div>
     <nav>
+        <AuthorizeView>
+            <NotAuthorized>
         <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
-        <NavLink class="nav-link" href="counter">Counter</NavLink>
-        <NavLink class="nav-link" href="login">Login</NavLink>
+        </NotAuthorized>
+    <Authorized>
         <NavLink class="nav-link" href="authors">Authors</NavLink>
         <NavLink class="nav-link" href="books">Books</NavLink>
         <NavLink class="nav-link" href="myBooks">My Books</NavLink>
+        @if(isAdmin)
+        {
+        <NavLink class="nav-link" href="dashboard">Admin dashboard</NavLink>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <NavLink class="nav-link" href="login">Login</NavLink>
+        <NavLink class="nav-link" href="register">Register</NavLink>
+    </NotAuthorized>
+</AuthorizeView>
     </nav>
 </header>
+
+@code {
+    private bool isAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            isAdmin = user.Claims.Any(claim => claim.Type == ClaimTypes.Role && claim.Value == "Admin");
+        }
+    }
+}
