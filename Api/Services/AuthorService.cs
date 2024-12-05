@@ -18,6 +18,10 @@ public class AuthorService : IAuthorService{
             Books = (List<string>)a.Books.Select(b => b.Title)
         }).ToListAsync();
     }
+    public async Task<List<Author>> GetAllAuthors(){
+        using ApplicationDbContext context = new();
+        return await context.Authors.ToListAsync();
+    }
 
     public async Task<AuthorDto?> GetAsyncById(int id){
         using ApplicationDbContext context = new();

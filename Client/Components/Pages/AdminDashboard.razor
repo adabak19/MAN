@@ -1,7 +1,6 @@
 @page "/adminDashboard"
 @using MAN.Shared.Interfaces
 @using MAN.Shared.DTO
-@using MAN.Shared.Models
 @inject IBookReadService BookReadService
 
 @rendermode InteractiveServer
@@ -22,26 +21,72 @@ else
         <h4>Active loans</h4>
         @foreach (var bookRead in bookReads)
         {
-            <LoanComponent loan="@bookRead" />
+            <div class="loan-item">
+                @if (editingLoan == bookRead)
+                {
+                    <div class="edit-dialog">
+                        <h4>Edit Loan</h4>
+                        <p><strong>User:</strong> @editingLoan.ReviewerName</p>
+                        <p><strong>Book:</strong> @editingLoan.BookTitle</p>
+                        <label for="status">Status:</label>
+                        <select id="status" @bind="editingLoan.Status">
+                            <option value="reading">Reading</option>
+                            <option value="read">Read</option>
+                        </select>
+                        <button @onclick="SaveChanges">Save</button>
+                        <button @onclick="CancelEdit">Cancel</button>
+                    </div>
+                }
+                else
+                {
+                    <LoanComponent loan="@bookRead" OnEdit="HandleEdit" />
+                }
+            </div>
         }
     </div>
 }
 
 @code {
-    private List<BookReadDto> bookReads;
+    private List<BookReadDto>? bookReads;
+    private BookReadDto? editingLoan;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            // Fetch all active loans
             bookReads = await BookReadService.GetAllReading();
-
-        Console.WriteLine($"Fetched {bookReads?.Count ?? 0} book reads");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching data: {ex.Message}");
         }
-        
+    }
+
+    private void HandleEdit(BookReadDto loan)
+    {
+        editingLoan = loan;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (editingLoan != null)
+        {
+            try
+            {
+                await BookReadService.UpdateFromDto(editingLoan);
+                editingLoan = null;
+                bookReads = await BookReadService.GetAllReading();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving changes: {ex.Message}");
+            }
+        }
+    }
+
+    private void CancelEdit()
+    {
+        editingLoan = null;
     }
 }

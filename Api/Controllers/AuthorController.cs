@@ -47,4 +47,10 @@ public class AuthorController : ControllerBase
         await _authorService.Delete(id);
         return NoContent();
     }
+    
+    [HttpGet("all")]
+    public async Task<IActionResult> GetAllAuthors(){
+        var authors = await _authorService.GetAllAuthors();
+        return Ok(authors);
+    }
 }

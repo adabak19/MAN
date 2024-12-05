@@ -94,3 +94,15 @@ main {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
+    .edit-dialog {
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%; /* Ensure it fits well in the container */
+    }
+    
+    

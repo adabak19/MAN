@@ -12,5 +12,6 @@ public interface IBookReadService
     Task<List<BookReadDto>> GetAsyncByProfileId(int profileId);
     
     Task<List<BookReadDto>> GetAllReading();
+    Task UpdateFromDto(BookReadDto bookReadDto);
 
 }
