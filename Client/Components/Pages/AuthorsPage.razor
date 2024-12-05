@@ -23,7 +23,7 @@ else
     <div class="book-container">
     @foreach (var author in authors)
     {
-        <AuthorComponent Author="author" />
+        <AuthorComponent Author="author" NavigateTo="@($"/singleAuthor/{author.Id}")" />
     }
     </div>
 }

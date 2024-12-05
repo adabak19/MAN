@@ -1,0 +1,80 @@
+@page "/singleAuthor/{id:int}"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IBookService BookService
+@inject IBookReadService BookReadService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider CustomAuthProvider
+@inject IProfileService ProfileService
+@inject IAuthorService AuthorService
+@rendermode InteractiveServer
+
+<h3>Author Details</h3>
+
+@if (author == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="single-book">
+        <p><strong>Name:</strong> @author.AuthorName</p>
+            <h3><strong>Books:</strong></h3>
+    </div>
+                    @if(author.Books != null)
+                    {
+                        @foreach (var (bookDto, book) in books)
+                        {
+                            <BookComponent BookDto="bookDto" NavigateTo="@($"/singleBook/{bookDto.Id}")"/>
+                        }
+                    }else{
+                        <p> </p>
+                    }
+}
+
+@code {
+    private AuthorDto? author;
+    private List<(BookDto bookDto, string title)>? books;
+    private Profile? profile;
+    private BookRead? bookRead;
+    [Parameter]
+    public int Id { get; set; }
+    public string? Username {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+    {
+    
+        author = await AuthorService.GetAsyncById(Id);
+        if (author == null)
+        {
+            Console.WriteLine("Author not found.");
+        }
+        var authState = await CustomAuthProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            Username = user.Claims.First(claim => claim.Type.Equals("Username")).Value;
+        }
+        profile = await ProfileService.GetAsyncByUsername(Username);
+
+        books = new List<(BookDto, string)>();
+
+            foreach (var book in author?.Books)
+            {
+                BookDto? bookDto = await BookService.GetAsyncByName(book);
+                if (bookDto != null)
+                {
+                    books.Add((bookDto, book));
+                }
+            }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error fetching data: {ex.Message}");
+    }
+    }
+}

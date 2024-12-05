@@ -26,6 +26,13 @@ public class BookController : ControllerBase
             return NotFound();
         return Ok(book);
     }
+    [HttpGet("book/title/{name}")]
+    public async Task<ActionResult<BookDto>> GetByName(string name){
+        var book = await _bookService.GetAsyncByName(name);
+        if (book is null)
+            return NotFound();
+        return Ok(book);
+    }
     [HttpPost]
     public async Task<IActionResult> Create(Book book){
         await _bookService.Add(book);

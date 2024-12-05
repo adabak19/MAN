@@ -26,6 +26,9 @@ namespace MAN.Client.Services
         {
             return await _httpClient.GetFromJsonAsync<BookDto>($"api/book/{id}");
         }
+        public async Task<BookDto?> GetAsyncByName(string name){
+            return await _httpClient.GetFromJsonAsync<BookDto>($"book/title/{name}");
+        }
 
         public async Task<Book> Add(Book book)
         {

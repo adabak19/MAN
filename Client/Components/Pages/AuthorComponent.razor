@@ -3,6 +3,7 @@
 @using MAN.Shared.DTO;
 @using MAN.Shared.Models;
 @inject IAuthorService AuthorService
+@inject NavigationManager Navigation
 @rendermode InteractiveServer
 
 @if (Author == null)
@@ -11,7 +12,7 @@
 }
 else
 {
-    <div class="book-item">
+    <div @onclick="Navigate" class="book-item">
             <h2><strong>Name:</strong> @Author.AuthorName</h2>
     </div>
 }
@@ -19,7 +20,9 @@ else
 @code {
     [Parameter]
     public AuthorDto? Author {get; set;}
-    private string name;
+    [Parameter]
+    public string? NavigateTo {get; set;}
+    private string? name;
 
     protected override async Task OnInitializedAsync()
     {
@@ -30,6 +33,13 @@ else
         catch (Exception ex)
         {
             Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
+    private void Navigate()
+    {
+        if (!string.IsNullOrEmpty(NavigateTo))
+        {
+            Navigation.NavigateTo(NavigateTo);
         }
     }
 }

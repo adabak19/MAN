@@ -27,6 +27,10 @@ namespace MAN.Client.Services
             return await _httpClient.GetFromJsonAsync<AuthorDto>($"api/author/{id}");
         }
 
+        public async Task<Author?> GetAuthorByIdAsync(int id){
+            return await _httpClient.GetFromJsonAsync<Author>($"api/author/author/{id}");
+        }
+
         public async Task<Author> Add(Author author)
         {
             var response = await _httpClient.PostAsJsonAsync("api/author", author);
