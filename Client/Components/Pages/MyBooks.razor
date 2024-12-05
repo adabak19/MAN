@@ -18,31 +18,27 @@
 
 <BookSearch OnSearchResultsChanged="HandleSearchResults" IsForMyBooks="true" ProfileId="@profile?.Id" />
 
-        @if (books == null)
+        @if (filteredBookReads == null)
         {
-            <p><em>Loading...</em></p>
+            <p><em></em></p>
         }
-        else if (!books.Any())
+        else if (!filteredBookReads.Any())
         {
             <p><em> </em></p>
         }
         else
         {
             <div class="book-container">
-                @foreach (var book in books)
+                @foreach (var (bookRead, book) in filteredBookReads)
                 {
-                    <div class="book-item">
-                        <a href="/singleBook/@book.Id">
-                            <h4>@book.Title</h4>
-                            <p><strong>Author:</strong> @book.AuthorName</p>
-                        </a>
-                    </div>
+                    <BookComponent BookDto="book" Username="@Username" NavigateTo="@($"/singleBook/{book.Id}")">
+                    </BookComponent>
                 }
             </div>
         }
 
   
-@if (bookReads == null)
+@if (booksWithStatus == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -50,54 +46,46 @@ else
 {
     <h1>Current books</h1>
     <div class="book-container">
-        @foreach (var book in bookReads)
+        @foreach (var (bookRead, bookDto) in booksWithStatus)
+    {
+        @if (bookRead.Status == "to-read")
         {
-            @if(book.Status == "reading"){
-                <div class="book-item">
-                <a href="/singleBook/@book.BookId">
-                    <h4>@book.BookTitle</h4>
-                    <p><strong>Author:</strong> @book.AuthorName</p>
-                    </a>
-            </div>
-            }
+            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
+                    </BookComponent>
         }
+    }
     </div>
         
         <h1>Books to read</h1>
         <div class="book-container">
-        @foreach (var book in bookReads)
+        @foreach (var (bookRead, bookDto) in booksWithStatus)
+    {
+        @if (bookRead.Status == "to-read")
         {
-            @if(book.Status == "to-read"){
-                <div class="book-item">
-                <a href="/singleBook/@book.BookId">
-                    <h4>@book.BookTitle</h4>
-                    <p><strong>Author:</strong> @book.AuthorName</p>
-                    </a>
-            </div>
-            }
+            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
+                    </BookComponent>
         }
+    }
         </div>
         <h1>Books you already read</h1>
         <div class="book-container">
-        @foreach (var book in bookReads)
+        @foreach (var (bookRead, bookDto) in booksWithStatus)
+    {
+        @if (bookRead.Status == "to-read")
         {
-            @if(book.Status == "read"){
-                <div class="book-item">
-                <a href="/singleBook/@book.BookId">
-                    <h4>@book.BookTitle</h4>
-                    <p><strong>Author:</strong> @book.AuthorName</p>
-                    </a>
-            </div>
-            }
+            <BookComponent BookDto="bookDto" Username="@Username" NavigateTo="@($"/singleBook/{bookDto.Id}")">
+                    </BookComponent>
         }
+    }
         </div>
 }
 </Authorized>
 @code {
+    private List<(BookReadDto bookRead, BookDto bookDto)>? booksWithStatus;
     private List<BookDto>? books = new();
      @* private List<BookDto>? books; *@
     private List<BookReadDto>? bookReads;
-         private List<BookReadDto>? filteredBookReads;
+    private List<(BookReadDto bookRead, BookDto bookDto)>? filteredBookReads;
     private Profile? profile;
     [Parameter]
     public string? Username { get; set; }
@@ -119,12 +107,22 @@ else
             {
                 Console.WriteLine("Profile not found.");
             }
-Console.WriteLine($"ProfileId: {profile?.Id}");
+            Console.WriteLine($"ProfileId: {profile?.Id}");
 
             bookReads = await BookReadService.GetAsyncByProfileId(profile.Id);
             if (bookReads == null)
             {
                 Console.WriteLine("BookRead not found.");
+            }
+            booksWithStatus = new List<(BookReadDto, BookDto)>();
+
+            foreach (var bookRead in bookReads)
+            {
+                BookDto? bookDto = await BookService.GetAsyncById(bookRead.BookId);
+                if (bookDto != null)
+                {
+                    booksWithStatus.Add((bookRead, bookDto));
+                }
             }
         }
         catch (Exception ex)
@@ -133,10 +131,31 @@ Console.WriteLine($"ProfileId: {profile?.Id}");
         }
     }
 
-     private void HandleSearchResults(List<BookDto> searchResults)
+     private async void HandleSearchResults(List<BookDto> searchResults)
     {
         books = searchResults;
-    StateHasChanged(); 
+        filteredBookReads = new List<(BookReadDto, BookDto)>();
+        foreach (var book in books)
+            {
+                BookRead? bookRead1 = await BookReadService.GetAsyncById(profile.Id, book.Id);
+                if (bookRead1 != null)
+                {
+                    BookReadDto bookReadDto = new(){
+                        BookId = bookRead1.BookId,
+                        ProfileId = bookRead1.ProfileId,
+                        BookTitle = bookRead1.Book?.Title,
+                        AuthorName = bookRead1.Book?.Author?.MiddleName == null ? $"{bookRead1.Book?.Author?.FirstName} {bookRead1.Book?.Author?.LastName}" : $"{bookRead1.Book?.Author?.FirstName} {bookRead1.Book?.Author?.MiddleName} {bookRead1.Book?.Author?.LastName}",
+                        ReviewerName = bookRead1.Profile != null ? $"{bookRead1.Profile.FirstName} {bookRead1.Profile.LastName}" : null,
+                        Rating = bookRead1.Rating,
+                        Review = bookRead1.Review,
+                        DateFinished = bookRead1.DateFinished,
+                        DateStarted = bookRead1.DateStarted,
+                        Status = bookRead1.Status
+                    };
+                    filteredBookReads.Add((bookReadDto, book));
+                }
+            }
+        StateHasChanged(); 
     }
 }
 </AuthorizeView>

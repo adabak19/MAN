@@ -50,25 +50,25 @@ namespace MAN.Client.Services
         public async Task<List<BookDto>> SearchBooksForUserAsync(int profileId, string? title, string? author, string? genre)
         {
             // Fetch book reads for the user
-            var query = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/profile/{profileId}")
-                       ?? new List<BookReadDto>();
+            var query = await _httpClient.GetFromJsonAsync<List<BookDto>>($"api/book/book/{profileId}")
+                       ?? new List<BookDto>();
 
 
             // Transform BookReadDto into BookDto (filter is not applied yet)
-            var userBooks = query.Select(br => new BookDto
-            {
-                Id = br.BookId,
-                Title = br.BookTitle,
-                AuthorName = br.AuthorName,
-                Genres = new List<string>() // Adjust if genre data is provided elsewhere
-            }).ToList();
+            // var userBooks = query.Select(br => new BookDto
+            // {
+            //     Id = br.Id,
+            //     Title = br.BookTitle,
+            //     AuthorName = br.AuthorName,
+            //     Genres = new List<string>() // Adjust if genre data is provided elsewhere
+            // }).ToList();
 
 
 
             // Apply filters to userBooks
             if (!string.IsNullOrWhiteSpace(title))
             {
-                userBooks = userBooks
+                query = query
                     .Where(b => b.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
@@ -76,7 +76,7 @@ namespace MAN.Client.Services
 
             if (!string.IsNullOrWhiteSpace(author))
             {
-                userBooks = userBooks
+                query = query
                     .Where(b => b.AuthorName.Contains(author, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
@@ -84,14 +84,14 @@ namespace MAN.Client.Services
 
             if (!string.IsNullOrWhiteSpace(genre))
             {
-                userBooks = userBooks
+                query = query
                     .Where(b => b.Genres.Any(g => g.Contains(genre, StringComparison.OrdinalIgnoreCase)))
                     .ToList();
 
             }
 
 
-            return userBooks;
+            return query;
         }
 
 
