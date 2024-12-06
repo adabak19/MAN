@@ -244,3 +244,39 @@ nav[b-b3bxtejbwi] {
         text-align: left;
     }
 }
+.search-container {
+    display: flex;
+    flex-wrap: wrap; /* Ensures the inputs and button wrap on smaller screens */
+    justify-content: center; /* Centers the content horizontally */
+    align-items: center; /* Aligns the content vertically */
+    gap: 10px; /* Adds spacing between the inputs and button */
+    margin: 20px auto; /* Centers the container and adds spacing above and below */
+    padding: 10px; /* Adds padding around the container */
+    width: 90%; /* Adjust the width to fit the screen nicely */
+    max-width: 600px; /* Limits the width on larger screens */
+}
+
+.search-container input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #d2b48c; /* Warm tan border */
+    border-radius: 5px;
+    width: calc(100% / 3 - 15px); /* Divides the width evenly for three inputs */
+    box-sizing: border-box; /* Ensures padding and borders are included in the width */
+}
+
+.search-container button {
+    padding: 10px 20px;
+    background-color: #8b4513; /* Warm brown */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.search-container button:hover {
+    background-color: #a0522d; /* Lighter brown on hover */
+    transform: translateY(-2px); /* Slight hover effect */
+}

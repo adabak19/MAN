@@ -5,6 +5,7 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
+<div class="register-container">
 <h3>Register</h3>
 
 @if (!string.IsNullOrEmpty(errorMessage))
@@ -40,6 +41,7 @@
 
     <button type="submit" class="btn btn-primary">Register</button>
 </EditForm>
+</div>
 
 @code {
     private Profile registerModel = new Profile();
