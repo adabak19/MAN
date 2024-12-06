@@ -25,6 +25,7 @@ else
             <li><strong>Publisher:</strong> @book.Publisher</li>
             <li><strong>Page Count:</strong> @book.PageCount</li>
             <li><strong>Year Published:</strong> @book.YearPublished</li>
+            <li><strong>Rating:</strong> @RenderStars(bookRating)</li>
             <li><strong>Amount:</strong> @book.Amount</li>
             <li><strong>Genres:</strong>
                 <ul>
@@ -63,6 +64,8 @@ else
     private BookDto? book;
     private Profile? profile;
     private BookRead? bookRead;
+    private List<BookReadDto>? bookReadDtos;
+    private double bookRating;
     [Parameter]
     public int Id { get; set; }
     public string? Review {get; set;}
@@ -92,11 +95,50 @@ else
         {
             Console.WriteLine("BookRead not found.");
         }
+        bookReadDtos = await BookReadService.GetAsyncByBookId(Id);
+        if (bookReadDtos == null){
+            Console.WriteLine("BookReads not found.");
+        }
+        double CalcRating(){
+        int steps = 0;
+        double sum = 0;
+        foreach (var bookReadDto in bookReadDtos){
+            if(bookReadDto.Rating != null){
+            sum = sum + (float)bookReadDto.Rating;
+            steps++;
+            }
+        }
+        return sum/steps;
+    }
+        bookRating = Math.Round(CalcRating(), 2);
     }
     catch (Exception ex)
     {
         Console.WriteLine($"Error fetching data: {ex.Message}");
     }
+    }
+     private MarkupString RenderStars(double rating)
+    {
+        int fullStars = (int)rating; // Number of full stars
+        bool hasHalfStar = rating - fullStars >= 0.5; // Check for half star
+        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // Remaining empty stars
+
+        string starsHtml = "";
+
+        for (int i = 0; i < fullStars; i++)
+        {
+            starsHtml += "<span class='star full'>★</span>";
+        }
+        if (hasHalfStar)
+        {
+            starsHtml += "<span class='star half'>★</span>";
+        }
+        for (int i = 0; i < emptyStars; i++)
+        {
+            starsHtml += "<span class='star empty'>★</span>";
+        }
+
+        return new MarkupString(starsHtml);
     }
 
     private async Task BorrowBook()

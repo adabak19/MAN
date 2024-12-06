@@ -51,7 +51,7 @@ namespace MAN.Client.Services
         }
         public async Task<List<Author>> GetAllAuthors()
         {
-            return await _httpClient.GetFromJsonAsync<List<Author>>("api/author")
+            return await _httpClient.GetFromJsonAsync<List<Author>>("api/author/all")
                    ?? new List<Author>();}
         public async Task<List<AuthorDto>> SearchAuthorsAsync(string? name)
         {

@@ -48,7 +48,7 @@ namespace MAN.Client.Services
         }
         public async Task<List<BookReadDto>> GetAsyncByBookId(int bookId)
         {
-            var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/bookRead/{bookId}");
+            var response = await _httpClient.GetFromJsonAsync<List<BookReadDto>>($"api/BookRead/book/{bookId}");
             if (response == null)
             {
                 throw new Exception("Failed to fetch book reads.");
