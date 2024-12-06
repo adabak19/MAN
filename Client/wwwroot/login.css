@@ -1,0 +1,74 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align closer to the top */
+    min-height: 60vh; /* Ensure enough vertical space */
+    padding-top: 10vh; /* Adjust top padding */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fffdf3; /* Soft warm white background */
+    border: 1px solid #d2b48c; /* Tan border */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    width: 350px; /* Keep width unchanged */
+    max-height: 300px; /* Adjust the container's height */
+}
+
+.login-container h3 {
+    margin-bottom: 20px;
+    color: #8b4513; /* Warm brown color */
+    text-align: center;
+    font-weight: bold;
+}
+
+.login-container .form-group {
+    margin-bottom: 15px;
+}
+
+.login-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #5d4037; /* Warm brown for labels */
+}
+
+.login-container input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #d2b48c; /* Warm tan border */
+    border-radius: 5px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login-container input:focus {
+    border-color: #a0522d; /* Slightly darker tan for focus */
+    outline: none;
+}
+
+.login-container button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #8b4513; /* Warm brown for button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.login-container button:hover {
+    background-color: #a0522d; /* Slightly lighter brown */
+    transform: translateY(-2px);
+}
+
+.login-container .alert {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}

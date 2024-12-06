@@ -5,6 +5,8 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
+
+<div class="login-container">
 <h3>Login</h3>
 
 @if (!string.IsNullOrEmpty(errorMessage))
@@ -29,7 +31,7 @@
 
     <button type="submit" class="btn btn-primary">Login</button>
 </EditForm>
-
+</div>
 @code {
     private ProfileLoginDto loginModel = new ProfileLoginDto();
     private string? errorMessage;
