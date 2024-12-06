@@ -15,7 +15,7 @@
 
 <EditForm Model="registerModel" OnValidSubmit="HandleRegister">
     <DataAnnotationsValidator />
-    @* <ValidationSummary /> *@
+    <ValidationSummary />
 
     <div class="form-group">
         <label for="profileName">Profile Name</label>
@@ -55,7 +55,7 @@
             errorMessage = "Passwords do not match.";
             return;
         }
-        registerModel.Id = 10000;
+        registerModel.Id = 10003;
         registerModel.Role = "User";
         registerModel.Active = true;
         registerModel.BookReads = null; 
