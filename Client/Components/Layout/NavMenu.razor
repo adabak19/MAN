@@ -14,9 +14,6 @@
     <Authorized>
         <NavLink class="nav-link" href="authors">Authors</NavLink>
         <NavLink class="nav-link" href="books">Books</NavLink>
-        @if(!isAdmin){
-        <NavLink class="nav-link" href="myBooks">My Books</NavLink>
-        }
         @if(isAdmin)
         {
         <NavLink class="nav-link" href="dashboard">Admin dashboard</NavLink>
