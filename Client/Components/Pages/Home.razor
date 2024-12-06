@@ -8,7 +8,9 @@
 <AuthorizeView>
     <Authorized>
         <h1>Hello @context.User.Claims.First(claim => claim.Type.Equals("Username")).Value</h1>
-
+        </Authorized>
+</AuthorizeView>
+<AuthorizeView Policy="MustBeMember">
         <div class="dashboard-container">
             <div class="dashboard-card" @onclick="NavigateToCurrentBooks">
                 <h4>Current Books</h4>
@@ -23,8 +25,9 @@
                 <p>Books you've finished</p>
             </div>
         </div>
-    </Authorized>
-    <NotAuthorized>
+        </AuthorizeView>
+        <AuthorizeView>
+        <NotAuthorized>
         <h1>Hello and welcome to your library! Log in or register to begin your reading :)</h1>
     </NotAuthorized>
 </AuthorizeView>

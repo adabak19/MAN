@@ -8,6 +8,7 @@
 @inject IPublisherService PublisherService
 @inject IBindingTypeService BindingTypeService
 @inject NavigationManager Navigation
+@rendermode InteractiveServer
 
 <h3>Add New Book</h3>
 
@@ -59,12 +60,12 @@ else
                 <option value="@bindingType.Id">@bindingType.Type</option>
             }
         </select>
-        <label for="bindingType">Co Authors:</label>
-        <select id="bindingType" @bind="addingBook.BindingTypeId">
-            <option value="0">-- Select Binding Type --</option>
-            @foreach (var bindingType in bindingTypes)
+        <label for="Genre">Genre:</label>
+        <select id="Genre" @bind="genre">
+            <option value="0">-- Select Genre --</option>
+            @foreach (var genre in genres)
             {
-                <option value="@bindingType.Id">@bindingType.Type</option>
+                <option value="@genre.Id">@genre.GenreName</option>
             }
         </select>
 
@@ -79,11 +80,17 @@ else
     private List<Genre> genres = new();
     private List<Publisher> publishers = new();
     private List<BindingType> bindingTypes = new();
+    private BindingType bindingType1; 
+    private Publisher publisher1;
+    private Author author1;
+    private int genre;
+    private BookGenre bookGenre;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+
             addingBook = new Book
             {
                 Id = 0,
@@ -118,6 +125,7 @@ else
                 BookGenres = new List<BookGenre>(),
                 BookReads = null,
                 Coauthors = new List<CoAuthors>()
+                
             };
 
             authors = await AuthorService.GetAllAuthors();
@@ -135,6 +143,16 @@ else
     {
         try
         {
+            @* bindingType1 = await BindingTypeService.GetAsyncById(addingBook.BindingTypeId);
+            addingBook.BindingType = bindingType1;
+            publisher1 = await PublisherService.GetAsyncById(addingBook.PublisherId);
+            addingBook.Publisher = publisher1; *@
+            author1 = await AuthorService.GetAuthorByIdAsync(addingBook.AuthorId);
+            addingBook.Author = author1;
+            addingBook.Coauthors = [];
+            addingBook.Id = 1;
+            addingBook.BookGenres = [];
+            addingBook.BookReads = [];
             await BookService.Add(addingBook);
             Navigation.NavigateTo("/adminBook");
         }
