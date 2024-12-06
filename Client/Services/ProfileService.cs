@@ -25,6 +25,9 @@ namespace MAN.Client.Services
         {
             return await _httpClient.GetFromJsonAsync<Profile>($"api/profile/{id}");
         }
+        public async Task<int> GetHighestId(){
+            return await _httpClient.GetFromJsonAsync<int>("api/profile/max");
+        }
 
         public async Task<Profile> AddAsync(Profile profile)
         {

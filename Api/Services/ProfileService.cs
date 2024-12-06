@@ -43,4 +43,9 @@ public class ProfileService : IProfileService{
         using ApplicationDbContext context = new();
         return await context.Profiles.Where(x => x.ProfileName == username).FirstOrDefaultAsync();
     }
+    public async Task<int> GetHighestId(){
+        using ApplicationDbContext context = new();
+        var list = await context.Profiles.Select(p => p.Id).ToListAsync();
+        return list.Max();
+    }
 }

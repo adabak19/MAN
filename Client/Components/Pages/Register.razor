@@ -47,6 +47,18 @@
     private Profile registerModel = new Profile();
     private string confirmPassword;
     private string errorMessage;
+    private int Id;
+     protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Id = await ProfileService.GetHighestId();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching data: {ex.Message}");
+        }
+    }
 
     private async Task HandleRegister()
     {
@@ -55,7 +67,7 @@
             errorMessage = "Passwords do not match.";
             return;
         }
-        registerModel.Id = 10003;
+        registerModel.Id = Id + 1;
         registerModel.Role = "User";
         registerModel.Active = true;
         registerModel.BookReads = null; 

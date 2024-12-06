@@ -53,4 +53,9 @@ public class ProfileController : ControllerBase
         await _profileService.DeleteAsync(id);
         return NoContent();
     }
+    [HttpGet("max")]
+    public async Task<IActionResult> GetMax(){
+        var max = await _profileService.GetHighestId();
+        return Ok(max);
+    }
 }

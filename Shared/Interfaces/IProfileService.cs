@@ -8,4 +8,5 @@ public interface IProfileService
     Task<Profile> AddAsync(Profile profile);
     Task DeleteAsync(int id);
     Task UpdateAsync(Profile profile);
+    Task<int> GetHighestId();
 }
