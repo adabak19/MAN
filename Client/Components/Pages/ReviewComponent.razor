@@ -1,0 +1,49 @@
+@page "/reviewComponent"
+@using MAN.Shared.Interfaces;
+@using MAN.Shared.DTO;
+@using MAN.Shared.Models;
+@inject IAuthorService AuthorService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+@if (BookRead == null)
+{
+    <p>loading...</p>
+}
+else
+{
+    <div class="book-item">
+        <h4>@(BookRead.BookTitle ?? "Unknown Book")</h4>
+        <p><strong>Reviewed by:</strong> @(BookRead.ReviewerName ?? "Anonymous")</p>
+        <p><strong>Review:</strong> @(BookRead.Review ?? "No review provided")</p>
+        @if (BookRead.Rating != null){
+            <p><strong>Rating:</strong> @RenderStars(BookRead.Rating)</p>
+        }else{
+        <p><strong>Rating:</strong>No rating</p>
+        }
+        <p><strong>Date Added:</strong> @(BookRead.DateFinished?.ToString("yyyy-MM-dd") ?? "Not finished")</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public BookReadDto? BookRead {get; set;}
+    private MarkupString RenderStars(int? rating)
+    {
+        int? fullStars = BookRead?.Rating; // Number of full stars
+        int? emptyStars = 5 - fullStars; // Remaining empty stars
+
+        string starsHtml = "";
+
+        for (int i = 0; i < fullStars; i++)
+        {
+            starsHtml += "<span class='star full'>★</span>";
+        }
+        for (int i = 0; i < emptyStars; i++)
+        {
+            starsHtml += "<span class='star empty'>★</span>";
+        }
+
+        return new MarkupString(starsHtml);
+    }
+}

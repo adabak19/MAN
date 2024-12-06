@@ -127,3 +127,19 @@ h2 {
         padding: 15px;
     }
 }
+.star {
+    font-size: 24px;
+    color: lightgray; /* Default color for empty stars */
+    margin-right: 5px;
+}
+
+.star.full {
+    color: orange; /* Color for full stars */
+}
+
+.star.half {
+    background: linear-gradient(to right, orange 50%, lightgray 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}

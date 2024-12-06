@@ -1,4 +1,4 @@
-@* @page "/addBook"
+@page "/addBook"
 @using MAN.Shared.Interfaces
 @using MAN.Shared.Models
 @using Microsoft.AspNetCore.Components
@@ -59,6 +59,14 @@ else
                 <option value="@bindingType.Id">@bindingType.Type</option>
             }
         </select>
+        <label for="bindingType">Co Authors:</label>
+        <select id="bindingType" @bind="addingBook.BindingTypeId">
+            <option value="0">-- Select Binding Type --</option>
+            @foreach (var bindingType in bindingTypes)
+            {
+                <option value="@bindingType.Id">@bindingType.Type</option>
+            }
+        </select>
 
         <button @onclick="SaveBook">Save</button>
         <button @onclick="Cancel">Cancel</button>
@@ -108,7 +116,7 @@ else
                     Coauthors = new List<CoAuthors>()
                 },
                 BookGenres = new List<BookGenre>(),
-                BookReads = new List<BookRead>(),
+                BookReads = null,
                 Coauthors = new List<CoAuthors>()
             };
 
@@ -140,4 +148,4 @@ else
     {
         Navigation.NavigateTo("/adminBook");
     }
-} *@
+}
