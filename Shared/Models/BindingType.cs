@@ -12,6 +12,6 @@ public class BindingType
 
     [MaxLength(50)]
     public string Type { get; set; }
-
+    
     public ICollection<Book> Books { get; set; }
 }
